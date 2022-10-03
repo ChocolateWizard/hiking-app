@@ -1,0 +1,5 @@
+/app/hiking-app_Client/target/
+/app/hiking-app_CommonLib/target/
+/app/hiking-app_Server/target/
+/app/hiking-app_Server/src/main/resources/config/server.param.properties
+/app/hiking-app_Server/src/main/resources/config/db.param.properties

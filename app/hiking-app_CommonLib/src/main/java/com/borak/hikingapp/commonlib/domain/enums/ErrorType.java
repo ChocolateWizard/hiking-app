@@ -1,0 +1,38 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Enum.java to edit this template
+ */
+package com.borak.hikingapp.commonlib.domain.enums;
+
+/**
+ *
+ * @author Despot
+ */
+public enum ErrorType {
+    FILE_NOT_FOUND_ERROR,
+    IO_ERROR,
+    CONNECTION_ESTABLISHING_ERROR,
+    CONNECTION_TERMINATION_ERROR,
+    CONNECTION_COMMIT_ERROR,
+    CONNECTION_ROLLBACK_ERROR,
+    CONNECTION_NOT_ESTABLISHED_ERROR,
+    SELECT_QUERY_ERROR,
+    DELETE_QUERY_ERROR,
+    INSERT_QUERY_ERROR,
+    UPDATE_QUERY_ERROR,
+    EMPTY_STRING_ERROR,
+    INPUT_OUT_OF_BOUNDS_ERROR,
+    BLANK_SPOTS_IN_STRING_ERROR,
+    REGISTRATION_ERROR,
+    LOGIN_ERROR,
+    HIKER_CREATION_ERROR,
+    HIKING_GROUP_CREATION_ERROR,
+    UNEXPECTED_ERROR,
+    INVALID_INPUT_ERROR,
+    SERVER_BOOT_ERROR,
+    SERVER_TERMINATION_ERROR,
+    SENDING_OBJECT_ERROR,
+    RECEIVING_OBJECT_ERROR;
+    
+    
+}
