@@ -4,17 +4,13 @@
  */
 package com.borak.hikingapp.server.logic.controllers;
 
+import com.borak.hikingapp.server.repository.RepositoryManager;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.repository.db.mysql.impl.RepositoryHiker;
-import com.borak.hikingapp.server.repository.db.mysql.impl.RepositoryHikingGroup;
-import com.borak.hikingapp.server.repository.db.mysql.impl.RepositoryPlace;
-import com.borak.hikingapp.server.repository.db.mysql.impl.RepositoryUser;
-import com.borak.hikingapp.server.repository.intf.IRepository;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,85 +18,87 @@ import java.util.List;
  *
  * @author Despot
  */
-public class ControllerSO {
+public final class ControllerSO {
 
-    private IRepository<Place> storagePlace;
-    private IRepository<User> storageUser;
-    private IRepository<Hiker> storageHiker;
-    private IRepository<HikingGroup> storageHikingGroup;
+    private RepositoryManager repositoryManager;
 
     private static ControllerSO instance;
 
-    private ControllerSO() {
-        storagePlace = new RepositoryPlace();
-        storageUser = new RepositoryUser();
-        storageHiker = new RepositoryHiker();
-        storageHikingGroup = new RepositoryHikingGroup();
+    private ControllerSO() throws CustomException {
+        repositoryManager = new RepositoryManager();
     }
 
-    public static ControllerSO getInstance() {
+    public static void initialize() throws CustomException {
+        instance = new ControllerSO();
+    }
+
+    public static void terminate() throws CustomException {
+        instance = null;
+    }
+
+    public static ControllerSO getInstance() throws CustomException {
         if (instance == null) {
-            instance = new ControllerSO();
+            throw new CustomException(ErrorType.CRITICAL_ERROR, "Controller must be initialized first!");
         }
         return instance;
     }
+
 //====================================================================================   
 //===============================SYSTEM OPERATIONS===================================
 //=====================================================================================    
-
     public List<Place> getAllPlaces() throws CustomException {
         try {
-            storagePlace.connect();
-            List<Place> places = storagePlace.getAll();
-            storagePlace.commit();
+            repositoryManager.getRepositoryPlace().connect();
+            List<Place> places = repositoryManager.getRepositoryPlace().getAll();
+            repositoryManager.getRepositoryPlace().commit();
             return places;
         } catch (CustomException ex) {
-            storagePlace.rollback();
+            repositoryManager.getRepositoryPlace().rollback();
             throw ex;
         } finally {
-            storagePlace.disconnect();
+            repositoryManager.getRepositoryPlace().disconnect();
         }
 
     }
 
     public List<Hiker> getAllHikers() throws CustomException {
         try {
-            storageHiker.connect();
-            List<Hiker> hikers = storageHiker.getAll();
-            storageHiker.commit();
+            repositoryManager.getRepositoryHiker().connect();
+            List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
+            repositoryManager.getRepositoryHiker().commit();
             return hikers;
         } catch (CustomException ex) {
-            storageHiker.rollback();
+            repositoryManager.getRepositoryHiker().rollback();
             throw ex;
         } finally {
-            storageHiker.disconnect();
+            repositoryManager.getRepositoryHiker().disconnect();
         }
 
     }
 
     public void register(User user) throws CustomException {
         try {
-            storageUser.connect();
-            User u = storageUser.find(user);
+            repositoryManager.getRepositoryUser().connect();           
+            User u = repositoryManager.getRepositoryUser().find(user);
             if (u == null) {
-                storageUser.insert(user);
+                repositoryManager.getRepositoryUser().insert(user);
             } else {
                 throw new CustomException(ErrorType.REGISTRATION_ERROR, "Username " + user.getUsername() + " already exists!");
             }
-            storageUser.commit();;
+            repositoryManager.getRepositoryUser().commit();
         } catch (CustomException ex) {
-            storageUser.rollback();
+            repositoryManager.getRepositoryUser().rollback();
             throw ex;
         } finally {
-            storageUser.disconnect();
+            repositoryManager.getRepositoryUser().disconnect();
         }
     }
 
     public User login(User user) throws CustomException {
         User u;
         try {
-            storageUser.connect();
-            u = storageUser.find(user);
+            repositoryManager.getRepositoryUser().connect();
+            u = repositoryManager.getRepositoryUser().find(user);
             if (u != null) {
                 if (!u.getPassword().equals(user.getPassword())) {
                     throw new CustomException(ErrorType.LOGIN_ERROR, "Invalid password for given username!");
@@ -108,31 +106,31 @@ public class ControllerSO {
             } else {
                 throw new CustomException(ErrorType.LOGIN_ERROR, "Username " + user.getUsername() + " does not exist!");
             }
-            storageUser.commit();
+            repositoryManager.getRepositoryUser().commit();
         } catch (CustomException ex) {
-            storageUser.rollback();
+            repositoryManager.getRepositoryUser().rollback();
             throw ex;
         } finally {
-            storageUser.disconnect();
+            repositoryManager.getRepositoryUser().disconnect();
         }
         return u;
     }
 
     public void createHiker(Hiker hiker) throws CustomException {
         try {
-            storageHiker.connect();
-            Hiker h = storageHiker.find(hiker);
+            repositoryManager.getRepositoryHiker().connect();
+            Hiker h = repositoryManager.getRepositoryHiker().find(hiker);
             if (h == null) {
-                storageHiker.insert(hiker);
+                repositoryManager.getRepositoryHiker().insert(hiker);
             } else {
                 throw new CustomException(ErrorType.HIKER_CREATION_ERROR, "Hiker " + hiker.getUcin() + " already exists!");
             }
-            storageHiker.commit();
+            repositoryManager.getRepositoryHiker().commit();
         } catch (CustomException ex) {
-            storageHiker.rollback();
+            repositoryManager.getRepositoryHiker().rollback();
             throw ex;
         } finally {
-            storageHiker.disconnect();
+            repositoryManager.getRepositoryHiker().disconnect();
         }
     }
 
@@ -140,8 +138,8 @@ public class ControllerSO {
         List<Hiker> hikersToBeReturned = null;
         name = name.trim();
         try {
-            storageHiker.connect();
-            List<Hiker> hikers = storageHiker.getAll();
+            repositoryManager.getRepositoryHiker().connect();
+            List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
             if (hikers != null) {
                 hikersToBeReturned = new ArrayList<>(hikers.size());
                 if (name.isEmpty()) {
@@ -164,57 +162,57 @@ public class ControllerSO {
                     }
                 }
             }
-            storageHiker.commit();
+            repositoryManager.getRepositoryHiker().commit();
         } catch (CustomException ex) {
-            storageHiker.rollback();
+            repositoryManager.getRepositoryHiker().rollback();
             throw ex;
         } finally {
-            storageHiker.disconnect();
+            repositoryManager.getRepositoryHiker().disconnect();
         }
         return hikersToBeReturned;
     }
 
     public void deleteHiker(Hiker h) throws CustomException {
         try {
-            storageHiker.connect();
-            storageHiker.delete(h);
-            storageHiker.commit();
+            repositoryManager.getRepositoryHiker().connect();
+            repositoryManager.getRepositoryHiker().delete(h);
+            repositoryManager.getRepositoryHiker().commit();
         } catch (CustomException ex) {
-            storageHiker.rollback();
+            repositoryManager.getRepositoryHiker().rollback();
             throw ex;
         } finally {
-            storageHiker.disconnect();
+            repositoryManager.getRepositoryHiker().disconnect();
         }
     }
 
     public void updateHiker(Hiker h) throws CustomException {
         try {
-            storageHiker.connect();
-            storageHiker.update(h);
-            storageHiker.commit();
+            repositoryManager.getRepositoryHiker().connect();
+            repositoryManager.getRepositoryHiker().update(h);
+            repositoryManager.getRepositoryHiker().commit();
         } catch (CustomException ex) {
-            storageHiker.rollback();
+            repositoryManager.getRepositoryHiker().rollback();
             throw ex;
         } finally {
-            storageHiker.disconnect();
+            repositoryManager.getRepositoryHiker().disconnect();
         }
     }
 
     public void createHikingGroup(HikingGroup mainGroup) throws CustomException {
         try {
-            storageHikingGroup.connect();
-            HikingGroup g = storageHikingGroup.find(mainGroup);
+            repositoryManager.getRepositoryHikingGroup().connect();
+            HikingGroup g = repositoryManager.getRepositoryHikingGroup().find(mainGroup);
             if (g == null) {
-                storageHikingGroup.insert(mainGroup);
+                repositoryManager.getRepositoryHikingGroup().insert(mainGroup);
             } else {
                 throw new CustomException(ErrorType.HIKING_GROUP_CREATION_ERROR, "Hiking group " + mainGroup.getCrn() + " already exists!");
             }
-            storageHikingGroup.commit();
+            repositoryManager.getRepositoryHikingGroup().commit();
         } catch (CustomException ex) {
-            storageHikingGroup.rollback();
+            repositoryManager.getRepositoryHikingGroup().rollback();
             throw ex;
         } finally {
-            storageHikingGroup.disconnect();
+            repositoryManager.getRepositoryHikingGroup().disconnect();
         }
     }
 
@@ -222,8 +220,8 @@ public class ControllerSO {
         List<HikingGroup> groupsToBeReturned = null;
         name = name.trim();
         try {
-            storageHikingGroup.connect();
-            List<HikingGroup> groups = storageHikingGroup.getAll();
+            repositoryManager.getRepositoryHikingGroup().connect();
+            List<HikingGroup> groups = repositoryManager.getRepositoryHikingGroup().getAll();
             if (groups != null) {
                 groupsToBeReturned = new ArrayList<>(groups.size());
                 if (name.isEmpty()) {
@@ -244,27 +242,27 @@ public class ControllerSO {
                     }
                 }
             }
-            storageHikingGroup.commit();
+            repositoryManager.getRepositoryHikingGroup().commit();
         } catch (CustomException ex) {
-            storageHikingGroup.rollback();
+            repositoryManager.getRepositoryHikingGroup().rollback();
             throw ex;
         } finally {
-            storageHikingGroup.disconnect();
+            repositoryManager.getRepositoryHikingGroup().disconnect();
         }
         return groupsToBeReturned;
     }
 
     public void deleteHikingGroup(HikingGroup g) throws CustomException {
         try {
-            storageHikingGroup.connect();
-            storageHikingGroup.delete(g);
-            storageHikingGroup.commit();
-            
+            repositoryManager.getRepositoryHikingGroup().connect();
+            repositoryManager.getRepositoryHikingGroup().delete(g);
+            repositoryManager.getRepositoryHikingGroup().commit();
+
         } catch (CustomException ex) {
-            storageHikingGroup.rollback();
+            repositoryManager.getRepositoryHikingGroup().rollback();
             throw ex;
         } finally {
-            storageHikingGroup.disconnect();
+            repositoryManager.getRepositoryHikingGroup().disconnect();
         }
     }
 }

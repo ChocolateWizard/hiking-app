@@ -12,7 +12,7 @@ import com.borak.hikingapp.server.view.forms.FrmMain;
  *
  * @author Despot
  */
-public class ControllerForms {
+public final class ControllerForms {
 
     private static ControllerForms instance;
 

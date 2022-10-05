@@ -25,14 +25,13 @@ public class CompDatabasePicker extends CompOneComboBox<DatabaseType, Object> {
     public DatabaseType getValue() throws CustomException {
         return (DatabaseType) cbField.getSelectedItem();
     }
-
+  
     @Override
     public void setValue(DatabaseType value) throws CustomException {
         cbField.setSelectedItem(value);
     }
-
+    
     public void addActionListener(ActionListener listener) {
-        cbField.addActionListener(listener);
-        
+        cbField.addActionListener(listener);       
     }
 }

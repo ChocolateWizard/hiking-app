@@ -7,14 +7,13 @@ package com.borak.hikingapp.server.view.forms;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
 import com.borak.hikingapp.server.domain.enums.DatabaseType;
+import com.borak.hikingapp.server.logic.controllers.ControllerForms;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.view.components.impl.CompDatabasePicker;
 import com.borak.hikingapp.server.view.components.impl.CompStringInput;
-import com.borak.hikingapp.server.view.components.validators.factory.ValidatorFactory;
+import com.borak.hikingapp.server.view.helpers.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -83,7 +82,7 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
         setFormElements();
 
         pack();
-        //setResizable(false);
+        setResizable(false);
         setLocationRelativeTo(null);
     }
 
@@ -94,9 +93,9 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
     }
 
     private void setPanels() {
-        MigLayout migPicker = new MigLayout("insets 0 0 0 0", "", "");
-        MigLayout migButtons = new MigLayout("insets 0 0 0 0", "", "");
-        MigLayout migParams = new MigLayout("insets 0 0 0 0", "", "[]0[]0[]");
+        MigLayout migPicker = new MigLayout("insets 15 15 0 0", "", "");
+        MigLayout migButtons = new MigLayout("insets 0 15 0 15", "", "");
+        MigLayout migParams = new MigLayout("insets 5 15 0 0", "", "[]0[]0[]");
 
         pnlPicker = new JPanel(migPicker);
         pnlButtons = new JPanel(migButtons);
@@ -110,62 +109,51 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
     private void setComponents() {
         setDatabasePicker();
         setDatabaseParams();
+        fillComponents();
     }
 
     private void setDatabasePicker() {
         compDatabasePicker = new CompDatabasePicker();
-        compDatabasePicker.setCaption("Database:");
-        compDatabasePicker.setCaptionSize(100);
+        compDatabasePicker.setCaption("Current database:");
+        compDatabasePicker.setCaptionSize(120);
         compDatabasePicker.setErrorMessageSize(200);
         compDatabasePicker.setInputSize(200);
         compDatabasePicker.setErrorMessage("");
-        
-        try {
-            String currentDB = Util.getInstance().getCurrentDatabase();
-            DatabaseType t = DatabaseType.parseDatabaseType(currentDB);
-            compDatabasePicker.setValue(t);
-        } catch (CustomException ex) {
-            ex.printStackTrace();
-        }
 
         ((CompDatabasePicker) compDatabasePicker).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 cbPickerPressed();
-                
             }
-
         });
-
-        
-
         pnlPicker.add((JPanel) compDatabasePicker, "cell 0 0");
     }
 
     private void setDatabaseParams() {
-        compDatabaseUrl = new CompStringInput(ValidatorFactory.getInstance().getDatabaseUrlValidator());
-        compDatabaseUsername = new CompStringInput(ValidatorFactory.getInstance().getDatabaseUsernameValidator());
-        compDatabasePassword = new CompStringInput(ValidatorFactory.getInstance().getDatabasePasswordValidator());
+        compDatabaseUrl = new CompStringInput();
+        compDatabaseUsername = new CompStringInput();
+        compDatabasePassword = new CompStringInput();
 
         compDatabaseUrl.setCaption("Url:");
         compDatabaseUrl.setCaptionSize(70);
-        compDatabaseUrl.setErrorMessageSize(200);
-        compDatabaseUrl.setInputSize(250);
+        compDatabaseUrl.setInputSize(330);
+        compDatabaseUrl.setErrorMessageSize(330);
         compDatabaseUrl.setErrorMessage("");
+        compDatabaseUrl.setEnabledInput(false);
 
         compDatabaseUsername.setCaption("Username:");
         compDatabaseUsername.setCaptionSize(70);
-        compDatabaseUsername.setInputSize(250);
-        compDatabaseUsername.setErrorMessageSize(200);
+        compDatabaseUsername.setInputSize(330);
+        compDatabaseUsername.setErrorMessageSize(330);
         compDatabaseUsername.setErrorMessage("");
+        compDatabaseUsername.setEnabledInput(false);
 
         compDatabasePassword.setCaption("Password:");
         compDatabasePassword.setCaptionSize(70);
-        compDatabasePassword.setInputSize(250);
-        compDatabasePassword.setErrorMessageSize(200);
+        compDatabasePassword.setInputSize(330);
+        compDatabasePassword.setErrorMessageSize(330);
         compDatabasePassword.setErrorMessage("");
-
-        fillParams();
+        compDatabasePassword.setEnabledInput(false);
 
         pnlParams.add((JPanel) compDatabaseUrl, "cell 0 0");
         pnlParams.add((JPanel) compDatabaseUsername, "cell 0 1");
@@ -174,7 +162,6 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
 
     private void setButtons() {
         btnSave = new JButton("Save");
-
         btnSave.setFocusable(false);
         btnSave.addActionListener((e) -> {
             btnSavePressed();
@@ -183,14 +170,23 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
     }
 
     private void btnSavePressed() {
-        //TODO
+        try {
+            DatabaseType type = compDatabasePicker.getValue();
+            Util.getInstance().setCurrentDatabase(type);
+            Window.successfulOperation(this, "Successfull save", "Configuration successfully saved!");
+            ControllerForms.getInstance().closeFrmConfigurationDatabase();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+        }
     }
 
     public void cbPickerPressed() {
         try {
-            DatabaseType t = compDatabasePicker.getValue();
-            if (t.hasParams()) {
+            DatabaseType type = compDatabasePicker.getValue();
+            if (type.hasParams()) {
                 pnlParams.setVisible(true);
+                fillParams(type);
             } else {
                 pnlParams.setVisible(false);
             }
@@ -200,18 +196,28 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
         }
     }
 
-    private void fillParams() {
+    private void fillParams(DatabaseType databaseType) {
         try {
-            String url = Util.getInstance().getDatabaseUrl();
+            String url = Util.getInstance().getDatabaseUrl(databaseType);
+            String username = Util.getInstance().getDatabaseUsername(databaseType);
+            String password = Util.getInstance().getDatabasePassword(databaseType);
             compDatabaseUrl.setValue(url);
-            String username = Util.getInstance().getDatabaseUsername();
             compDatabaseUsername.setValue(username);
-            String password = Util.getInstance().getDatabasePassword();
             compDatabasePassword.setValue(password);
         } catch (CustomException ex) {
             ex.printStackTrace();
         }
     }
+
+    private void fillComponents() {
+        try {
+            DatabaseType t = Util.getInstance().getCurrentDatabase();
+            compDatabasePicker.setValue(t);
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

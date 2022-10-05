@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author Despot
  */
-public class ControllerServer {
+public final class ControllerServer {
 
     private static ControllerServer instance;
 
@@ -38,14 +38,22 @@ public class ControllerServer {
     }
 
     public void startServer() throws CustomException {
-        serverThread = new ServerThread();
-        serverThread.start();
+        ControllerSO.initialize();
+        try {
+            serverThread = new ServerThread();
+            serverThread.start();
+        } catch (CustomException e) {
+            ControllerSO.terminate();
+            throw e;
+        }
+
     }
 
     public void stopServer() throws CustomException {
         try {
             serverThread.getServerSocket().close();
             serverThread = null;
+            ControllerSO.terminate();
         } catch (IOException | NullPointerException ex) {
             throw new CustomException(ErrorType.SERVER_TERMINATION_ERROR, "Unable to terminate server!", ex);
         }

@@ -2,8 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.borak.hikingapp.server.repository.db.mysql.impl;
-
+package com.borak.hikingapp.server.repository.db.mysql;
 
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
@@ -122,7 +121,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void delete(Hiker object) throws CustomException {
-        String query="DELETE FROM hiker WHERE ucin=?";
+        String query = "DELETE FROM hiker WHERE ucin=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -137,7 +136,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void update(Hiker object) throws CustomException {
-        String query="UPDATE hiker SET ucin=?,first_name=?,last_name=?,gender=?,date_of_birth=?,years_of_experience=?,place_id=? WHERE ucin=?";
+        String query = "UPDATE hiker SET ucin=?,first_name=?,last_name=?,gender=?,date_of_birth=?,years_of_experience=?,place_id=? WHERE ucin=?";
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());

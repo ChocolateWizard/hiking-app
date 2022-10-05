@@ -203,6 +203,8 @@ public class FrmMain extends javax.swing.JFrame {
             try {
                 ControllerServer.getInstance().startServer();
                 miServerStart.setEnabled(false);
+                miConfigurationDatabase.setEnabled(false);
+                miConfigurationPort.setEnabled(false);
                 miServerStop.setEnabled(true);
                 lblServerStatus.setText("ONLINE");
                 lblServerStatus.setForeground(Color.GREEN.darker());
@@ -218,6 +220,8 @@ public class FrmMain extends javax.swing.JFrame {
             try {
                 ControllerServer.getInstance().stopServer();
                 miServerStart.setEnabled(true);
+                miConfigurationDatabase.setEnabled(true);
+                miConfigurationPort.setEnabled(true);
                 miServerStop.setEnabled(false);
                 lblServerStatus.setText("OFFLINE");
                 lblServerStatus.setForeground(Color.MAGENTA);

@@ -27,29 +27,40 @@ public enum DatabaseType {
         return this.name;
     }
 
+    public static String toPropertyName(DatabaseType databaseType) {
+        switch (databaseType) {
+            case OM:
+                return "om";
+            case MYSQL:
+                return "mysql";
+            default:
+                return null;
+        }
+    }
+
     public static DatabaseType parseDatabaseType(String databaseType) {
-        return switch (databaseType) {
-            case "Operative memory" ->
-                OM;
-            case "om" ->
-                OM;
-            case "MySQL database" ->
-                MYSQL;
-            case "mysql" ->
-                MYSQL;
-            default ->
-                null;
-        };
+        switch (databaseType) {
+            case "Operative memory":
+                return OM;
+            case "om":
+                return OM;
+            case "MySQL database":
+                return MYSQL;
+            case "mysql":
+                return MYSQL;
+            default:
+                return null;
+        }
     }
 
     public boolean hasParams() {
-        return switch (this) {
-            case OM ->
-                false;
-            case MYSQL ->
-                true;
-            default ->
-                false;
-        };
+        switch (this) {
+            case OM:
+                return false;
+            case MYSQL:
+                return true;
+            default:
+                return false;
+        }
     }
 }

@@ -5,9 +5,6 @@
 package com.borak.hikingapp.server.view.components.validators.factory;
 
 import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
-import com.borak.hikingapp.server.view.components.validators.impl.ValidatorDatabasePassword;
-import com.borak.hikingapp.server.view.components.validators.impl.ValidatorDatabaseUrl;
-import com.borak.hikingapp.server.view.components.validators.impl.ValidatorDatabaseUsername;
 import com.borak.hikingapp.server.view.components.validators.impl.ValidatorGroupCrn;
 import com.borak.hikingapp.server.view.components.validators.impl.ValidatorGroupDescription;
 import com.borak.hikingapp.server.view.components.validators.impl.ValidatorGroupFilter;
@@ -34,9 +31,8 @@ import com.borak.hikingapp.server.view.components.validators.impl.ValidatorUserU
  * @author Despot
  */
 public class ValidatorFactory {
-    
-//=========Client==============================================================
 
+//=========Client==============================================================
     private IValidator<String> userFirstNameValidator;
     private IValidator<String> userLastNameValidator;
     private IValidator<String> userUsernameValidator;
@@ -60,16 +56,8 @@ public class ValidatorFactory {
     private IValidator<String> hikingActivityDescriptionValidator;
 
     private IValidator<Object> placeValidator;
-    
-//==============Database==========================================================
-    
-    private IValidator<String> databaseUrlValidator;
-    private IValidator<String> databaseUsernameValidator;
-    private IValidator<String> databasePasswordValidator;
 
-    
 //========Server===============================================================
-    
     private IValidator<String> portValidator;
 //=================================================================================
     private static ValidatorFactory instance;
@@ -98,12 +86,9 @@ public class ValidatorFactory {
         hikingActivityDescriptionValidator = new ValidatorHikingActivityDescription();
 
         placeValidator = new ValidatorPlace();
-        
-        portValidator=new ValidatorPort();
-        
-        databaseUrlValidator=new ValidatorDatabaseUrl();
-        databaseUsernameValidator=new ValidatorDatabaseUsername();
-        databasePasswordValidator=new ValidatorDatabasePassword();
+
+        portValidator = new ValidatorPort();
+
     }
 
     public static ValidatorFactory getInstance() {
@@ -193,17 +178,4 @@ public class ValidatorFactory {
     public IValidator<String> getPortValidator() {
         return portValidator;
     }
-
-    public IValidator<String> getDatabaseUrlValidator() {
-        return databaseUrlValidator;
-    }
-
-    public IValidator<String> getDatabaseUsernameValidator() {
-        return databaseUsernameValidator;
-    }
-
-    public IValidator<String> getDatabasePasswordValidator() {
-        return databasePasswordValidator;
-    }
-    
 }

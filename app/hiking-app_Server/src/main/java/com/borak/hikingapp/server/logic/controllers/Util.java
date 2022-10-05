@@ -7,6 +7,7 @@ package com.borak.hikingapp.server.logic.controllers;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.domain.constants.Constants;
+import com.borak.hikingapp.server.domain.enums.DatabaseType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,7 +20,7 @@ import java.util.Properties;
  *
  * @author Despot
  */
-public class Util {
+public final class Util {
 
     private static Util instance;
 
@@ -76,26 +77,48 @@ public class Util {
     }
 
 //=================DATABASE PARAMS==================================================
-    public String getCurrentDatabase() {
-        return databaseParams.getProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB);
+    public DatabaseType getCurrentDatabase() {
+        String type = databaseParams.getProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB);
+        return DatabaseType.parseDatabaseType(type);
     }
 
-    public String getDatabaseUrl() {
+    public void setCurrentDatabase(DatabaseType databaseType) throws CustomException {
+        try ( OutputStream out = new FileOutputStream(databaseParamsFile)) {
+            databaseParams.setProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB, DatabaseType.toPropertyName(databaseType));
+            databaseParams.store(out, null);
+        } catch (IOException e) {
+            throw new CustomException(ErrorType.IO_ERROR, "Unable to set current database!", e);
+        }
+    }
+
+    public String getCurrentDatabaseUrl() {
         String currentDB = databaseParams.getProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB);
         return databaseParams.getProperty(currentDB + "_" + Constants.DATABASE_PARAM_FILE_URL);
     }
 
-    public String getDatabaseUsername() {
+    public String getCurrentDatabaseUsername() {
         String currentDB = databaseParams.getProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB);
         return databaseParams.getProperty(currentDB + "_" + Constants.DATABASE_PARAM_FILE_USERNAME);
     }
 
-    public String getDatabasePassword() {
+    public String getCurrentDatabasePassword() {
         String currentDB = databaseParams.getProperty(Constants.DATABASE_PARAM_FILE_CURRENT_DB);
         return databaseParams.getProperty(currentDB + "_" + Constants.DATABASE_PARAM_FILE_PASSWORD);
     }
-//=======================SERVER PARAMS===============================================
 
+    public String getDatabaseUrl(DatabaseType databaseType) {
+        return databaseParams.getProperty(DatabaseType.toPropertyName(databaseType) + "_" + Constants.DATABASE_PARAM_FILE_URL);
+    }
+
+    public String getDatabaseUsername(DatabaseType databaseType) {
+        return databaseParams.getProperty(DatabaseType.toPropertyName(databaseType) + "_" + Constants.DATABASE_PARAM_FILE_USERNAME);
+    }
+
+    public String getDatabasePassword(DatabaseType databaseType) {
+        return databaseParams.getProperty(DatabaseType.toPropertyName(databaseType) + "_" + Constants.DATABASE_PARAM_FILE_PASSWORD);
+    }
+
+//=======================SERVER PARAMS===============================================
     public String getServerUrl() {
         return serverParams.getProperty(Constants.SERVER_PARAM_FILE_URL);
     }

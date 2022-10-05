@@ -7,7 +7,7 @@ package com.borak.hikingapp.server.repository.db.connections;
 
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.repository.intf.IRepository;
+import com.borak.hikingapp.server.repository.IRepository;
 import java.sql.Connection;
 import java.sql.SQLException;
 
