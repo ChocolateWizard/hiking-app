@@ -8,20 +8,17 @@ import com.borak.hikingapp.commonlib.domain.classes.User;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
+import com.borak.hikingapp.server.DUMMYCLASSES.UserViewObserver;
 
 /**
  *
  * @author Despot
  */
-public class TableLoggedUsers extends AbstractTableModel {
+public class TableLoggedUsers extends AbstractTableModel implements UserViewObserver {
 
     private List<User> loggedUsers;
     private final String[] colNames = new String[]{"Username", "First and last name"};
     private final Class[] colTypes = new Class[]{String.class, String.class};
-
-    public TableLoggedUsers(List<User> loggedUsers) {
-        this.loggedUsers = loggedUsers;
-    }
 
     public TableLoggedUsers() {
         this.loggedUsers = new LinkedList<>();
@@ -70,6 +67,41 @@ public class TableLoggedUsers extends AbstractTableModel {
             return "N/A";
         }
         return colNames[column];
+    }
+
+    @Override
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return false;
+    }
+
+    public User removeUser(int row) {
+        if (loggedUsers != null && row >= 0 && row < loggedUsers.size()) {
+            return loggedUsers.remove(row);
+        }
+        return null;
+    }
+
+    @Override
+    public void addUser(User user) {
+        if (loggedUsers == null) {
+            loggedUsers = new LinkedList<>();
+        }
+        loggedUsers.add(user);
+        fireTableDataChanged();
+    }
+
+    @Override
+    public void removeUser(User user) {
+        if (loggedUsers != null) {
+            loggedUsers.remove(user);
+            fireTableDataChanged();
+        }
+    }
+
+    @Override
+    public void removeAllUsers() {
+        loggedUsers = new LinkedList<>();
+        fireTableDataChanged();
     }
 
 }

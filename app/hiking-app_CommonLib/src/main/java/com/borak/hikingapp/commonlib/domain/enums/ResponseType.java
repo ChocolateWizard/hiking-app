@@ -9,5 +9,5 @@ package com.borak.hikingapp.commonlib.domain.enums;
  * @author Despot
  */
 public enum ResponseType {
-    
+    SUCCESS,ERROR;
 }

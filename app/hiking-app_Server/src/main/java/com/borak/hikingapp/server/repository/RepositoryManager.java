@@ -13,6 +13,9 @@ import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.domain.enums.DatabaseType;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.repository.IRepository;
+import com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -26,25 +29,10 @@ public final class RepositoryManager {
     private IRepository<User> repositoryUser;
     private IRepository<Hiker> repositoryHiker;
     private IRepository<HikingGroup> repositoryHikingGroup;
+    private RepositoryLoggedUsers repositoryLoggedUsers;
 
     public RepositoryManager() throws CustomException {
         setRepositories();
-    }
-
-    public IRepository<Place> getRepositoryPlace() {
-        return repositoryPlace;
-    }
-
-    public IRepository<Hiker> getRepositoryHiker() {
-        return repositoryHiker;
-    }
-
-    public IRepository<HikingGroup> getRepositoryHikingGroup() {
-        return repositoryHikingGroup;
-    }
-
-    public IRepository<User> getRepositoryUser() {
-        return repositoryUser;
     }
 
     public void setRepositories() throws CustomException {
@@ -65,8 +53,32 @@ public final class RepositoryManager {
                     break;
                 default:
             }
+            repositoryLoggedUsers = new com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers();
         } catch (CustomException e) {
             throw new CustomException(ErrorType.CRITICAL_ERROR, "Unable to initialize repositories!", e);
         }
     }
+//==========================================================================================================
+
+    public IRepository<Place> getRepositoryPlace() {
+        return repositoryPlace;
+    }
+
+    public IRepository<Hiker> getRepositoryHiker() {
+        return repositoryHiker;
+    }
+
+    public IRepository<HikingGroup> getRepositoryHikingGroup() {
+        return repositoryHikingGroup;
+    }
+
+    public IRepository<User> getRepositoryUser() {
+        return repositoryUser;
+    }
+
+    public RepositoryLoggedUsers getRepositoryLoggedUsers() {
+        return repositoryLoggedUsers;
+    }
+    
+    
 }

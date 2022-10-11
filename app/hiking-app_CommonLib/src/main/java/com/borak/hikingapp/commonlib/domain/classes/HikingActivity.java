@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.commonlib.domain.classes;
 
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author Despot
  */
-public class HikingActivity {
+public class HikingActivity implements Serializable{
 
     private Integer orderNum;
     private String name;

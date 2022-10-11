@@ -11,6 +11,7 @@ import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
+import com.borak.hikingapp.server.threads.ServerThread;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +33,9 @@ public final class ControllerSO {
         instance = new ControllerSO();
     }
 
-    public static void terminate() throws CustomException {
+    public void terminate() throws CustomException {
         instance = null;
+        repositoryManager.getRepositoryLoggedUsers().removeAll();
     }
 
     public static ControllerSO getInstance() throws CustomException {
@@ -78,9 +80,9 @@ public final class ControllerSO {
 
     public void register(User user) throws CustomException {
         try {
-            repositoryManager.getRepositoryUser().connect();           
-            User u = repositoryManager.getRepositoryUser().find(user);
-            if (u == null) {
+            repositoryManager.getRepositoryUser().connect();
+            User databaseUser = repositoryManager.getRepositoryUser().find(user);
+            if (databaseUser == null) {
                 repositoryManager.getRepositoryUser().insert(user);
             } else {
                 throw new CustomException(ErrorType.REGISTRATION_ERROR, "Username " + user.getUsername() + " already exists!");
@@ -95,12 +97,12 @@ public final class ControllerSO {
     }
 
     public User login(User user) throws CustomException {
-        User u;
+        User databaseUser;
         try {
             repositoryManager.getRepositoryUser().connect();
-            u = repositoryManager.getRepositoryUser().find(user);
-            if (u != null) {
-                if (!u.getPassword().equals(user.getPassword())) {
+            databaseUser = repositoryManager.getRepositoryUser().find(user);
+            if (databaseUser != null) {
+                if (!databaseUser.getPassword().equals(user.getPassword())) {
                     throw new CustomException(ErrorType.LOGIN_ERROR, "Invalid password for given username!");
                 }
             } else {
@@ -113,7 +115,11 @@ public final class ControllerSO {
         } finally {
             repositoryManager.getRepositoryUser().disconnect();
         }
-        return u;
+        if (repositoryManager.getRepositoryLoggedUsers().isLoggedIn(databaseUser)) {
+            throw new CustomException(ErrorType.LOGIN_ERROR, "Given user is already logged in!");
+        }
+        repositoryManager.getRepositoryLoggedUsers().add(databaseUser);
+        return databaseUser;
     }
 
     public void createHiker(Hiker hiker) throws CustomException {
@@ -265,4 +271,9 @@ public final class ControllerSO {
             repositoryManager.getRepositoryHikingGroup().disconnect();
         }
     }
+
+    public void logout(User loggedUser) throws CustomException {
+        repositoryManager.getRepositoryLoggedUsers().remove(loggedUser);
+    }
+
 }

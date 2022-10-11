@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.commonlib.domain.classes;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -11,7 +12,7 @@ import java.util.Objects;
  *
  * @author Despot
  */
-public class HikingGroup {
+public class HikingGroup implements Serializable{
     
     private Long id;
     private String crn;//Company Registration Number. This is "maticni broj" in serbian

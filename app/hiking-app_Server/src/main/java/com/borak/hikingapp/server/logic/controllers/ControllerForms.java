@@ -7,6 +7,7 @@ package com.borak.hikingapp.server.logic.controllers;
 import com.borak.hikingapp.server.view.forms.FrmConfigurationDatabase;
 import com.borak.hikingapp.server.view.forms.FrmConfigurationPort;
 import com.borak.hikingapp.server.view.forms.FrmMain;
+import com.borak.hikingapp.server.view.tables.TableLoggedUsers;
 
 /**
  *
@@ -15,10 +16,13 @@ import com.borak.hikingapp.server.view.forms.FrmMain;
 public final class ControllerForms {
 
     private static ControllerForms instance;
-
+    //View forms
     private FrmMain frmMain;
     private FrmConfigurationDatabase frmConfigurationDatabase;
     private FrmConfigurationPort frmConfigurationPort;
+    
+    //View tables
+    private TableLoggedUsers tblLoggedUsers;
 
     private ControllerForms() {
     }
@@ -44,6 +48,12 @@ public final class ControllerForms {
             frmMain = null;
         }
     }
+
+    public FrmMain getFrmMain() {
+        return frmMain;
+    }
+    
+    
 
     public void openFrmConfigurationDatabase() {
         if (frmConfigurationDatabase == null) {
@@ -72,5 +82,16 @@ public final class ControllerForms {
             frmConfigurationPort = null;
         }
     }
+//========================TABLES================================================================
+    
+    public TableLoggedUsers getTableLoggedUsers(){
+        if(tblLoggedUsers==null){
+            tblLoggedUsers=new TableLoggedUsers();
+        }
+        return tblLoggedUsers;
+    }
+    
+    
+    
 
 }

@@ -4,13 +4,14 @@
  */
 package com.borak.hikingapp.commonlib.domain.classes;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 /**
  *
  * @author Despot
  */
-public class Place {
+public class Place implements Serializable{
 
     private Long id;
     private String name;

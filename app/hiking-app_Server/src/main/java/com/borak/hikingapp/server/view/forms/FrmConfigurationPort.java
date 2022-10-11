@@ -8,7 +8,7 @@ import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
 import com.borak.hikingapp.server.logic.controllers.ControllerForms;
 import com.borak.hikingapp.server.logic.controllers.Util;
-import com.borak.hikingapp.server.view.components.impl.CompNumberInput;
+import com.borak.hikingapp.commonlib.view.components.CompNumberInput;
 import com.borak.hikingapp.server.view.components.validators.factory.ValidatorFactory;
 import com.borak.hikingapp.server.view.helpers.Window;
 import java.awt.Component;

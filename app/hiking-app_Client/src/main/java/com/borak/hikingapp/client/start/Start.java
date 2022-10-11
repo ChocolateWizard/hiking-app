@@ -4,12 +4,25 @@
  */
 package com.borak.hikingapp.client.start;
 
+import com.borak.hikingapp.client.logic.controllers.ControllerForms;
+import com.borak.hikingapp.client.logic.controllers.ControllerSO;
+import com.borak.hikingapp.client.threads.ClientThread;
+import com.borak.hikingapp.client.view.helpers.Window;
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
+
 /**
  *
  * @author Despot
  */
 public class Start {
+
     public static void main(String[] args) {
-        
+        try {           
+            ClientThread.getInstance().connect();           
+            ControllerForms.getInstance().openFrmLogin();
+        } catch (CustomException ex) {
+            Window.unSuccessfulOperation(null, "Connection error", ex.getMessage());
+        }
+
     }
 }

@@ -30,7 +30,6 @@ public class Sender {
             out.writeObject(object);
             out.flush();
         } catch (IOException ex) {
-            ex.printStackTrace();
             throw new CustomException(ErrorType.SENDING_OBJECT_ERROR, "Error while sending object!", ex);
         }
     }

@@ -36,7 +36,7 @@ import net.miginfocom.swing.MigLayout;
 public class FrmMain extends javax.swing.JFrame {
 
     private JPanel pnlUsers;
-    private AbstractTableModel tblModel;
+//    private AbstractTableModel tblModel;
     private JTable tblUsers;
     private JScrollPane scrollPane;
 
@@ -177,8 +177,8 @@ public class FrmMain extends javax.swing.JFrame {
     }
 
     private void setTable() {
-        tblModel = new TableLoggedUsers();
-        tblUsers = new JTable(tblModel);
+//        tblModel = new TableLoggedUsers();
+        tblUsers = new JTable(ControllerForms.getInstance().getTableLoggedUsers());
         scrollPane = new JScrollPane(tblUsers);
 
         Dimension d = scrollPane.getPreferredSize();

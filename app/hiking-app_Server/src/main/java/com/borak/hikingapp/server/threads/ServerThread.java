@@ -4,9 +4,11 @@
  */
 package com.borak.hikingapp.server.threads;
 
+import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.logic.controllers.Util;
+import com.borak.hikingapp.server.view.tables.TableLoggedUsers;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,6 +23,7 @@ public class ServerThread extends Thread {
 
     private ServerSocket serverSocket;
     private List<HandleClientThread> lisOfClients;
+    private TableLoggedUsers loggedUsers;
 
     public ServerThread() throws CustomException {
         int port = Util.getInstance().getServerPort();
@@ -34,37 +37,43 @@ public class ServerThread extends Thread {
 
     @Override
     public void run() {
-        int i=1;
+        int i = 0;
         while (!serverSocket.isClosed()) {
             System.out.println("Waiting for a client...");
             try {
                 Socket socket = serverSocket.accept();
-                System.out.println("Client No. "+(i++)+" connected!");
-                HandleClientThread client = new HandleClientThread(socket);
-                client.start();
+                System.out.println("Client No. " + (++i) + " connected!");
+                HandleClientThread client = new HandleClientThread(socket, i);
                 lisOfClients.add(client);
+                client.start();             
             } catch (IOException ex) {
                 System.out.println("Error in accepting client: " + ex.getMessage());
                 //ex.printStackTrace();
             }
-        }      
-        stopAllClientThreads();      
-    }
-
-    public ServerSocket getServerSocket() {
-        return serverSocket;
+        }
+        stopAllClientThreads();
     }
 
     private void stopAllClientThreads() {
-        int i = 1;
         for (HandleClientThread client : lisOfClients) {
             try {
                 client.getSocket().close();
-                i++;
             } catch (IOException ex) {
-                System.out.println("Error in deleting client thread number " + i + ": " + ex.getMessage());
+                System.out.println("Error in deleting client thread number " + client.getClientNum() + ": " + ex.getMessage());
                 ex.printStackTrace();
             }
         }
     }
+//==================================================================================================================
+
+    public ServerSocket getServerSocket() {
+        return serverSocket;
+    }
+    
+    
+
+    public void removeClient(HandleClientThread clientThread) {
+        lisOfClients.remove(clientThread);
+    }
+
 }

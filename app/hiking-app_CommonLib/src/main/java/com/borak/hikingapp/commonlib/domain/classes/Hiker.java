@@ -5,6 +5,7 @@
 package com.borak.hikingapp.commonlib.domain.classes;
 
 import com.borak.hikingapp.commonlib.domain.enums.Gender;
+import java.io.Serializable;
 import java.util.GregorianCalendar;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import java.util.Objects;
  *
  * @author Despot
  */
-public class Hiker {
+public class Hiker implements Serializable{
 
     private Long id;
     private String ucin;// Stands for "Unique Citizen Identification Number". This is "JMBG" in serbian
