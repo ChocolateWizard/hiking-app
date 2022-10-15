@@ -4,14 +4,15 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-
 import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.Util;
 import com.borak.hikingapp.client.view.components.validators.factory.ValidatorFactory;
 import com.borak.hikingapp.client.view.helpers.Window;
 import com.borak.hikingapp.client.view.tables.GroupTableModel;
+import com.borak.hikingapp.commonlib.communication.TransferObject;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
+import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompStringInput;
 import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
@@ -43,7 +44,7 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
     private JPanel pnlFilter;
     private JPanel pnlAction;
     private JPanel pnlShow;
-    
+
     public FrmGroupChangeInfo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -75,7 +76,7 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-   private void initialize() {
+    private void initialize() {
         setTitle("Change hiking group");
         MigLayout mig = new MigLayout("", "[]0[]", "[]0[]");
         setLayout(mig);
@@ -171,21 +172,26 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
             name = name.trim();
             try {
                 //returns all hikers with given name, or similar name
-                List<HikingGroup> groups = ControllerSO.getInstance().findHikingGroups(name);
-                if (groups == null || groups.isEmpty()) {
-                    if (name.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups in database!");
+                TransferObject response = ControllerSO.getInstance().findHikingGroups(name);
+                if (response.getResponseType() == ResponseType.SUCCESS) {
+                    List<HikingGroup> groups = (List<HikingGroup>) response.getArgument();
+                    if (groups == null || groups.isEmpty()) {
+                        if (name.isEmpty()) {
+                            Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups in database!");
+                        } else {
+                            Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups found with " + name + " as name!");
+                        }
                     } else {
-                        Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups found with "+name+" as name!");
+                        tblModel.loadGroups(groups);
+                        tblModel.fireTableDataChanged();
+                        if (name.isEmpty()) {
+                            Window.successfulOperation(this, "Successfull operation", "Loaded all " + groups.size() + " groups!");
+                        } else {
+                            Window.successfulOperation(this, "Successfull operation", "Found " + groups.size() + " groups with " + name + " in name!");
+                        }
                     }
                 } else {
-                    tblModel.loadGroups(groups);
-                    tblModel.fireTableDataChanged();
-                    if (name.isEmpty()) {
-                        Window.successfulOperation(this, "Successfull operation", "Loaded all " + groups.size() + " groups!");
-                    } else {
-                        Window.successfulOperation(this, "Successfull operation", "Found " + groups.size() + " groups with " + name + " in name!");
-                    }
+                    throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
@@ -221,7 +227,6 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         return a > b ? (int) a : (int) b;
     }
 
-   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

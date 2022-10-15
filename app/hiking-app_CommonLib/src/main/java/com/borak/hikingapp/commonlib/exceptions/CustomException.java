@@ -33,6 +33,10 @@ public class CustomException extends Exception{
     public String toString() {
         return "\n"+errorType+": "+description;
     }
+
+    public ErrorType getErrorType() {
+        return errorType;
+    }
     
     
     

@@ -20,7 +20,7 @@ public final class ControllerForms {
     private FrmMain frmMain;
     private FrmConfigurationDatabase frmConfigurationDatabase;
     private FrmConfigurationPort frmConfigurationPort;
-    
+
     //View tables
     private TableLoggedUsers tblLoggedUsers;
 
@@ -52,13 +52,9 @@ public final class ControllerForms {
     public FrmMain getFrmMain() {
         return frmMain;
     }
-    
-    
 
     public void openFrmConfigurationDatabase() {
-        if (frmConfigurationDatabase == null) {
-            frmConfigurationDatabase = new FrmConfigurationDatabase(frmMain, true);
-        }
+        frmConfigurationDatabase = new FrmConfigurationDatabase(frmMain, true);
         frmConfigurationDatabase.setVisible(true);
     }
 
@@ -70,9 +66,7 @@ public final class ControllerForms {
     }
 
     public void openFrmConfigurationPort() {
-        if (frmConfigurationPort == null) {
-            frmConfigurationPort = new FrmConfigurationPort(frmMain, true);
-        }
+        frmConfigurationPort = new FrmConfigurationPort(frmMain, true);
         frmConfigurationPort.setVisible(true);
     }
 
@@ -83,15 +77,12 @@ public final class ControllerForms {
         }
     }
 //========================TABLES================================================================
-    
-    public TableLoggedUsers getTableLoggedUsers(){
-        if(tblLoggedUsers==null){
-            tblLoggedUsers=new TableLoggedUsers();
+
+    public TableLoggedUsers getTableLoggedUsers() {
+        if (tblLoggedUsers == null) {
+            tblLoggedUsers = new TableLoggedUsers();
         }
         return tblLoggedUsers;
     }
-    
-    
-    
 
 }

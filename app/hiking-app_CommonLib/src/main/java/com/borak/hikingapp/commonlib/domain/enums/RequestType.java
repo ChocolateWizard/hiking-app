@@ -9,14 +9,15 @@ package com.borak.hikingapp.commonlib.domain.enums;
  * @author Despot
  */
 public enum RequestType {
-    LOGIN,
-    REGISTER,
     GET_ALL_PLACES,
-    FIND_HIKING_GROUPS,
-    CREATE_HIKING_GROUP,
-    DELETE_HIKING_GROUP,
-    FIND_HIKERS,
-    UPDATE_HIKER,
+    REGISTER,  
+    LOGIN,  
     CREATE_HIKER,
-    DELETE_HIKER;
+    FIND_HIKERS,
+    UPDATE_HIKER,   
+    DELETE_HIKER,
+    CREATE_HIKING_GROUP,
+    FIND_HIKING_GROUPS,  
+    DELETE_HIKING_GROUP,
+    UPDATE_HIKING_GROUP;
 }

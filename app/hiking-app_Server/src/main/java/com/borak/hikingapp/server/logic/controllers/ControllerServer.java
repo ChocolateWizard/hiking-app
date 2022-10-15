@@ -7,6 +7,7 @@ package com.borak.hikingapp.server.logic.controllers;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
+import com.borak.hikingapp.server.DUMMYCLASSES.Server;
 import com.borak.hikingapp.server.threads.HandleClientThread;
 import com.borak.hikingapp.server.threads.ServerThread;
 import java.io.IOException;
@@ -18,10 +19,11 @@ import java.util.List;
  */
 public final class ControllerServer {
 
-    private ServerThread serverThread;
+    private Server server;
     private static ControllerServer instance;
 
     private ControllerServer() {
+        server = new Server();
     }
 
     public static ControllerServer getInstance() {
@@ -33,18 +35,17 @@ public final class ControllerServer {
 //=========================SERVER BOOT==========================================================
 
     public boolean isOnline() {
-        return (serverThread != null && serverThread.getServerSocket().isBound());
+        return server.isUp();
     }
 
     public boolean isOffline() {
-        return (serverThread == null || !serverThread.isAlive());
+        return server.isDown();
     }
 
     public void startServer() throws CustomException {
         ControllerSO.initialize();
         try {
-            serverThread = new ServerThread();
-            serverThread.start();
+            server.bootUp();
         } catch (CustomException e) {
             ControllerSO.getInstance().terminate();
             throw e;
@@ -52,24 +53,17 @@ public final class ControllerServer {
     }
 
     public void stopServer() throws CustomException {
-        try {
-            serverThread.getServerSocket().close();
-            serverThread = null;           
-            ControllerSO.getInstance().terminate();
-        } catch (IOException | NullPointerException ex) {
-            throw new CustomException(ErrorType.SERVER_TERMINATION_ERROR, "Unable to terminate server!", ex);
-        }
+        server.shutDown();
+        ControllerSO.getInstance().terminate();
     }
 //===============================================================================================================
 
     public void removeClient(HandleClientThread clientThread) {
-        if (serverThread != null) {
-            serverThread.removeClient(clientThread);
-        }
+            server.removeClient(clientThread);
     }
-
-    public ServerThread getServerThread() {
-        return serverThread;
-    }
+//
+//    public ServerThread getServerThread() {
+//        return server;
+//    }
 
 }

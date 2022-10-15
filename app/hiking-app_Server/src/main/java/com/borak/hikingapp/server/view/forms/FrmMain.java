@@ -9,7 +9,6 @@ import com.borak.hikingapp.server.logic.controllers.ControllerForms;
 import com.borak.hikingapp.server.logic.controllers.ControllerServer;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.view.helpers.Window;
-import com.borak.hikingapp.server.view.tables.TableLoggedUsers;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -26,7 +25,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
-import javax.swing.table.AbstractTableModel;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -36,7 +34,6 @@ import net.miginfocom.swing.MigLayout;
 public class FrmMain extends javax.swing.JFrame {
 
     private JPanel pnlUsers;
-//    private AbstractTableModel tblModel;
     private JTable tblUsers;
     private JScrollPane scrollPane;
 

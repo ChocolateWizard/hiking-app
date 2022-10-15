@@ -91,6 +91,9 @@ public class HandleClientThread extends Thread {
                 case DELETE_HIKING_GROUP:
                     deleteHikingGroup(request);
                     break;
+                case UPDATE_HIKING_GROUP:
+                    updateHikingGroup(request);
+                    break;
                 default:
             }
         } catch (CustomException ex) {
@@ -204,8 +207,19 @@ public class HandleClientThread extends Thread {
             throw new CustomException(ErrorType.HIKING_GROUP_DELETE_ERROR, e.getMessage());
         }
     }
-//==========================================================================================================
 
+    private void updateHikingGroup(TransferObject request) throws CustomException {
+        try {
+            HikingGroup group = (HikingGroup) request.getArgument();
+            ControllerSO.getInstance().updateHikingGroup(group);
+            TransferObject response = new TransferObject(ResponseType.SUCCESS, null, null);
+            (new Sender(socket)).send(response);
+        } catch (CustomException | ClassCastException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_UPDATE_ERROR, e.getMessage());
+        }
+    }
+
+//==========================================================================================================
     public Socket getSocket() {
         return socket;
     }

@@ -136,49 +136,9 @@ public final class Util {
         }
     }
 
-    //================FORMS FAVICONS================================================  
-    public String getFrmLoginFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMLOGIN_FAVICON);
-    }
-
-    public String getFrmRegisterFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMREGISTER_FAVICON);
-    }
-
+    //================FORMS FAVICONS================================================    
     public String getFrmMainFavicon() {
         return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMMAIN_FAVICON);
-    }
-
-    public String getFrmHikerCreateFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMHIKERCREATE_FAVICON);
-    }
-
-    public String getFrmHikerDeleteFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMHIKERDELETE_FAVICON);
-    }
-
-    public String getFrmHikerChangeInfoFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMHIKERCHANGEINFO_FAVICON);
-    }
-
-    public String getFrmHikerChangeInfo_DialogFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMHIKERCHANGEINFODIALOG_FAVICON);
-    }
-
-    public String getFrmGroupCreateFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMGROUPCREATE_FAVICON);
-    }
-
-    public String getFrmGroupDeleteFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMGROUPDELETE_FAVICON);
-    }
-
-    public String getFrmGroupChangeInfoFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFO_FAVICON);
-    }
-
-    public String getFrmGroupChangeInfo_DialogFavicon() {
-        return imagesLocations.getProperty(Constants.IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFODIALOG_FAVICON);
     }
 
     public String getFrmConfigurationPortFavicon() {

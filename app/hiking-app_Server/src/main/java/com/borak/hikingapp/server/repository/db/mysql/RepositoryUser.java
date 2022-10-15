@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.server.repository.db.mysql;
 
-
 import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
@@ -25,9 +24,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public List<User> getAll() throws CustomException {
-        String query = "SELECT u.user_id,u.first_name,u.last_name,u.username,u.password,u.email"
-                + ",u.place_id,p.name "
-                + "FROM user u INNER JOIN place p ON (u.place_id=p.place_id)";
+        String query = User.getAllQuery();
         List<User> users = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
@@ -45,7 +42,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
                 String placeName = rs.getString(8);
                 p = new Place(placeId, placeName);
                 u = new User(firstName, lastName, username, password, email, p);
-                u.setId(id);               
+                u.setId(id);
                 users.add(u);
             }
             rs.close();
@@ -60,7 +57,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public void insert(User object) throws CustomException {
-        String query = "INSERT INTO user(first_name,last_name,username,password,email,place_id) VALUES(?,?,?,?,?,?)";
+        String query = User.insertQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getFirstName());
@@ -81,9 +78,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public User find(User object) throws CustomException {
-        String query = "SELECT u.user_id,u.first_name,u.last_name,u.username,u.password,u.email"
-                + ",u.place_id,p.name "
-                + "FROM user u INNER JOIN place p ON (u.place_id=p.place_id) WHERE u.username=?";
+        String query = User.findQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUsername());

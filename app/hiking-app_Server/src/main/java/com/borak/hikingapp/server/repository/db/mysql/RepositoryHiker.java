@@ -27,9 +27,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public List<Hiker> getAll() throws CustomException {
-        String query = "SELECT h.hiker_id,h.ucin,h.first_name,h.last_name,h.gender,h.date_of_birth,h.years_of_experience,h.place_id"
-                + ",p.name "
-                + "FROM hiker h INNER JOIN place p ON (h.place_id=p.place_id)";
+        String query = Hiker.getAllQuery();
         List<Hiker> hikers = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
@@ -63,7 +61,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void insert(Hiker object) throws CustomException {
-        String query = "INSERT INTO hiker(ucin,first_name,last_name,gender,date_of_birth,years_of_experience,place_id) VALUES(?,?,?,?,?,?,?)";
+        String query = Hiker.insertQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -85,9 +83,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public Hiker find(Hiker object) throws CustomException {
-        String query = "SELECT h.hiker_id,h.ucin,h.first_name,h.last_name,h.gender,h.date_of_birth,h.years_of_experience,h.place_id"
-                + ",p.name "
-                + "FROM hiker h INNER JOIN place p ON (h.place_id=p.place_id) WHERE h.ucin=?";
+        String query = Hiker.findQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -121,7 +117,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void delete(Hiker object) throws CustomException {
-        String query = "DELETE FROM hiker WHERE ucin=?";
+        String query = Hiker.deleteQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -136,7 +132,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void update(Hiker object) throws CustomException {
-        String query = "UPDATE hiker SET ucin=?,first_name=?,last_name=?,gender=?,date_of_birth=?,years_of_experience=?,place_id=? WHERE ucin=?";
+        String query = Hiker.updateQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());

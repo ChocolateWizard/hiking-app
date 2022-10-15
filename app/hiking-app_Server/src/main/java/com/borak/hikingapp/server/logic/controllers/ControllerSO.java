@@ -11,7 +11,6 @@ import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.threads.ServerThread;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,11 +30,13 @@ public final class ControllerSO {
 
     public static void initialize() throws CustomException {
         instance = new ControllerSO();
+        System.out.println("================SYSTEM CONTROLLER INITIALIZED=================");
     }
 
     public void terminate() throws CustomException {
         instance = null;
         repositoryManager.getRepositoryLoggedUsers().removeAll();
+        System.out.println("================SYSTEM CONTROLLER TERMINATED==================");
     }
 
     public static ControllerSO getInstance() throws CustomException {
@@ -50,93 +51,126 @@ public final class ControllerSO {
 //=====================================================================================    
     public List<Place> getAllPlaces() throws CustomException {
         try {
-            repositoryManager.getRepositoryPlace().connect();
-            List<Place> places = repositoryManager.getRepositoryPlace().getAll();
-            repositoryManager.getRepositoryPlace().commit();
-            return places;
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryPlace().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryPlace().disconnect();
+            try {
+                repositoryManager.getRepositoryPlace().connect();
+                List<Place> places = repositoryManager.getRepositoryPlace().getAll();
+                repositoryManager.getRepositoryPlace().commit();
+                return places;
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryPlace().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryPlace().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.PLACE_GET_ALL_ERROR, "Unable to retreive places");
         }
 
     }
 
     public List<Hiker> getAllHikers() throws CustomException {
         try {
-            repositoryManager.getRepositoryHiker().connect();
-            List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
-            repositoryManager.getRepositoryHiker().commit();
-            return hikers;
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHiker().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHiker().disconnect();
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
+                repositoryManager.getRepositoryHiker().commit();
+                return hikers;
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKER_GET_ALL_ERROR, "Unable to retreive hikers");
         }
 
     }
 
     public void register(User user) throws CustomException {
         try {
-            repositoryManager.getRepositoryUser().connect();
-            User databaseUser = repositoryManager.getRepositoryUser().find(user);
-            if (databaseUser == null) {
-                repositoryManager.getRepositoryUser().insert(user);
-            } else {
-                throw new CustomException(ErrorType.REGISTRATION_ERROR, "Username " + user.getUsername() + " already exists!");
+            try {
+                repositoryManager.getRepositoryUser().connect();
+                User databaseUser = repositoryManager.getRepositoryUser().find(user);
+                if (databaseUser == null) {
+                    repositoryManager.getRepositoryUser().insert(user);
+                } else {
+                    throw new CustomException(ErrorType.REGISTRATION_DUPLICATE_USER_ERROR, "Username " + user.getUsername() + " already exists");
+                }
+                repositoryManager.getRepositoryUser().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryUser().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryUser().disconnect();
             }
-            repositoryManager.getRepositoryUser().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryUser().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryUser().disconnect();
+        } catch (CustomException e) {
+            if (e.getErrorType() == ErrorType.REGISTRATION_DUPLICATE_USER_ERROR) {
+                throw new CustomException(ErrorType.REGISTRATION_ERROR, "Given user already exists");
+            } else {
+                throw new CustomException(ErrorType.REGISTRATION_ERROR, "Unable to register user");
+            }
         }
     }
 
     public User login(User user) throws CustomException {
-        User databaseUser;
         try {
-            repositoryManager.getRepositoryUser().connect();
-            databaseUser = repositoryManager.getRepositoryUser().find(user);
-            if (databaseUser != null) {
-                if (!databaseUser.getPassword().equals(user.getPassword())) {
-                    throw new CustomException(ErrorType.LOGIN_ERROR, "Invalid password for given username!");
+            User databaseUser;
+            try {
+                repositoryManager.getRepositoryUser().connect();
+                databaseUser = repositoryManager.getRepositoryUser().find(user);
+                if (databaseUser != null) {
+                    if (!databaseUser.getPassword().equals(user.getPassword())) {
+                        throw new CustomException(ErrorType.LOGIN_INVALID_USER_ERROR, "Invalid password for given username!");
+                    }
+                } else {
+                    throw new CustomException(ErrorType.LOGIN_INVALID_USER_ERROR, "Username " + user.getUsername() + " does not exist!");
                 }
-            } else {
-                throw new CustomException(ErrorType.LOGIN_ERROR, "Username " + user.getUsername() + " does not exist!");
+                repositoryManager.getRepositoryUser().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryUser().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryUser().disconnect();
             }
-            repositoryManager.getRepositoryUser().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryUser().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryUser().disconnect();
+            if (repositoryManager.getRepositoryLoggedUsers().isLoggedIn(databaseUser)) {
+                throw new CustomException(ErrorType.LOGIN_ERROR, "Given user is already logged in!");
+            }
+            repositoryManager.getRepositoryLoggedUsers().add(databaseUser);
+            return databaseUser;
+        } catch (CustomException e) {
+            if (e.getErrorType() == ErrorType.LOGIN_INVALID_USER_ERROR) {
+                throw new CustomException(ErrorType.LOGIN_ERROR, "Given user does not exist");
+            } else {
+                throw new CustomException(ErrorType.LOGIN_ERROR, "Unable to login user");
+            }
         }
-        if (repositoryManager.getRepositoryLoggedUsers().isLoggedIn(databaseUser)) {
-            throw new CustomException(ErrorType.LOGIN_ERROR, "Given user is already logged in!");
-        }
-        repositoryManager.getRepositoryLoggedUsers().add(databaseUser);
-        return databaseUser;
+
     }
 
     public void createHiker(Hiker hiker) throws CustomException {
         try {
-            repositoryManager.getRepositoryHiker().connect();
-            Hiker h = repositoryManager.getRepositoryHiker().find(hiker);
-            if (h == null) {
-                repositoryManager.getRepositoryHiker().insert(hiker);
-            } else {
-                throw new CustomException(ErrorType.HIKER_CREATION_ERROR, "Hiker " + hiker.getUcin() + " already exists!");
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                Hiker h = repositoryManager.getRepositoryHiker().find(hiker);
+                if (h == null) {
+                    repositoryManager.getRepositoryHiker().insert(hiker);
+                } else {
+                    throw new CustomException(ErrorType.HIKER_INVALID_ERROR, "Hiker " + hiker.getUcin() + " already exists!");
+                }
+                repositoryManager.getRepositoryHiker().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
             }
-            repositoryManager.getRepositoryHiker().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHiker().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHiker().disconnect();
+        } catch (CustomException e) {
+            if (e.getErrorType() == ErrorType.HIKER_INVALID_ERROR) {
+                throw new CustomException(ErrorType.HIKER_CREATION_ERROR, "Given hiker already exists");
+            } else {
+                throw new CustomException(ErrorType.HIKER_CREATION_ERROR, "Unable to create hiker");
+            }
         }
     }
 
@@ -144,81 +178,101 @@ public final class ControllerSO {
         List<Hiker> hikersToBeReturned = null;
         name = name.trim();
         try {
-            repositoryManager.getRepositoryHiker().connect();
-            List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
-            if (hikers != null) {
-                hikersToBeReturned = new ArrayList<>(hikers.size());
-                if (name.isEmpty()) {
-                    hikersToBeReturned = hikers;
-                } else {
-                    String[] n = name.split(" ");
-                    name = "";
-                    for (String n1 : n) {
-                        if (!n1.isEmpty()) {
-                            name += n1 + " ";
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                List<Hiker> hikers = repositoryManager.getRepositoryHiker().getAll();
+                if (hikers != null) {
+                    hikersToBeReturned = new ArrayList<>(hikers.size());
+                    if (name.isEmpty()) {
+                        hikersToBeReturned = hikers;
+                    } else {
+                        String[] n = name.split(" ");
+                        name = "";
+                        for (String n1 : n) {
+                            if (!n1.isEmpty()) {
+                                name += n1 + " ";
+                            }
                         }
-                    }
-                    name = name.trim();
-                    String dummyName = "";
-                    for (Hiker hiker : hikers) {
-                        dummyName = hiker.getFirstName().concat(" ").concat(hiker.getLastName());
-                        if (dummyName.contains(name)) {
-                            hikersToBeReturned.add(hiker);
+                        name = name.trim();
+                        String dummyName = "";
+                        for (Hiker hiker : hikers) {
+                            dummyName = hiker.getFirstName().concat(" ").concat(hiker.getLastName());
+                            if (dummyName.contains(name)) {
+                                hikersToBeReturned.add(hiker);
+                            }
                         }
                     }
                 }
+                repositoryManager.getRepositoryHiker().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
             }
-            repositoryManager.getRepositoryHiker().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHiker().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHiker().disconnect();
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.SEARCH_ERROR, "Unable to find hikers");
         }
         return hikersToBeReturned;
     }
 
-    public void deleteHiker(Hiker h) throws CustomException {
+    public void updateHiker(Hiker h) throws CustomException {
         try {
-            repositoryManager.getRepositoryHiker().connect();
-            repositoryManager.getRepositoryHiker().delete(h);
-            repositoryManager.getRepositoryHiker().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHiker().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHiker().disconnect();
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                repositoryManager.getRepositoryHiker().update(h);
+                repositoryManager.getRepositoryHiker().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKER_UPDATE_ERROR, "Unable to update hiker");
         }
     }
 
-    public void updateHiker(Hiker h) throws CustomException {
+    public void deleteHiker(Hiker h) throws CustomException {
         try {
-            repositoryManager.getRepositoryHiker().connect();
-            repositoryManager.getRepositoryHiker().update(h);
-            repositoryManager.getRepositoryHiker().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHiker().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHiker().disconnect();
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                repositoryManager.getRepositoryHiker().delete(h);
+                repositoryManager.getRepositoryHiker().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKER_DELETE_ERROR, "Unable to delete hiker");
         }
     }
 
     public void createHikingGroup(HikingGroup mainGroup) throws CustomException {
         try {
-            repositoryManager.getRepositoryHikingGroup().connect();
-            HikingGroup g = repositoryManager.getRepositoryHikingGroup().find(mainGroup);
-            if (g == null) {
-                repositoryManager.getRepositoryHikingGroup().insert(mainGroup);
-            } else {
-                throw new CustomException(ErrorType.HIKING_GROUP_CREATION_ERROR, "Hiking group " + mainGroup.getCrn() + " already exists!");
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                HikingGroup g = repositoryManager.getRepositoryHikingGroup().find(mainGroup);
+                if (g == null) {
+                    repositoryManager.getRepositoryHikingGroup().insert(mainGroup);
+                } else {
+                    throw new CustomException(ErrorType.HIKING_GROUP_INVALID_ERROR, "Hiking group " + mainGroup.getCrn() + " already exists!");
+                }
+                repositoryManager.getRepositoryHikingGroup().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
             }
-            repositoryManager.getRepositoryHikingGroup().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHikingGroup().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHikingGroup().disconnect();
+        } catch (CustomException e) {
+            if (e.getErrorType() == ErrorType.HIKING_GROUP_INVALID_ERROR) {
+                throw new CustomException(ErrorType.HIKING_GROUP_CREATION_ERROR, "Given hiking group already exists");
+            } else {
+                throw new CustomException(ErrorType.HIKING_GROUP_CREATION_ERROR, "Unable to create hiking group");
+            }
         }
     }
 
@@ -226,49 +280,74 @@ public final class ControllerSO {
         List<HikingGroup> groupsToBeReturned = null;
         name = name.trim();
         try {
-            repositoryManager.getRepositoryHikingGroup().connect();
-            List<HikingGroup> groups = repositoryManager.getRepositoryHikingGroup().getAll();
-            if (groups != null) {
-                groupsToBeReturned = new ArrayList<>(groups.size());
-                if (name.isEmpty()) {
-                    groupsToBeReturned = groups;
-                } else {
-                    String[] n = name.split(" ");
-                    name = "";
-                    for (String n1 : n) {
-                        if (!n1.isEmpty()) {
-                            name += n1 + " ";
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                List<HikingGroup> groups = repositoryManager.getRepositoryHikingGroup().getAll();
+                if (groups != null) {
+                    groupsToBeReturned = new ArrayList<>(groups.size());
+                    if (name.isEmpty()) {
+                        groupsToBeReturned = groups;
+                    } else {
+                        String[] n = name.split(" ");
+                        name = "";
+                        for (String n1 : n) {
+                            if (!n1.isEmpty()) {
+                                name += n1 + " ";
+                            }
                         }
-                    }
-                    name = name.trim();
-                    for (HikingGroup group : groups) {
-                        if (group.getName().contains(name)) {
-                            groupsToBeReturned.add(group);
+                        name = name.trim();
+                        for (HikingGroup group : groups) {
+                            if (group.getName().contains(name)) {
+                                groupsToBeReturned.add(group);
+                            }
                         }
                     }
                 }
+                repositoryManager.getRepositoryHikingGroup().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
             }
-            repositoryManager.getRepositoryHikingGroup().commit();
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHikingGroup().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHikingGroup().disconnect();
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.SEARCH_ERROR, "Unable to find hiking groups");
         }
         return groupsToBeReturned;
     }
 
     public void deleteHikingGroup(HikingGroup g) throws CustomException {
         try {
-            repositoryManager.getRepositoryHikingGroup().connect();
-            repositoryManager.getRepositoryHikingGroup().delete(g);
-            repositoryManager.getRepositoryHikingGroup().commit();
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                repositoryManager.getRepositoryHikingGroup().delete(g);
+                repositoryManager.getRepositoryHikingGroup().commit();
 
-        } catch (CustomException ex) {
-            repositoryManager.getRepositoryHikingGroup().rollback();
-            throw ex;
-        } finally {
-            repositoryManager.getRepositoryHikingGroup().disconnect();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_UPDATE_ERROR, "Unable to delete hiking group");
+        }
+    }
+
+    public void updateHikingGroup(HikingGroup group) throws CustomException {
+        try {
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                repositoryManager.getRepositoryHikingGroup().update(group);
+                repositoryManager.getRepositoryHikingGroup().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_UPDATE_ERROR, "Unable to update hiking group");
         }
     }
 

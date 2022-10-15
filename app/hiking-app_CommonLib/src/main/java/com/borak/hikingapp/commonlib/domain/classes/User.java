@@ -11,7 +11,7 @@ import java.util.Objects;
  *
  * @author Despot
  */
-public class User implements Serializable{
+public class User implements Serializable {
 
     private Long id;
     private String firstName;
@@ -20,6 +20,16 @@ public class User implements Serializable{
     private String password;
     private String email;
     private Place place;
+
+    public static final String DB_ID = "id";
+    public static final String DB_FIRST_NAME = "first_name";
+    public static final String DB_LAST_NAME = "last_name";
+    public static final String DB_USERNAME = "username";
+    public static final String DB_PASSWORD = "password";
+    public static final String DB_EMAIL = "email";
+    public static final String DB_PLACE = "place_id";
+    public static final String DB_TABLE = "user";
+    public static final String DB_TABLE_INITIALS = "user";
 
     public User(String username, String password) {
         this.username = username;
@@ -121,5 +131,45 @@ public class User implements Serializable{
     public String toString() {
         return firstName + " " + lastName;
     }
+
+    public static String getAllQuery() {
+        return "SELECT " + DB_TABLE_INITIALS + "." + DB_ID
+                + "," + DB_TABLE_INITIALS + "." + DB_FIRST_NAME
+                + "," + DB_TABLE_INITIALS + "." + DB_LAST_NAME
+                + "," + DB_TABLE_INITIALS + "." + DB_USERNAME
+                + "," + DB_TABLE_INITIALS + "." + DB_PASSWORD
+                + "," + DB_TABLE_INITIALS + "." + DB_EMAIL
+                + "," + DB_TABLE_INITIALS + "." + DB_PLACE
+                + "," + Place.DB_TABLE_INITIALS + "." + Place.DB_NAME
+                + " FROM " + DB_TABLE + " " + DB_TABLE_INITIALS + " INNER JOIN " + Place.DB_TABLE + " " + Place.DB_TABLE_INITIALS
+                + " ON (" + DB_TABLE_INITIALS + "." + DB_PLACE + "=" + Place.DB_TABLE_INITIALS + "." + Place.DB_ID + ");";
+    }
+
+    public static String insertQuery() {
+        return "INSERT INTO " + DB_TABLE + "("
+                + DB_FIRST_NAME + ","
+                + DB_LAST_NAME + ","
+                + DB_USERNAME + ","
+                + DB_PASSWORD + ","
+                + DB_EMAIL + ","
+                + DB_PLACE + ") VALUES(?,?,?,?,?,?);";
+    }
+
+    public static String findQuery() {
+        return "SELECT " + DB_TABLE_INITIALS + "." + DB_ID
+                + "," + DB_TABLE_INITIALS + "." + DB_FIRST_NAME
+                + "," + DB_TABLE_INITIALS + "." + DB_LAST_NAME
+                + "," + DB_TABLE_INITIALS + "." + DB_USERNAME
+                + "," + DB_TABLE_INITIALS + "." + DB_PASSWORD
+                + "," + DB_TABLE_INITIALS + "." + DB_EMAIL
+                + "," + DB_TABLE_INITIALS + "." + DB_PLACE
+                + "," + Place.DB_TABLE_INITIALS + "." + Place.DB_NAME
+                + " FROM " + DB_TABLE + " " + DB_TABLE_INITIALS
+                + " INNER JOIN " + Place.DB_TABLE + " " + Place.DB_TABLE_INITIALS
+                + " ON (" + DB_TABLE_INITIALS + "." + DB_PLACE + "=" + Place.DB_TABLE_INITIALS + "." + Place.DB_ID
+                + ") WHERE " + DB_TABLE_INITIALS + "." + DB_USERNAME + "=?";
+    }
+    
+    
 
 }

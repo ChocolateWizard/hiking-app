@@ -14,8 +14,7 @@ import com.borak.hikingapp.server.domain.enums.DatabaseType;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.repository.IRepository;
 import com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers;
-import java.util.LinkedList;
-import java.util.List;
+
 
 /**
  *

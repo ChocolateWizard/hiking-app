@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.server.repository.db.connections;
 
-
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.repository.IRepository;
@@ -20,13 +19,18 @@ public abstract class DatabaseConnectionManager<T> implements IRepository<T> {
     protected Connection connection;
 
     @Override
-    public void rollback() throws CustomException {
+    public void connect() throws CustomException {
+        connection = DatabaseConnectionFactory.getInstance().getConnection();
+    }
+
+    @Override
+    public void disconnect() throws CustomException {
         try {
-            connection.rollback();
+            connection.close();
         } catch (NullPointerException ex) {
-            throw new CustomException(ErrorType.CONNECTION_ROLLBACK_ERROR, "Connection must be established first, in order to rollback transaction!", ex);
+            throw new CustomException(ErrorType.CONNECTION_TERMINATION_ERROR, "Connection must be established first, in order to be closed!", ex);
         } catch (SQLException ex) {
-            throw new CustomException(ErrorType.CONNECTION_ROLLBACK_ERROR, "Unable to rollback transaction!", ex);
+            throw new CustomException(ErrorType.CONNECTION_TERMINATION_ERROR, "Unable to close connection with database!", ex);
         }
     }
 
@@ -42,19 +46,14 @@ public abstract class DatabaseConnectionManager<T> implements IRepository<T> {
     }
 
     @Override
-    public void disconnect() throws CustomException {
+    public void rollback() throws CustomException {
         try {
-            connection.close();
+            connection.rollback();
         } catch (NullPointerException ex) {
-            throw new CustomException(ErrorType.CONNECTION_TERMINATION_ERROR, "Connection must be established first, in order to be closed!", ex);
+            throw new CustomException(ErrorType.CONNECTION_ROLLBACK_ERROR, "Connection must be established first, in order to rollback transaction!", ex);
         } catch (SQLException ex) {
-            throw new CustomException(ErrorType.CONNECTION_TERMINATION_ERROR, "Unable to close connection with database!", ex);
+            throw new CustomException(ErrorType.CONNECTION_ROLLBACK_ERROR, "Unable to rollback transaction!", ex);
         }
-    }
-
-    @Override
-    public void connect() throws CustomException {
-        connection = DatabaseConnectionFactory.getInstance().getConnection();
     }
 
 }

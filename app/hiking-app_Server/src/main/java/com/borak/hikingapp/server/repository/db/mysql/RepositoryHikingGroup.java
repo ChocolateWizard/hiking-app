@@ -27,52 +27,57 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public List<HikingGroup> getAll() throws CustomException {
-        String query1 = "SELECT g.hiking_group_id,g.crn,g.name,g.description,g.resources,g.has_liscence,g.place_id,p.name "
-                + "FROM hiking_group g INNER JOIN place p ON(g.place_id=p.place_id)";
+        String queryGroup = HikingGroup.getAllQuery();
         try {
-            Statement statement = connection.createStatement();
-            PreparedStatement statement1;
-            ResultSet rs = statement.executeQuery(query1);
-            Place p;
+            Statement statementGroups;
+            ResultSet rsGroups;
+
+            PreparedStatement statementActivities;
+            ResultSet rsActivities;
+
+            statementGroups = connection.createStatement();
+            rsGroups = statementGroups.executeQuery(queryGroup);
             HikingGroup g = null;
             List<HikingGroup> groups = new LinkedList<>();
-            while (rs.next()) {
-                Long gId = rs.getLong(1);
-                String gCrn = rs.getString(2);
-                String gName = rs.getString(3);
-                String gDescription = rs.getString(4);
-                String gResources = rs.getString(5);
-                Boolean gHasLiscence = rs.getBoolean(6);
-                Long pId = rs.getLong(7);
-                String pName = rs.getString(8);
-                p = new Place(pId, pName);
-                g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, p, null);
+            while (rsGroups.next()) {
+                Long gId = rsGroups.getLong(1);
+                String gCrn = rsGroups.getString(2);
+                String gName = rsGroups.getString(3);
+                String gDescription = rsGroups.getString(4);
+                String gResources = rsGroups.getString(5);
+                Boolean gHasLiscence = rsGroups.getBoolean(6);
+
+                Long pId = rsGroups.getLong(7);
+                String pName = rsGroups.getString(8);
+
+                g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
 
                 //find all activities of found hiking group
-                String query2 = "SELECT a.hiking_group_id,a.activity_order_number,a.name,a.description,a.date "
-                        + "FROM group_activity a WHERE a.hiking_group_id=?";
-                statement1 = connection.prepareStatement(query2);
-                statement1.setLong(1, gId);
-                rs = statement1.executeQuery();
+                String queryActivities = HikingActivity.getAllQuery();
+                statementActivities = connection.prepareStatement(queryActivities);
+                statementActivities.setLong(1, gId);
+                rsActivities = statementActivities.executeQuery();
                 List<HikingActivity> groupActivities = new LinkedList<>();
-                while (rs.next()) {
-                    Integer aOrN = rs.getInt(2);
-                    String aName = rs.getString(3);
-                    String aDescription = rs.getString(4);
+                while (rsActivities.next()) {
+                    Integer aOrN = rsActivities.getInt(2);
+                    String aName = rsActivities.getString(3);
+                    String aDescription = rsActivities.getString(4);
                     GregorianCalendar aDate = new GregorianCalendar();
-                    Date d = rs.getDate(5);
-                    if (d == null) {
-                        aDate = null;
-                    } else {
-                        aDate.setTimeInMillis(d.getTime());
-                    }
-                    groupActivities.add(new HikingActivity(aOrN, aName, aDescription, aDate, null, g));
+                    aDate.setTimeInMillis(rsActivities.getDate(5).getTime());
+
+                    Long apId = rsActivities.getLong(6);
+                    String apName = rsActivities.getString(7);
+
+                    groupActivities.add(new HikingActivity(aOrN, aName, aDescription, aDate, new Place(apId, apName), g));
                 }
                 g.setGroupActivities(groupActivities);
                 groups.add(g);
+
+                rsActivities.close();
+                statementActivities.close();
             }
-            rs.close();
-            statement.close();
+            rsGroups.close();
+            statementGroups.close();
             return groups;
         } catch (NullPointerException ex) {
             throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Connection must be established first, in order to get hiking groups!", ex);
@@ -83,10 +88,9 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void insert(HikingGroup object) throws CustomException {
-        String query1 = "INSERT INTO hiking_group(crn,name,description,resources,has_liscence,place_id) "
-                + "VALUES(?,?,?,?,?,?)";
+        String queryGroup = HikingGroup.insertQuery();
         try {
-            PreparedStatement statement = connection.prepareStatement(query1, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statement = connection.prepareStatement(queryGroup, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, object.getCrn());
             statement.setString(2, object.getName());
             statement.setString(3, object.getDescription());
@@ -94,26 +98,22 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
             statement.setBoolean(5, object.isHasLiscence());
             statement.setLong(6, object.getPlace().getId());
             statement.executeUpdate();
-            ResultSet rs = statement.getGeneratedKeys();
+
             Long aId = null;
+            ResultSet rs = statement.getGeneratedKeys();
             while (rs.next()) {
                 aId = rs.getLong(1);
             }
             if (object.getGroupActivities() != null && !object.getGroupActivities().isEmpty()) {
-                String query2 = "INSERT INTO group_activity(hiking_group_id,activity_order_number,name,description,date) "
-                        + "VALUES(?,?,?,?,?)";
-                statement = connection.prepareStatement(query2);
+                String queryActivities = HikingActivity.insertQuery();
+                statement = connection.prepareStatement(queryActivities);
                 for (HikingActivity groupActivity : object.getGroupActivities()) {
                     statement.setLong(1, aId);
                     statement.setInt(2, groupActivity.getOrderNum());
                     statement.setString(3, groupActivity.getName());
                     statement.setString(4, groupActivity.getDescription());
-                    GregorianCalendar g = groupActivity.getDate();
-                    if (g == null) {
-                        statement.setNull(5, java.sql.Types.DATE);
-                    } else {
-                        statement.setDate(5, new Date(g.getTimeInMillis()));
-                    }
+                    statement.setDate(5, new Date(groupActivity.getDate().getTimeInMillis()));
+                    statement.setLong(6, groupActivity.getPlace().getId());
                     statement.addBatch();
                 }
                 statement.executeBatch();
@@ -121,60 +121,61 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
             rs.close();
             statement.close();
         } catch (NullPointerException ex) {
-            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Connection must be established first, in order to insert hiker: " + object, ex);
+            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Connection must be established first, in order to insert hiking group: " + object, ex);
         } catch (SQLException ex) {
-            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Unable to insert hiker: " + object, ex);
+            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Unable to insert hiking group: " + object, ex);
         }
 
     }
 
     @Override
     public HikingGroup find(HikingGroup object) throws CustomException {
-        String query1 = "SELECT g.hiking_group_id,g.crn,g.name,g.description,g.resources,g.has_liscence,g.place_id,p.name "
-                + "FROM hiking_group g INNER JOIN place p ON(g.place_id=p.place_id) WHERE g.crn=?";
+        String queryGroup = HikingGroup.findQuery();
         try {
-            PreparedStatement statement = connection.prepareStatement(query1);
-            statement.setString(1, object.getCrn());
-            ResultSet rs = statement.executeQuery();
-            Place p;
+            PreparedStatement statementGroup;
+            ResultSet rsGroup;
+
+            PreparedStatement statementActivities;
+            ResultSet rsActivities;
+
+            statementGroup = connection.prepareStatement(queryGroup);
+            statementGroup.setString(1, object.getCrn());
+            rsGroup = statementGroup.executeQuery();
             HikingGroup g = null;
-            while (rs.next()) {
-                Long gId = rs.getLong(1);
-                String gCrn = rs.getString(2);
-                String gName = rs.getString(3);
-                String gDescription = rs.getString(4);
-                String gResources = rs.getString(5);
-                Boolean gHasLiscence = rs.getBoolean(6);
-                Long pId = rs.getLong(7);
-                String pName = rs.getString(8);
-                p = new Place(pId, pName);
-                g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, p, null);
+            while (rsGroup.next()) {
+                Long gId = rsGroup.getLong(1);
+                String gCrn = rsGroup.getString(2);
+                String gName = rsGroup.getString(3);
+                String gDescription = rsGroup.getString(4);
+                String gResources = rsGroup.getString(5);
+                Boolean gHasLiscence = rsGroup.getBoolean(6);
+                Long pId = rsGroup.getLong(7);
+                String pName = rsGroup.getString(8);
+                g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
 
                 //find all activities of found hiking group
-                String query2 = "SELECT a.hiking_group_id,a.activity_order_number,a.name,a.description,a.date "
-                        + "FROM group_activity a WHERE a.hiking_group_id=?";
-                statement = connection.prepareStatement(query2);
-                statement.setLong(1, gId);
-                rs = statement.executeQuery();
+                String queryActivities = HikingActivity.getAllQuery();
+                statementActivities = connection.prepareStatement(queryActivities);
+                statementActivities.setLong(1, gId);
+                rsActivities = statementActivities.executeQuery();
                 List<HikingActivity> groupActivities = new LinkedList<>();
-                while (rs.next()) {
-                    Integer aOrN = rs.getInt(2);
-                    String aName = rs.getString(3);
-                    String aDescription = rs.getString(4);
+                while (rsActivities.next()) {
+                    Integer aOrN = rsGroup.getInt(2);
+                    String aName = rsGroup.getString(3);
+                    String aDescription = rsGroup.getString(4);
                     GregorianCalendar aDate = new GregorianCalendar();
-                    Date d = rs.getDate(5);
-                    if (d == null) {
-                        aDate = null;
-                    } else {
-                        aDate.setTimeInMillis(d.getTime());
-                    }
-                    groupActivities.add(new HikingActivity(aOrN, aName, aDescription, aDate, null, g));
+                    aDate.setTimeInMillis(rsGroup.getDate(5).getTime());
+                    Long apId = rsGroup.getLong(6);
+                    String apName = rsGroup.getString(7);
+                    groupActivities.add(new HikingActivity(aOrN, aName, aDescription, aDate, new Place(apId, apName), g));
                 }
+                rsActivities.close();
+                statementActivities.close();
                 g.setGroupActivities(groupActivities);
                 break;
             }
-            rs.close();
-            statement.close();
+            rsGroup.close();
+            statementGroup.close();
             return g;
         } catch (NullPointerException ex) {
             throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Connection must be established first, in order to find hiking group!", ex);
@@ -185,7 +186,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void delete(HikingGroup object) throws CustomException {
-        String query = "DELETE FROM hiking_group WHERE crn=?";
+        String query = HikingGroup.deleteQuery();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getCrn());
@@ -200,6 +201,51 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void update(HikingGroup object) throws CustomException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        String queryUpdateGroup = HikingGroup.updateQuery();
+        try {
+            PreparedStatement statementUpdateGroup = connection.prepareStatement(queryUpdateGroup, Statement.RETURN_GENERATED_KEYS);
+            statementUpdateGroup.setString(1, object.getCrn());
+            statementUpdateGroup.setString(2, object.getName());
+            statementUpdateGroup.setString(3, object.getDescription());
+            statementUpdateGroup.setString(4, object.getResources());
+            statementUpdateGroup.setBoolean(5, object.isHasLiscence());
+            statementUpdateGroup.setLong(6, object.getPlace().getId());
+            statementUpdateGroup.setString(7, object.getCrn());
+            statementUpdateGroup.executeUpdate();
+
+            Long aId = null;
+            ResultSet rs = statementUpdateGroup.getGeneratedKeys();
+            while (rs.next()) {
+                aId = rs.getLong(1);
+            }
+            String queryDeleteActivities = HikingActivity.deleteQuery();
+            PreparedStatement statementDeleteActivities = connection.prepareStatement(queryDeleteActivities);
+            statementDeleteActivities.setLong(1, aId);
+            statementDeleteActivities.executeUpdate();
+
+            if (object.getGroupActivities() != null && !object.getGroupActivities().isEmpty()) {
+                String queryInsertActivities = HikingActivity.insertQuery();
+                PreparedStatement statementInsertActivities = connection.prepareStatement(queryInsertActivities);
+                for (HikingActivity groupActivity : object.getGroupActivities()) {
+                    statementInsertActivities.setLong(1, aId);
+                    statementInsertActivities.setInt(2, groupActivity.getOrderNum());
+                    statementInsertActivities.setString(3, groupActivity.getName());
+                    statementInsertActivities.setString(4, groupActivity.getDescription());
+                    statementInsertActivities.setDate(5, new Date(groupActivity.getDate().getTimeInMillis()));
+                    statementInsertActivities.setLong(6, groupActivity.getPlace().getId());
+                    statementInsertActivities.addBatch();
+                }
+                statementInsertActivities.executeBatch();
+                statementInsertActivities.close();
+            }
+            statementDeleteActivities.close();
+            rs.close();
+            statementUpdateGroup.close();
+        } catch (NullPointerException ex) {
+            throw new CustomException(ErrorType.UPDATE_QUERY_ERROR, "Connection must be established first, in order to update hiking group", ex);
+        } catch (SQLException ex) {
+            throw new CustomException(ErrorType.UPDATE_QUERY_ERROR, "Unable to update hiking group!", ex);
+        }
+
     }
 }

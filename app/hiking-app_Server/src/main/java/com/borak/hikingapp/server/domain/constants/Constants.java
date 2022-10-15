@@ -8,31 +8,24 @@ package com.borak.hikingapp.server.domain.constants;
  *
  * @author Despot
  */
-public interface Constants {
+public final class Constants {
+
+    private Constants() {
+    }
 
     public static final String IMAGES_LOCATIONS_FILE_NAME = "images.locations.properties";
     public static final String IMAGES_LOCATIONS_FILE_PATH = "src/main/resources/config/" + IMAGES_LOCATIONS_FILE_NAME;
 
-    public static final String IMAGES_LOCATIONS_FILE_FRMLOGIN_FAVICON = "FrmLogin_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMREGISTER_FAVICON = "FrmRegister_favicon";
     public static final String IMAGES_LOCATIONS_FILE_FRMMAIN_FAVICON = "FrmMain_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMHIKERCREATE_FAVICON = "FrmHikerCreate_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMHIKERDELETE_FAVICON = "FrmHikerDelete_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMHIKERCHANGEINFO_FAVICON = "FrmHikerChangeInfo_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMHIKERCHANGEINFODIALOG_FAVICON = "FrmHikerChangeInfo_Dialog_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMGROUPCREATE_FAVICON = "FrmGroupCreate_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMGROUPDELETE_FAVICON = "FrmGroupDelete_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFO_FAVICON = "FrmGroupChangeInfo_favicon";
-    public static final String IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFODIALOG_FAVICON = "FrmGroupChangeInfo_Dialog_favicon";
-    public static String IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONPORTFAVICON = "FrmConfigurationPort_favicon";
-    public static String IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONDATABASEFAVICON = "FrmConfigurationDatabase_favicon";
+    public static final String IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONPORTFAVICON = "FrmConfigurationPort_favicon";
+    public static final String IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONDATABASEFAVICON = "FrmConfigurationDatabase_favicon";
     public static final String IMAGES_LOCATIONS_FILE_SUCCESS_FAVICON = "Success_favicon";
     public static final String IMAGES_LOCATIONS_FILE_QUESTION_FAVICON = "Question_favicon";
     public static final String IMAGES_LOCATIONS_FILE_ERROR_FAVICON = "Error_favicon";
 
     public static final String DATABASE_PARAM_FILE_NAME = "db.param.properties";
     public static final String DATABASE_PARAM_FILE_PATH = "src/main/resources/config/" + DATABASE_PARAM_FILE_NAME;
-    
+
     public static final String DATABASE_PARAM_FILE_CURRENT_DB = "current_db";
     public static final String DATABASE_PARAM_FILE_URL = "url";
     public static final String DATABASE_PARAM_FILE_USERNAME = "username";

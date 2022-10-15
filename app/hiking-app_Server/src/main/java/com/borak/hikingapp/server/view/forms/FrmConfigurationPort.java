@@ -12,8 +12,6 @@ import com.borak.hikingapp.commonlib.view.components.CompNumberInput;
 import com.borak.hikingapp.server.view.components.validators.factory.ValidatorFactory;
 import com.borak.hikingapp.server.view.helpers.Window;
 import java.awt.Component;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -126,6 +124,7 @@ public class FrmConfigurationPort extends javax.swing.JDialog {
 
     private void btnSavePressed() {
         try {
+            componentPort.setErrorMessage("");
             Integer port = componentPort.getValue();
             Util.getInstance().setServerPort(port);
             Window.successfulOperation(this, "Port configuration", "Port changes succesfully saved!");
@@ -133,7 +132,7 @@ public class FrmConfigurationPort extends javax.swing.JDialog {
         } catch (CustomException ex) {
             ex.printStackTrace();
             componentPort.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Port configuration error", "Unable to save port changes!");
+            Window.unSuccessfulOperation(this, "Port configuration", "Unable to save port changes!");
         }
     }
 

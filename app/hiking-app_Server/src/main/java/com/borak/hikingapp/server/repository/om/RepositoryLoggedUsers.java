@@ -5,9 +5,7 @@
 package com.borak.hikingapp.server.repository.om;
 
 import com.borak.hikingapp.commonlib.domain.classes.User;
-import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.repository.IRepository;
 import java.util.LinkedList;
 import java.util.List;
 import com.borak.hikingapp.server.DUMMYCLASSES.UserViewObserver;
@@ -37,7 +35,6 @@ public class RepositoryLoggedUsers {
         for (UserViewObserver userTable : userTables) {
             userTable.addUser(user);
         }
-
     }
 
     public boolean isLoggedIn(User user) {
@@ -58,7 +55,7 @@ public class RepositoryLoggedUsers {
     }
 
     public void removeAll() {
-        loggedUsers = null;
+        loggedUsers = new LinkedList<>();
         for (UserViewObserver userTable : userTables) {
             userTable.removeAllUsers();
         }
