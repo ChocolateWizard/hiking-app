@@ -21,6 +21,10 @@ public class ValidatorHikingActivityDescription implements IValidator<String>{
         if(entity==null){
             throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity description is mandatory!");
         }
+        String description = entity.trim();
+        if (description.isEmpty()) {
+            throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity description is mandatory!");
+        }
         int upperBound=500;
         if(entity.trim().length()>upperBound){
             throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity description must be less than "+upperBound+" characters!");

@@ -19,12 +19,12 @@ import net.miginfocom.swing.MigLayout;
  * @author Despot
  */
 public abstract class CompOneComboBox<ComponentType, ValidatorType> extends javax.swing.JPanel implements IComponent<ComponentType> {
-
+    
     private JLabel lblCaption;
     protected JComboBox<ComponentType> cbField;
     private JLabel lblErrorMessage;
     protected IValidator<ValidatorType> validator;
-
+    
     public CompOneComboBox(ComponentType[] arrayOfElements, IValidator validator) {
         initComponents();
         this.validator = validator;
@@ -56,19 +56,19 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
         MigLayout mig = new MigLayout("insets 0 0 0 0", "[]0[]", "[]0[]");
         setLayout(mig);
         setComponents(arrayOfElements);
-
+        
     }
-
+    
     private void setComponents(ComponentType[] arrayOfElements) {
         setCaption();
         setInputField(arrayOfElements);
         setErrorMessage();
-
+        
         add(lblCaption, "cell 0 0");
         add(cbField, "cell 1 0");
         add(lblErrorMessage, "cell 1 1");
     }
-
+    
     private void setCaption() {
         lblCaption = new JLabel("Caption");
 //        Dimension d = lblCaption.getPreferredSize();
@@ -76,7 +76,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
 //        int height = (int) d.getHeight();
 //        lblCaption.setPreferredSize(new Dimension(100, height));
     }
-
+    
     private void setInputField(ComponentType[] arrayOfElements) {
         if (arrayOfElements == null || arrayOfElements.length == 0) {
             cbField = new JComboBox<>();
@@ -84,13 +84,13 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
         } else {
             cbField = new JComboBox<>(arrayOfElements);
         }
-
+        
         Dimension d = cbField.getPreferredSize();
         //int width = (int) d.getWidth();
         int height = (int) d.getHeight();
         cbField.setPreferredSize(new Dimension(200, height));
     }
-
+    
     private void setErrorMessage() {
         lblErrorMessage = new JLabel("ErrorMessage");
 //        Dimension d = lblErrorMessage.getPreferredSize();
@@ -106,7 +106,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     public void setCaption(String caption) {
         lblCaption.setText(caption);
     }
-
+    
     @Override
     public void setCaption(String[] caption) {
         caption = formatArrayString(caption);
@@ -114,14 +114,14 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
             lblCaption.setText(caption[0]);
         }
     }
-
+    
     @Override
     public void setCaptionSize(int width) {
         Dimension d = lblCaption.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblCaption.setPreferredSize(d);
     }
-
+    
     @Override
     public void setCaptionSize(int width, int height) {
         lblCaption.setPreferredSize(new Dimension(width, height));
@@ -132,14 +132,14 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     public void setErrorMessage(String errorMessage) {
         lblErrorMessage.setText(errorMessage);
     }
-
+    
     @Override
     public void setErrorMessageSize(int width) {
         Dimension d = lblErrorMessage.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblErrorMessage.setPreferredSize(d);
     }
-
+    
     @Override
     public void setErrorMessageSize(int width, int height) {
         lblErrorMessage.setPreferredSize(new Dimension(width, height));
@@ -152,12 +152,12 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
         d.setSize(width, d.getHeight());
         cbField.setPreferredSize(d);
     }
-
+    
     @Override
     public void setInputSize(int width, int height) {
         cbField.setPreferredSize(new Dimension(width, height));
     }
-
+    
     @Override
     public void setInputSize(Integer[] width) {
         width = formatArray(width);
@@ -167,12 +167,12 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
             cbField.setPreferredSize(d);
         }
     }
-
+    
     @Override
     public void setInputSize(Integer[] width, Integer[] height) {
         width = formatArray(width);
         height = formatArray(height);
-
+        
         if ((width != null && width.length > 0) && (height != null && height.length > 0)) {
             //both width and height got atleast 1 element
             cbField.setPreferredSize(new Dimension(width[0], height[0]));
@@ -188,22 +188,22 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
             cbField.setPreferredSize(d);
         }
     }
-
+    
     @Override
     public void setBackgroundColor(Color color) {
         setBackground(color);
     }
-
+    
     @Override
     public void setEnabledInput(boolean isEnabled) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        cbField.setEnabled(isEnabled);
     }
 
 //===================================================================================
     private int findMax(int a, int b) {
         return a > b ? a : b;
     }
-
+    
     private Integer[] formatArray(Integer[] n) {
         if (n == null || n.length == 0) {
             return n;
@@ -216,7 +216,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
         }
         return list.toArray(Integer[]::new);
     }
-
+    
     private String[] formatArrayString(String[] n) {
         if (n == null || n.length == 0) {
             return n;

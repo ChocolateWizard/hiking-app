@@ -18,8 +18,6 @@ import com.borak.hikingapp.client.view.forms.FrmRegister;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 
-
-
 /**
  *
  * @author Despot
@@ -51,9 +49,7 @@ public class ControllerForms {
     }
 
     public void openFrmLogin() {
-        if (frmLogin == null) {
-            frmLogin = new FrmLogin();
-        }
+        frmLogin = new FrmLogin();
         frmLogin.setVisible(true);
     }
 
@@ -65,9 +61,7 @@ public class ControllerForms {
     }
 
     public void openFrmRegister() {
-        if (frmRegister == null) {
-            frmRegister = new FrmRegister(frmLogin, true);
-        }
+        frmRegister = new FrmRegister(frmLogin, true);
         frmRegister.setVisible(true);
     }
 
@@ -79,9 +73,7 @@ public class ControllerForms {
     }
 
     public void openFrmMain() {
-        if (frmMain == null) {
-            frmMain = new FrmMain();
-        }
+        frmMain = new FrmMain();
         frmMain.setVisible(true);
     }
 
@@ -93,9 +85,7 @@ public class ControllerForms {
     }
 
     public void openFrmHikerCreate() {
-        if (frmHikerCreate == null) {
-            frmHikerCreate = new FrmHikerCreate(frmMain, true);
-        }
+        frmHikerCreate = new FrmHikerCreate(frmMain, true);
         frmHikerCreate.setVisible(true);
     }
 
@@ -107,9 +97,7 @@ public class ControllerForms {
     }
 
     public void openFrmHikerDelete() {
-        if (frmHikerDelete == null) {
-            frmHikerDelete = new FrmHikerDelete(frmMain, true);
-        }
+        frmHikerDelete = new FrmHikerDelete(frmMain, true);
         frmHikerDelete.setVisible(true);
     }
 
@@ -121,9 +109,7 @@ public class ControllerForms {
     }
 
     public void openFrmHikerChangeInfo() {
-        if (frmHikerChangeInfo == null) {
-            frmHikerChangeInfo = new FrmHikerChangeInfo(frmMain, true);
-        }
+        frmHikerChangeInfo = new FrmHikerChangeInfo(frmMain, true);
         frmHikerChangeInfo.setVisible(true);
     }
 
@@ -147,9 +133,7 @@ public class ControllerForms {
     }
 
     public void openFrmGroupCreate() {
-        if (frmGroupCreate == null) {
-            frmGroupCreate = new FrmGroupCreate(frmMain, true);
-        }
+        frmGroupCreate = new FrmGroupCreate(frmMain, true);
         frmGroupCreate.setVisible(true);
     }
 
@@ -161,9 +145,7 @@ public class ControllerForms {
     }
 
     public void openFrmGroupChangeInfo() {
-        if (frmGroupChangeInfo == null) {
-            frmGroupChangeInfo = new FrmGroupChangeInfo(frmMain, true);
-        }
+        frmGroupChangeInfo = new FrmGroupChangeInfo(frmMain, true);
         frmGroupChangeInfo.setVisible(true);
     }
 
@@ -175,9 +157,7 @@ public class ControllerForms {
     }
 
     public void openFrmGroupDelete() {
-        if (frmGroupDelete == null) {
-            frmGroupDelete = new FrmGroupDelete(frmMain, true);
-        }
+        frmGroupDelete = new FrmGroupDelete(frmMain, true);
         frmGroupDelete.setVisible(true);
     }
 

@@ -340,18 +340,18 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
                         hiker.setDateOfBirth(dateOfBirth);
                         hiker.setYearsOfExperience(yearsOfExperience);
                         hiker.setPlace(place);
-                        Window.successfulOperation(this, "Updated hiker", "Successfully updated hiker!");
+                        Window.successfulOperation(this, "Success", "Successfully updated hiker!");
                         ControllerForms.getInstance().closeFrmHikerChangeInfo_Dialog();
                     } else {
                         throw response.getException();
                     }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
-                    Window.unSuccessfulOperation(this, "Failed to update hiker", ex.getMessage());
+                    Window.unSuccessfulOperation(this, "Error", ex.getMessage());
                 }
             }
         } else {
-            Window.unSuccessfulOperation(this, "Failed to update hiker", errorMessage);
+            Window.unSuccessfulOperation(this, "Error", errorMessage);
         }
     }
 

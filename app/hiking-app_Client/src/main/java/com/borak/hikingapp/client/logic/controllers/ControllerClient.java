@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.borak.hikingapp.client.threads;
+package com.borak.hikingapp.client.logic.controllers;
 
 import com.borak.hikingapp.client.domain.constants.ServerConstants;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
@@ -19,19 +19,19 @@ import java.util.logging.Logger;
  *
  * @author User
  */
-public final class ClientThread extends Thread {
+public final class ControllerClient extends Thread {
 
     private Socket socket;
     private boolean disconnected;
-    private static ClientThread instance;
+    private static ControllerClient instance;
 
-    private ClientThread() {
+    private ControllerClient() {
         disconnected = false;
     }
 
-    public static ClientThread getInstance() {
+    public static ControllerClient getInstance() {
         if (instance == null) {
-            instance = new ClientThread();
+            instance = new ControllerClient();
         }
         return instance;
     }
@@ -40,7 +40,7 @@ public final class ClientThread extends Thread {
         try {
             socket = new Socket(ServerConstants.SERVER_ADDRESS, ServerConstants.SERVER_PORT);
             ControllerSO.getInstance().setSocket(socket);
-            start();
+//            start();
         } catch (IOException e) {
             throw new CustomException(ErrorType.CONNECTION_ESTABLISHING_ERROR, "Unable to establish connection with server!", e);
         }

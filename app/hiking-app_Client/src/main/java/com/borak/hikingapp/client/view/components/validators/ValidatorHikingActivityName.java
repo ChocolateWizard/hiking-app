@@ -19,6 +19,10 @@ public class ValidatorHikingActivityName implements IValidator<String> {
         if (entity == null) {
             throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity name is mandatory!");
         }
+        String pom = entity.trim();
+        if (pom.isEmpty()) {
+            throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity name is mandatory!");
+        }
         int upperBound = 300;
         if (entity.trim().length() > upperBound) {
             throw new CustomException(ErrorType.INVALID_INPUT_ERROR, "Activity name must be less than " + upperBound + " characters!");

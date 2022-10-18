@@ -28,7 +28,7 @@ public class Receiver {
             InputStream inSocket = socket.getInputStream();
             ObjectInputStream in = new ObjectInputStream(inSocket);
             return (TransferObject) in.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
+        } catch (IOException | NullPointerException | ClassNotFoundException ex) {
             throw new CustomException(ErrorType.RECEIVING_OBJECT_ERROR, "Error in receiving object!", ex);
         }
 

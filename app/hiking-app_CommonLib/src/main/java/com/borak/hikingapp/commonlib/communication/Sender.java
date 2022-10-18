@@ -29,7 +29,7 @@ public class Sender {
             ObjectOutputStream out = new ObjectOutputStream(outSocket);
             out.writeObject(object);
             out.flush();
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             throw new CustomException(ErrorType.SENDING_OBJECT_ERROR, "Error while sending object!", ex);
         }
     }

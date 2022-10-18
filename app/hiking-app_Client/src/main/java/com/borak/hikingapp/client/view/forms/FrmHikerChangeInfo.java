@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-
 import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.Util;
@@ -104,8 +103,8 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
     }
 
     private void setPanels() {
-        MigLayout migFilter = new MigLayout("insets 0 0 0 0", "", "");
-        MigLayout migAction = new MigLayout("insets 0 0 0 0", "", "[]8[]");
+        MigLayout migFilter = new MigLayout("insets 5 5 5 15", "", "");
+        MigLayout migAction = new MigLayout("insets 0 0 10 0", "[]8[]", "");
         MigLayout migShow = new MigLayout("insets 0 0 0 0", "", "");
 
         pnlFilter = new JPanel(migFilter);
@@ -132,6 +131,9 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
         tblHikers = new JTable(tblModel);
 
         scrollPane = new JScrollPane(tblHikers);
+        Dimension d = scrollPane.getPreferredSize();
+        d.setSize(485, d.getHeight());
+        scrollPane.setPreferredSize(d);
         pnlShow.add(scrollPane, "cell 0 0");
     }
 
@@ -153,7 +155,7 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
         addListeners();
 
         pnlAction.add(btnFilter, "cell 0 0");
-        pnlAction.add(btnChange, "cell 0 1");
+        pnlAction.add(btnChange, "cell 1 0");
     }
 
     private void addListeners() {
@@ -168,43 +170,29 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
     private void btnFilterPressed() {
         try {
             filterComponent.setErrorMessage("");
-            String name = "";
-            name = filterComponent.getValue();
-            name = name.trim();
-            List<Hiker> hikers;
+            tblModel.removeAllHikers();
+            String name = filterComponent.getValue();
             try {
-                //returns all hikers with given name, or similar name
                 TransferObject response = ControllerSO.getInstance().findHikers(name);
-                if(response.getResponseType()==ResponseType.SUCCESS){
-                    hikers=(List<Hiker>)response.getArgument();
+                if (response.getResponseType() == ResponseType.SUCCESS) {
+                    List<Hiker> hikers = (List<Hiker>) response.getArgument();
                     if (hikers == null || hikers.isEmpty()) {
-                    if (name.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Find hikers error", "No hikers in database!");
+                        Window.unSuccessfulOperation(this, "Error", "No hikers found with given name!");
                     } else {
-                        Window.unSuccessfulOperation(this, "Find hikers error", "No hikers found with "+name+" as name!");
+                        tblModel.loadHikers(hikers);
+                        Window.successfulOperation(this, "Success", "Found " + (hikers.size() == 1 ? "1 hiker" : hikers.size() + " hikers") + " with given name!");
                     }
                 } else {
-                    tblModel.loadHikers(hikers);
-                    tblModel.fireTableDataChanged();
-                    if (name.isEmpty()) {
-                        Window.successfulOperation(this, "Successfull operation", "Loaded all " + hikers.size() + " hikers!");
-                    } else {
-                        Window.successfulOperation(this, "Successfull operation", "Found " + hikers.size() + " hikers with " + name + " in name!");
-                    }
-                }
-                }else{
                     throw response.getException();
                 }
-                
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Find hikers error", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Error", ex.getMessage());
             }
-
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Find hikers error", ex.getMessage());
+            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
         }
 
     }

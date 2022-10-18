@@ -180,6 +180,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
         } catch (NullPointerException ex) {
             throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Connection must be established first, in order to find hiking group!", ex);
         } catch (SQLException ex) {
+            ex.printStackTrace();
             throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Unable to find hiking group!", ex);
         }
     }

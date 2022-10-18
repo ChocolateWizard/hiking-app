@@ -135,7 +135,7 @@ public class HikingActivity implements Serializable {
                 + Place.DB_TABLE_INITIALS + "." + Place.DB_NAME
                 + " FROM " + DB_TABLE + " " + DB_TABLE_INITIALS
                 + " INNER JOIN " + Place.DB_TABLE + " " + Place.DB_TABLE_INITIALS
-                + " ON(" + DB_TABLE_INITIALS + "." + DB_PLACE + "," + Place.DB_TABLE_INITIALS + "." + Place.DB_ID + ")"
+                + " ON(" + DB_TABLE_INITIALS + "." + DB_PLACE + "=" + Place.DB_TABLE_INITIALS + "." + Place.DB_ID + ")"
                 + " WHERE " + DB_TABLE_INITIALS + "." + DB_HIKING_GROUP + "=?";
     }
 

@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
+import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.Util;
 import com.borak.hikingapp.client.view.components.CompDateAdvanced;
@@ -285,6 +286,7 @@ public class FrmHikerCreate extends javax.swing.JDialog {
                 TransferObject response = ControllerSO.getInstance().createHiker(h);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     Window.successfulOperation(this, "Created hiker", "Successful creation of new hiker!");
+                    ControllerForms.getInstance().closeFrmHikerCreate();
                 } else {
                     throw response.getException();
                 }

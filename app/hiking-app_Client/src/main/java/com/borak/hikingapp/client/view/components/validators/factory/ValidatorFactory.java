@@ -15,6 +15,7 @@ import com.borak.hikingapp.client.view.components.validators.ValidatorHikerFirst
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerLastName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerUcin;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerYearsOfExperience;
+import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivity;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityDescription;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityOrderNumber;
@@ -24,6 +25,7 @@ import com.borak.hikingapp.client.view.components.validators.ValidatorUserFirstN
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserLastName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserPasswordStrict;
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserUsernameStrict;
+import com.borak.hikingapp.commonlib.domain.classes.HikingActivity;
 
 /**
  *
@@ -175,6 +177,10 @@ public class ValidatorFactory {
 
     public IValidator<Object> getPlaceValidator() {
         return new ValidatorPlace();
+    }
+
+    public IValidator<HikingActivity> getHikingActivityValidator() {
+        return new ValidatorHikingActivity();
     }
 
 }

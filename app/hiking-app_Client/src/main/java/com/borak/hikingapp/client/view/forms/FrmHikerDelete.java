@@ -102,8 +102,8 @@ public class FrmHikerDelete extends javax.swing.JDialog {
     }
 
     private void setPanels() {
-        MigLayout migFilter = new MigLayout("insets 0 0 0 0", "", "");
-        MigLayout migAction = new MigLayout("insets 0 0 0 0", "", "[]8[]");
+        MigLayout migFilter = new MigLayout("insets 5 5 5 15", "", "");
+        MigLayout migAction = new MigLayout("insets 0 0 10 0", "[]8[]", "");
         MigLayout migShow = new MigLayout("insets 0 0 0 0", "", "");
 
         pnlFilter = new JPanel(migFilter);
@@ -130,6 +130,9 @@ public class FrmHikerDelete extends javax.swing.JDialog {
         tblHikers = new JTable(tblModel);
 
         scrollPane = new JScrollPane(tblHikers);
+        Dimension d = scrollPane.getPreferredSize();
+        d.setSize(470, d.getHeight());
+        scrollPane.setPreferredSize(d);
         pnlShow.add(scrollPane, "cell 0 0");
     }
 
@@ -151,7 +154,7 @@ public class FrmHikerDelete extends javax.swing.JDialog {
         addListeners();
 
         pnlAction.add(btnFilter, "cell 0 0");
-        pnlAction.add(btnDelete, "cell 0 1");
+        pnlAction.add(btnDelete, "cell 1 0");
     }
 
     private void addListeners() {
@@ -164,21 +167,19 @@ public class FrmHikerDelete extends javax.swing.JDialog {
     }
 
     private void btnFilterPressed() {
-        filterComponent.setErrorMessage("");
-        String name = "";
         try {
-            name = filterComponent.getValue();
-            List<Hiker> hikers;
+            filterComponent.setErrorMessage("");
+            tblModel.removeAllHikers();
+            String name = filterComponent.getValue();
             try {
                 TransferObject response = ControllerSO.getInstance().findHikers(name);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
-                    hikers = (List<Hiker>) response.getArgument();
+                    List<Hiker> hikers = (List<Hiker>) response.getArgument();
                     if (hikers == null || hikers.isEmpty()) {
                         Window.unSuccessfulOperation(this, "Error", "No hikers found with given name!");
                     } else {
                         tblModel.loadHikers(hikers);
-                        tblModel.fireTableDataChanged();
-                        Window.successfulOperation(this, "Success", "Found " + hikers.size() + " hikers with given name!");
+                        Window.successfulOperation(this, "Success", "Found " + (hikers.size() == 1 ? "1 hiker" : hikers.size() + " hikers") + " with given name!");
                     }
                 } else {
                     throw response.getException();
@@ -199,28 +200,27 @@ public class FrmHikerDelete extends javax.swing.JDialog {
     private void btnDeletePressed() {
         int[] rows = tblHikers.getSelectedRows();
         if (rows.length == 0) {
-            Window.unSuccessfulOperation(this, "Delete hiker error", "No selected hiker!");
+            Window.unSuccessfulOperation(this, "Error", "No selected hiker!");
         } else if (rows.length > 1) {
-            Window.unSuccessfulOperation(this, "Delete hiker error", "Pick 1 hiker you wish to delete!");
+            Window.unSuccessfulOperation(this, "Error", "Pick 1 hiker you wish to delete!");
         } else {
             Hiker h = tblModel.getHiker(rows[0]);
             if (h != null) {
-                if (Window.question(this, "Delete hiker", "Do you wish to delete hiker '" + h + "'?")) {
+                if (Window.question(this, "Error", "Do you wish to delete hiker '" + h + "'?")) {
                     try {
                         TransferObject response = ControllerSO.getInstance().deleteHiker(h);
                         if (response.getResponseType() == ResponseType.SUCCESS) {
                             tblModel.removeHiker(rows[0]);
-                            tblModel.fireTableRowsDeleted(rows[0], rows[0]);
-                            Window.successfulOperation(this, "Successfull deletion", "Hiker " + h + " successfully deleted");
+                            Window.successfulOperation(this, "Success", "Hiker " + h + " successfully deleted");
                         } else {
                             throw response.getException();
                         }
                     } catch (CustomException ex) {
-                        Window.unSuccessfulOperation(this, "Delete hiker error", ex.getMessage());
+                        Window.unSuccessfulOperation(this, "Error", ex.getMessage());
                     }
                 }
             } else {
-                Window.unSuccessfulOperation(this, "Delete hiker error", "No selected hiker!");
+                Window.unSuccessfulOperation(this, "Error", "No selected hiker!");
             }
         }
     }

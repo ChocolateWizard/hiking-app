@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.client.view.tables;
 
-
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
 import java.util.LinkedList;
@@ -79,18 +78,27 @@ public class HikersTableModel extends AbstractTableModel {
 
     public void loadHikers(List<Hiker> hikers) {
         this.hikers = hikers;
+        fireTableDataChanged();
     }
 
     public Hiker removeHiker(int row) {
         if (hikers != null && row >= 0 && row < hikers.size()) {
-            return hikers.remove(row);           
+            Hiker hiker = hikers.remove(row);
+            fireTableRowsDeleted(row, row);
+            return hiker;
         }
         return null;
     }
-     public Hiker getHiker(int row) {
+
+    public Hiker getHiker(int row) {
         if (hikers != null && row >= 0 && row < hikers.size()) {
-            return hikers.get(row);           
+            return hikers.get(row);
         }
         return null;
+    }
+
+    public void removeAllHikers() {
+        hikers = new LinkedList<>();
+        fireTableDataChanged();
     }
 }

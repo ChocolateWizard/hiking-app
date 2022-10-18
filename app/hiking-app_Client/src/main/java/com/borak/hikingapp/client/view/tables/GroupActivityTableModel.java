@@ -4,8 +4,9 @@
  */
 package com.borak.hikingapp.client.view.tables;
 
-
 import com.borak.hikingapp.commonlib.domain.classes.HikingActivity;
+import com.borak.hikingapp.commonlib.domain.classes.Place;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,11 +20,11 @@ import javax.swing.table.AbstractTableModel;
 public class GroupActivityTableModel extends AbstractTableModel {
 
     private List<HikingActivity> groupActivities;
-    private final String[] colNames = {"Order number", "Name", "Description", "Date"};
-    private final Class[] colTypes = {Integer.class, String.class, String.class, String.class};
+    private final String[] colNames = {"Order number", "Name", "Description", "Date", "Place"};
+    private final Class[] colTypes = {Integer.class, String.class, String.class, String.class, Place.class};
 
     public GroupActivityTableModel() {
-        groupActivities = new LinkedList<>();
+        groupActivities = new ArrayList<>();
     }
 
     public GroupActivityTableModel(List<HikingActivity> groupActivities) {
@@ -79,26 +80,38 @@ public class GroupActivityTableModel extends AbstractTableModel {
                 }
                 String date = g.getDate().get(GregorianCalendar.DAY_OF_MONTH) + "/" + (g.getDate().get(GregorianCalendar.MONTH) + 1) + "/" + g.getDate().get(GregorianCalendar.YEAR);
                 return date;
+            case 4:
+                return g.getPlace();
             default:
                 return null;
         }
     }
 
-    public void addActivity(HikingActivity g) {
+    public void addActivity(HikingActivity a) {
         if (groupActivities == null) {
-            groupActivities = new LinkedList<>();
+            groupActivities = new ArrayList<>();
         }
-        g.setOrderNum(groupActivities.size() + 1);
-        groupActivities.add(g);
+        if (a == null) {
+            a = new HikingActivity();
+        }
+        a.setOrderNum(groupActivities.size() + 1);
+        groupActivities.add(a);
+        fireTableDataChanged();
     }
 
     public HikingActivity removeActivity(int row) {
+        System.out.println(row);
         if (groupActivities != null && row >= 0 && row < groupActivities.size()) {
-            return groupActivities.remove(row);
+            HikingActivity removedActivity = groupActivities.remove(row);
+            for (int i = row; i < groupActivities.size(); i++) {
+                groupActivities.get(i).setOrderNum(i + 1);
+            }
+            fireTableDataChanged();
+            return removedActivity;
         }
         return null;
     }
-    
+
     public HikingActivity getActivity(int row) {
         if (groupActivities != null && row >= 0 && row < groupActivities.size()) {
             return groupActivities.get(row);
@@ -106,27 +119,29 @@ public class GroupActivityTableModel extends AbstractTableModel {
         return null;
     }
 
-    
-
-    public void updateActivity(HikingActivity g) {
-        if (groupActivities != null) {
-            for (int i = 0; i < groupActivities.size(); i++) {
-                if (Objects.equals(groupActivities.get(i).getOrderNum(), g.getOrderNum())) {
-                    groupActivities.set(i, g);
-                }
+    public void updateActivity(HikingActivity a) {
+        if (a != null && a.getOrderNum() != null) {
+            int row = a.getOrderNum() - 1;
+            if (groupActivities != null && row >= 0 && row < groupActivities.size()) {
+                groupActivities.set(row, a);
+                fireTableDataChanged();
             }
         }
+
     }
-    public void resetOrderNumbers(){
-        int i=1;
-        if(groupActivities!=null){
+
+    public void resetOrderNumbers() {
+        int i = 1;
+        if (groupActivities != null) {
             for (HikingActivity groupActivity : groupActivities) {
                 groupActivity.setOrderNum(i++);
             }
         }
+        fireTableDataChanged();
     }
-    public List<HikingActivity> getAllActivities(){
+
+    public List<HikingActivity> getAllActivities() {
         return groupActivities;
     }
-    
+
 }
