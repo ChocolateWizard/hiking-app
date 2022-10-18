@@ -4,9 +4,42 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-
+import com.borak.hikingapp.client.logic.controllers.ControllerForms;
+import com.borak.hikingapp.client.logic.controllers.ControllerSO;
+import com.borak.hikingapp.client.logic.controllers.Util;
+import com.borak.hikingapp.client.view.components.CompDateAdvanced;
+import com.borak.hikingapp.client.view.components.CompPlaceInput;
+import com.borak.hikingapp.client.view.components.CompStringInputLarge;
+import com.borak.hikingapp.client.view.components.CompYesNoRB;
+import com.borak.hikingapp.client.view.components.validators.factory.ValidatorFactory;
+import com.borak.hikingapp.client.view.helpers.Window;
+import com.borak.hikingapp.client.view.tables.GroupActivityTableModel;
+import com.borak.hikingapp.commonlib.communication.TransferObject;
+import com.borak.hikingapp.commonlib.domain.classes.HikingActivity;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
+import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
+import com.borak.hikingapp.commonlib.view.components.CompNumberInput;
+import com.borak.hikingapp.commonlib.view.components.CompStringInput;
+import com.borak.hikingapp.commonlib.view.components.api.IComponent;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
+import java.awt.Color;
 import java.awt.Dialog;
+import java.awt.Dimension;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
+import net.miginfocom.swing.MigLayout;
 
 /**
  *
@@ -14,12 +47,59 @@ import java.awt.Dialog;
  */
 public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
 
-    /**
-     * Creates new form FrmGroupChangeInfo_Dialog
-     */
-    public FrmGroupChangeInfo_Dialog(Dialog parent, boolean modal,HikingGroup g) {
+    //Group panels
+    private JPanel pnlGroup;
+    private JPanel pnlGroupComponents;
+    private JPanel pnlGroupButtons;
+
+    //Activity panels
+    private JPanel pnlActivity;
+    private JPanel pnlActivityView;
+    private JPanel pnlActivityViewTable;
+    private JPanel pnlActivityViewButtons;
+    private JPanel pnlActivityAdd;
+    private JPanel pnlActivityAddComponents;
+    private JPanel pnlActivityAddButtons;
+
+    //Group parameters components
+    private IComponent<String> crnComponent;
+    private IComponent<String> nameComponent;
+    private IComponent<String> descriptionComponent;
+    private IComponent<String> resourcesComponent;
+    private IComponent<Boolean> hasLiscenceComponent;
+    private IComponent<Place> placeComponent;
+
+    //Group activity parameters components
+    private IComponent<Integer> activityOrderNumberComponent;
+    private IComponent<String> activityNameComponent;
+    private IComponent<String> activityDescriptionComponent;
+    private IComponent<GregorianCalendar> activityDateComponent;
+    private IComponent<Place> activityPlaceComponent;
+
+    //table of activities
+    private GroupActivityTableModel tblModel;
+    private JTable tblActivities;
+    private JScrollPane scrollPane;
+
+    //buttons
+    private JButton btnGroupSave;
+    private JButton btnActivityAdd;
+    private JButton btnActivityEdit;
+    private JButton btnActivityRemove;
+    private JButton btnActivitySave;
+
+    //Data
+    //private Long orderNumber;
+    private final HikingGroup mainGroup;
+    //Activity currently selected to be edited
+    private HikingActivity editableActivity;
+    private List<Place> places;
+
+    public FrmGroupChangeInfo_Dialog(Dialog parent, boolean modal, HikingGroup g) {
         super(parent, modal);
         initComponents();
+        mainGroup = g;
+        initialize();
     }
 
     /**
@@ -47,7 +127,634 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    
+    private void initialize() {
+        setTitle("Create hiking group");
+        MigLayout migMain = new MigLayout("", "", "[]0[]");
+        setLayout(migMain);
+        try {
+            ImageIcon favicon = new ImageIcon(Util.getInstance().getFrmGroupCreateFavicon());
+            setIconImage(favicon.getImage());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+        }
+
+        getPlaces();
+        setFormElements();
+
+        pack();
+        setResizable(false);
+        setLocationRelativeTo(null);
+    }
+
+    private void getPlaces() {
+        try {
+            TransferObject response = ControllerSO.getInstance().getAllPlaces();
+            if (response.getResponseType() == ResponseType.SUCCESS) {
+                places = (List<Place>) response.getArgument();
+            } else {
+                throw response.getException();
+            }
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            places = null;
+        }
+    }
+
+    private void setFormElements() {
+        setPanels();
+        setComponents();
+        setTable();
+        setButtons();
+    }
+//=====================================================================================
+//===============================PANELS======================================================
+//=====================================================================================
+
+    private void setPanels() {
+        setGroupPanels();
+        setActivityPanels();
+    }
+
+    private void setGroupPanels() {
+        MigLayout migGroup = new MigLayout("insets 0 0 0 0", "", "[]0[]");
+        MigLayout migGroupComponents = new MigLayout("insets 5 5 5 5", "[]15[]", "[]5[]5[]");
+        MigLayout migGroupButtons = new MigLayout("insets 0 5 5 0", "", "");
+
+        pnlGroup = new JPanel(migGroup);
+        pnlGroupComponents = new JPanel(migGroupComponents);
+        pnlGroupButtons = new JPanel(migGroupButtons);
+
+        TitledBorder groupTitledBorder = BorderFactory.createTitledBorder("Hiking group");
+        groupTitledBorder.setTitleColor(Color.black);
+        Border groupBorder = BorderFactory.createLineBorder(Color.black);
+        groupTitledBorder.setBorder(groupBorder);
+        pnlGroup.setBorder(groupTitledBorder);
+
+        pnlGroup.add(pnlGroupComponents, "cell 0 0");
+        pnlGroup.add(pnlGroupButtons, "cell 0 1");
+        add(pnlGroup, "cell 0 0");
+    }
+
+    private void setActivityPanels() {
+        MigLayout migActivity = new MigLayout("insets 0 0 0 0", "", "[]0[]");
+        pnlActivity = new JPanel(migActivity);
+
+        TitledBorder activityTitledBorder = BorderFactory.createTitledBorder("Group activities");
+        activityTitledBorder.setTitleColor(Color.black);
+        Border activityBorder = BorderFactory.createLineBorder(Color.black);
+        activityTitledBorder.setBorder(activityBorder);
+        pnlActivity.setBorder(activityTitledBorder);
+
+        setActivityViewPanels();
+        setActivityAddPanels();
+
+        pnlActivity.add(pnlActivityView, "cell 0 0");
+        pnlActivity.add(pnlActivityAdd, "cell 0 1");
+        add(pnlActivity, "cell 0 1");
+    }
+
+    private void setActivityViewPanels() {
+        MigLayout migActivityView = new MigLayout("insets 0 0 0 0", "", "[]0[]");
+        MigLayout migActivityViewTable = new MigLayout("insets 0 5 0 0", "", "");
+        MigLayout migActivityViewButtons = new MigLayout("insets 5 5 5 0", "[]8[]8[]", "");
+
+        pnlActivityView = new JPanel(migActivityView);
+        pnlActivityViewTable = new JPanel(migActivityViewTable);
+        pnlActivityViewButtons = new JPanel(migActivityViewButtons);
+
+        pnlActivityView.add(pnlActivityViewTable, "cell 0 0");
+        pnlActivityView.add(pnlActivityViewButtons, "cell 0 1");
+
+    }
+
+    private void setActivityAddPanels() {
+        MigLayout migActivityAdd = new MigLayout("insets 0 0 0 0", "", "[]0[]");
+        MigLayout migActivityAddComponents = new MigLayout("insets 5 5 5 5", "[]10[]", "[]5[]5[]");
+        MigLayout migActivityAddButtons = new MigLayout("insets 0 5 5 0", "", "");
+
+        pnlActivityAdd = new JPanel(migActivityAdd);
+        pnlActivityAddComponents = new JPanel(migActivityAddComponents);
+        pnlActivityAddButtons = new JPanel(migActivityAddButtons);
+
+        TitledBorder activityAddTitledBorder = BorderFactory.createTitledBorder("Activity information");
+        activityAddTitledBorder.setTitleColor(Color.black);
+        Border activityAddBorder = BorderFactory.createLineBorder(Color.black);
+        activityAddTitledBorder.setBorder(activityAddBorder);
+        pnlActivityAdd.setBorder(activityAddTitledBorder);
+
+        pnlActivityAdd.add(pnlActivityAddComponents, "cell 0 0");
+        pnlActivityAdd.add(pnlActivityAddButtons, "cell 0 1");
+    }
+//=====================================================================================
+//===============================COMPONENTS============================================
+//=====================================================================================
+
+    private void setComponents() {
+        setGroupComponents();
+        setActivityComponents();
+    }
+
+    private void setGroupComponents() {
+        crnComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupCrnValidator());
+        crnComponent.setCaption("CRN:");
+        crnComponent.setCaptionSize(100);
+        crnComponent.setInputSize(205);
+        crnComponent.setErrorMessageSize(205);
+        crnComponent.setErrorMessage("");
+        crnComponent.setEnabledInput(false);
+        try {
+            crnComponent.setValue(mainGroup.getCrn());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            crnComponent.setErrorMessage("CRN is missing!");
+        }
+
+        nameComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupNameValidator());
+        nameComponent.setCaption("Name:");
+        nameComponent.setCaptionSize(80);
+        nameComponent.setInputSize(205);
+        nameComponent.setErrorMessageSize(205);
+        nameComponent.setErrorMessage("");
+        try {
+            nameComponent.setValue(mainGroup.getName());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            nameComponent.setErrorMessage("Name is missing!");
+        }
+
+        hasLiscenceComponent = new CompYesNoRB();
+        hasLiscenceComponent.setCaption("Is it liscenced?");
+        hasLiscenceComponent.setCaptionSize(140);
+        hasLiscenceComponent.setErrorMessage("");
+        try {
+            hasLiscenceComponent.setValue(mainGroup.isHasLiscence());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            hasLiscenceComponent.setErrorMessage("Has liscence is missing!");
+        }
+
+        descriptionComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getGroupDescriptionValidator());
+        descriptionComponent.setCaption("Description:");
+        descriptionComponent.setCaptionSize(100);
+        descriptionComponent.setInputSize(205, 100);
+        descriptionComponent.setErrorMessageSize(205);
+        descriptionComponent.setErrorMessage("");
+        try {
+            descriptionComponent.setValue(mainGroup.getDescription());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            descriptionComponent.setErrorMessage("Liscence is missing!");
+        }
+
+        resourcesComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getGroupResourcesValidator());
+        resourcesComponent.setCaption("Resources:");
+        resourcesComponent.setCaptionSize(80);
+        resourcesComponent.setInputSize(205, 100);
+        resourcesComponent.setErrorMessageSize(205);
+        resourcesComponent.setErrorMessage("");
+        try {
+            resourcesComponent.setValue(mainGroup.getResources());
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            resourcesComponent.setErrorMessage("Resources are missing!");
+        }
+
+        if (places == null || places.isEmpty()) {
+            placeComponent = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
+            placeComponent.setErrorMessageSize(205);
+            placeComponent.setErrorMessage("There are no places!");
+        } else {
+            Place[] pom = places.toArray(Place[]::new);
+            placeComponent = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
+            placeComponent.setErrorMessageSize(205);
+            placeComponent.setErrorMessage("");
+        }
+
+        placeComponent.setCaption("Place:");
+        placeComponent.setInputSize(205);
+        placeComponent.setCaptionSize(80);
+        try {
+            placeComponent.setValue(mainGroup.getPlace());
+        } catch (NullPointerException | CustomException ex) {
+            ex.printStackTrace();
+            placeComponent.setErrorMessage("Place is missing!");
+        }
+
+        pnlGroupComponents.add((JPanel) crnComponent, "cell 0 0,align left top");
+        pnlGroupComponents.add((JPanel) descriptionComponent, "cell 0 1,align left top");
+        pnlGroupComponents.add((JPanel) hasLiscenceComponent, "cell 0 2,align left top");
+        pnlGroupComponents.add((JPanel) nameComponent, "cell 1 0,align left top");
+        pnlGroupComponents.add((JPanel) resourcesComponent, "cell 1 1,align left top");
+        pnlGroupComponents.add((JPanel) placeComponent, "cell 1 2,align left top");
+    }
+
+    private void setActivityComponents() {
+        activityOrderNumberComponent = new CompNumberInput(ValidatorFactory.getInstance().getHikingActivityOrderNumberValidator());
+        activityOrderNumberComponent.setCaption("Order number:");
+        activityOrderNumberComponent.setCaptionSize(100);
+        activityOrderNumberComponent.setInputSize(200);
+        activityOrderNumberComponent.setErrorMessageSize(200);
+        activityOrderNumberComponent.setErrorMessage("");
+        activityOrderNumberComponent.setEnabledInput(false);
+
+        activityNameComponent = new CompStringInput(ValidatorFactory.getInstance().getHikingActivityNameValidator());
+        activityNameComponent.setCaption("Name:");
+        activityNameComponent.setCaptionSize(100);
+        activityNameComponent.setInputSize(200);
+        activityNameComponent.setErrorMessageSize(200);
+        activityNameComponent.setErrorMessage("");
+        activityNameComponent.setEnabledInput(false);
+
+        activityDescriptionComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getHikingActivityDescriptionValidator());
+        activityDescriptionComponent.setCaption("Description:");
+        activityDescriptionComponent.setCaptionSize(80);
+        activityDescriptionComponent.setInputSize(200, 170);
+        activityDescriptionComponent.setErrorMessageSize(200);
+        activityDescriptionComponent.setErrorMessage("");
+        activityDescriptionComponent.setEnabledInput(false);
+
+        activityDateComponent = new CompDateAdvanced();
+        activityDateComponent.setCaption("Date:");
+        activityDateComponent.setCaptionSize(110);
+        activityDateComponent.setErrorMessageSize(120);
+        activityDateComponent.setErrorMessage("");
+        activityDateComponent.setEnabledInput(false);
+
+        if (places == null || places.isEmpty()) {
+            activityPlaceComponent = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
+            activityPlaceComponent.setErrorMessageSize(205);
+            activityPlaceComponent.setErrorMessage("There are no places!");
+        } else {
+            Place[] pom = places.toArray(Place[]::new);
+            activityPlaceComponent = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
+            activityPlaceComponent.setErrorMessageSize(205);
+            activityPlaceComponent.setErrorMessage("");
+        }
+
+        activityPlaceComponent.setCaption("Place:");
+        activityPlaceComponent.setInputSize(200);
+        activityPlaceComponent.setCaptionSize(100);
+
+        pnlActivityAddComponents.add((JPanel) activityOrderNumberComponent, "cell 0 0,align left top");
+        pnlActivityAddComponents.add((JPanel) activityNameComponent, "cell 0 1,align left top");
+        pnlActivityAddComponents.add((JPanel) activityDescriptionComponent, "cell 1 0 1 4,align left top");
+        pnlActivityAddComponents.add((JPanel) activityDateComponent, "cell 0 2,align left top");
+        pnlActivityAddComponents.add((JPanel) activityPlaceComponent, "cell 0 3,align left top");
+    }
+
+    private void setTable() {
+        tblModel = new GroupActivityTableModel();
+        tblActivities = new JTable(tblModel);
+        scrollPane = new JScrollPane(tblActivities);
+
+        Dimension d = scrollPane.getPreferredSize();
+        d.setSize(605, 200);
+        scrollPane.setPreferredSize(d);
+        tblModel.loadActivities(mainGroup.getGroupActivities());
+
+        pnlActivityViewTable.add(scrollPane, "cell 0 0");
+    }
+
+    private void setButtons() {
+        setGroupButtons();
+        setActivityViewButtons();
+        setActivityAddButtons();
+        addListeners();
+    }
+
+    private void setGroupButtons() {
+        btnGroupSave = new JButton("Save hiking group");
+        btnGroupSave.setFocusable(false);
+        pnlGroupButtons.add(btnGroupSave);
+    }
+
+    private void setActivityViewButtons() {
+        btnActivityAdd = new JButton("Add");
+        btnActivityEdit = new JButton("Edit");
+        btnActivityRemove = new JButton("Remove");
+
+        btnActivityAdd.setFocusable(false);
+        btnActivityEdit.setFocusable(false);
+        btnActivityRemove.setFocusable(false);
+
+        pnlActivityViewButtons.add(btnActivityAdd, "cell 0 0");
+        pnlActivityViewButtons.add(btnActivityEdit, "cell 1 0");
+        pnlActivityViewButtons.add(btnActivityRemove, "cell 2 0");
+    }
+
+    private void setActivityAddButtons() {
+        btnActivitySave = new JButton("Save activity information");
+
+        btnActivitySave.setFocusable(false);
+        btnActivitySave.setEnabled(false);
+
+        pnlActivityAddButtons.add(btnActivitySave, "cell 0 1");
+    }
+
+    private void addListeners() {
+        btnGroupSave.addActionListener(((ActionEvent) -> {
+            btnGroupSavePressed();
+        }));
+        btnActivityAdd.addActionListener(((ActionEvent) -> {
+            btnActivityAddPressed();
+        }));
+        btnActivityEdit.addActionListener(((ActionEvent) -> {
+            btnActivityEditPressed();
+        }));
+        btnActivityRemove.addActionListener(((ActionEvent) -> {
+            btnActivityRemovePressed();
+        }));
+        btnActivitySave.addActionListener(((ActionEvent) -> {
+            btnActivitySavePressed();
+        }));
+    }
+
+//=====================================================================================
+//=======================BUTTONS ACTIONS===============================================
+//=====================================================================================
+    private void btnGroupSavePressed() {
+        crnComponent.setErrorMessage("");
+        nameComponent.setErrorMessage("");
+        descriptionComponent.setErrorMessage("");
+        resourcesComponent.setErrorMessage("");
+        hasLiscenceComponent.setErrorMessage("");
+        placeComponent.setErrorMessage("");
+
+        String crn = "";
+        String name = "";
+        String description = "";
+        String resources = "";
+        boolean hasLiscence = true;
+        Place place = null;
+
+        String errorMessageGroup = "";
+        String errorMessageActivity = "";
+        boolean gateGroup = true;
+        boolean gateActivity = true;
+
+        try {
+            crn = crnComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            crnComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage() + "\n";
+            gateGroup = false;
+        }
+        try {
+            name = nameComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            nameComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage() + "\n";
+            gateGroup = false;
+        }
+        try {
+            description = descriptionComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            descriptionComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage() + "\n";
+            gateGroup = false;
+        }
+        try {
+            resources = resourcesComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            resourcesComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage() + "\n";
+            gateGroup = false;
+        }
+        try {
+            hasLiscence = hasLiscenceComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            hasLiscenceComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage() + "\n";
+            gateGroup = false;
+        }
+        try {
+            place = placeComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            placeComponent.setErrorMessage(ex.getMessage());
+            errorMessageGroup += ex.getMessage();
+            gateGroup = false;
+        }
+        IValidator<HikingActivity> v = ValidatorFactory.getInstance().getHikingActivityValidator();
+        try {
+            for (HikingActivity activity : tblModel.getAllActivities()) {
+                v.validate(activity);
+            }
+        } catch (CustomException e) {
+            e.printStackTrace();
+            gateActivity = false;
+            errorMessageActivity += e.getMessage();
+
+        }
+
+        if (gateGroup == true && gateActivity == true) {
+            mainGroup.setCrn(crn);
+            mainGroup.setName(name);
+            mainGroup.setDescription(description);
+            mainGroup.setResources(resources);
+            mainGroup.setHasLiscence(hasLiscence);
+            mainGroup.setPlace(place);
+            mainGroup.setGroupActivities(tblModel.getAllActivities());
+            try {
+                TransferObject response = ControllerSO.getInstance().updateHikingGroup(mainGroup);
+                if (response.getResponseType() == ResponseType.SUCCESS) {
+                    Window.successfulOperation(this, "Updated hiking group", "Successful update of hiking group!");
+                    ControllerForms.getInstance().closeFrmGroupCreate();
+                } else {
+                    throw response.getException();
+                }
+            } catch (CustomException ex) {
+                ex.printStackTrace();
+                Window.unSuccessfulOperation(this, "Failed to update hiking group", ex.getMessage());
+            }
+        } else {
+            if (gateGroup == false) {
+                Window.unSuccessfulOperation(this, "Failed to update hiking group", errorMessageGroup.trim());
+            }
+            if (gateActivity == false) {
+                Window.unSuccessfulOperation(this, "Failed to update hiking group", errorMessageActivity.trim());
+            }
+
+        }
+    }
+
+    private void btnActivityAddPressed() {
+        HikingActivity newActivity = new HikingActivity();
+        newActivity.setHikingGroup(mainGroup);
+        tblModel.addActivity(newActivity);
+    }
+
+    private void btnActivityRemovePressed() {
+        int[] rows = tblActivities.getSelectedRows();
+        if (rows.length == 0) {
+            Window.unSuccessfulOperation(this, "Remove activity error", "No selected activity!");
+        } else if (rows.length > 1) {
+            Window.unSuccessfulOperation(this, "Remove activity error", "Pick 1 activity you wish to remove!");
+        } else {
+            HikingActivity removedActivity = tblModel.removeActivity(rows[0]);
+            if (editableActivity != null) {
+                if (removedActivity.equals(editableActivity)) {
+                    //acitvity currently edited on is the one removed
+                    try {
+                        activityOrderNumberComponent.setValue(null);
+                        activityOrderNumberComponent.setErrorMessage("");
+                    } catch (CustomException ex) {
+                        ex.printStackTrace();
+                    }
+                    try {
+                        activityNameComponent.setValue("");
+                        activityNameComponent.setErrorMessage("");
+                        activityNameComponent.setEnabledInput(false);
+                    } catch (CustomException ex) {
+                        ex.printStackTrace();
+                    }
+                    try {
+                        activityDescriptionComponent.setValue("");
+                        activityDescriptionComponent.setErrorMessage("");
+                        activityDescriptionComponent.setEnabledInput(false);
+                    } catch (CustomException ex) {
+                        ex.printStackTrace();
+                    }
+                    try {
+                        activityDateComponent.setValue(new GregorianCalendar());
+                        activityDateComponent.setErrorMessage("");
+                        activityDateComponent.setEnabledInput(false);
+                    } catch (CustomException ex) {
+                        ex.printStackTrace();
+                    }
+                    activityPlaceComponent.setEnabledInput(false);
+                    activityPlaceComponent.setErrorMessage("");
+                    editableActivity = null;
+                    btnActivitySave.setEnabled(false);
+                } else {
+                    //activity currently edited on is different from the one removed
+                    if (removedActivity.getOrderNum() < editableActivity.getOrderNum()) {
+                        try {
+                            activityOrderNumberComponent.setValue(editableActivity.getOrderNum());
+                        } catch (CustomException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void btnActivityEditPressed() {
+        int[] rows = tblActivities.getSelectedRows();
+        if (rows.length == 0) {
+            Window.unSuccessfulOperation(this, "Edit activity error", "No selected activity!");
+        } else if (rows.length > 1) {
+            Window.unSuccessfulOperation(this, "Edit activity error", "Pick 1 activity you wish to edit!");
+        } else {
+            editableActivity = tblModel.getActivity(rows[0]);
+            if (editableActivity != null) {
+                try {
+                    activityOrderNumberComponent.setValue(editableActivity.getOrderNum());
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    activityNameComponent.setValue(editableActivity.getName());
+                    activityNameComponent.setEnabledInput(true);
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    activityDescriptionComponent.setValue(editableActivity.getDescription());
+                    activityDescriptionComponent.setEnabledInput(true);
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    activityDateComponent.setValue(editableActivity.getDate());
+                    activityDateComponent.setEnabledInput(true);
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                }
+                try {
+                    Place p = editableActivity.getPlace();
+                    if (p != null) {
+                        activityPlaceComponent.setValue(p);
+                    }
+                    activityPlaceComponent.setEnabledInput(true);
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                }
+                btnActivitySave.setEnabled(true);
+            } else {
+                Window.unSuccessfulOperation(this, "Edit activity error", "No selected activity!");
+            }
+        }
+    }
+
+    private void btnActivitySavePressed() {
+        activityOrderNumberComponent.setErrorMessage("");
+        activityNameComponent.setErrorMessage("");
+        activityDescriptionComponent.setErrorMessage("");
+        activityDateComponent.setErrorMessage("");
+        activityPlaceComponent.setErrorMessage("");
+
+        Integer orN = 0;
+        String name = "";
+        String description = "";
+        GregorianCalendar date = null;
+        Place place = null;
+        boolean gate = true;
+        try {
+            orN = activityOrderNumberComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            activityOrderNumberComponent.setErrorMessage(ex.getMessage());
+            gate = false;
+        }
+        try {
+            name = activityNameComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            activityNameComponent.setErrorMessage(ex.getMessage());
+            gate = false;
+        }
+        try {
+            description = activityDescriptionComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            activityDescriptionComponent.setErrorMessage(ex.getMessage());
+            gate = false;
+        }
+        try {
+            date = activityDateComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            activityDateComponent.setErrorMessage(ex.getMessage());
+            gate = false;
+        }
+        try {
+            place = activityPlaceComponent.getValue();
+        } catch (CustomException ex) {
+            ex.printStackTrace();
+            activityPlaceComponent.setErrorMessage(ex.getMessage());
+            gate = false;
+        }
+        if (gate) {
+            editableActivity.setOrderNum(orN);
+            editableActivity.setName(name);
+            editableActivity.setDescription(description);
+            editableActivity.setDate(date);
+            editableActivity.setPlace(place);
+            tblModel.updateActivity(editableActivity);
+        } else {
+            Window.unSuccessfulOperation(this, "Save activity error", "Unable to save hiking activity!");
+        }
+
+    }
+//===================================================================================
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables

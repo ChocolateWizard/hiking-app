@@ -562,28 +562,33 @@ public class FrmGroupCreate extends javax.swing.JDialog {
                     //acitvity currently edited on is the one removed
                     try {
                         activityOrderNumberComponent.setValue(null);
+                        activityOrderNumberComponent.setErrorMessage("");
                     } catch (CustomException ex) {
                         ex.printStackTrace();
                     }
                     try {
                         activityNameComponent.setValue("");
+                        activityNameComponent.setErrorMessage("");
                         activityNameComponent.setEnabledInput(false);
                     } catch (CustomException ex) {
                         ex.printStackTrace();
                     }
                     try {
                         activityDescriptionComponent.setValue("");
+                        activityDescriptionComponent.setErrorMessage("");
                         activityDescriptionComponent.setEnabledInput(false);
                     } catch (CustomException ex) {
                         ex.printStackTrace();
                     }
                     try {
                         activityDateComponent.setValue(new GregorianCalendar());
+                        activityDateComponent.setErrorMessage("");
                         activityDateComponent.setEnabledInput(false);
                     } catch (CustomException ex) {
                         ex.printStackTrace();
                     }
                     activityPlaceComponent.setEnabledInput(false);
+                    activityPlaceComponent.setErrorMessage("");
                     editableActivity = null;
                     btnActivitySave.setEnabled(false);
                 } else {

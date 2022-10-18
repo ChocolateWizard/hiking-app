@@ -17,13 +17,11 @@ import com.borak.hikingapp.commonlib.exceptions.CustomException;
 public class Start {
 
     public static void main(String[] args) {
-        try {           
-            ControllerClient.getInstance().connect();           
+        try {
+            ControllerClient.getInstance().connect();
             ControllerForms.getInstance().openFrmLogin();
         } catch (CustomException ex) {
             Window.unSuccessfulOperation(null, "Connection error", ex.getMessage());
         }
-        
-
     }
 }

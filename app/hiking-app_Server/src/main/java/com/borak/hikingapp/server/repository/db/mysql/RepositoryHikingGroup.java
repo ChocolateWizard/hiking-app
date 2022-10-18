@@ -50,7 +50,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 Long pId = rsGroups.getLong(7);
                 String pName = rsGroups.getString(8);
 
-                g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
+                g = new HikingGroup(gId, gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
 
                 //find all activities of found hiking group
                 String queryActivities = HikingActivity.getAllQuery();
@@ -204,7 +204,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
     public void update(HikingGroup object) throws CustomException {
         String queryUpdateGroup = HikingGroup.updateQuery();
         try {
-            PreparedStatement statementUpdateGroup = connection.prepareStatement(queryUpdateGroup, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement statementUpdateGroup = connection.prepareStatement(queryUpdateGroup);
             statementUpdateGroup.setString(1, object.getCrn());
             statementUpdateGroup.setString(2, object.getName());
             statementUpdateGroup.setString(3, object.getDescription());
@@ -214,21 +214,16 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
             statementUpdateGroup.setString(7, object.getCrn());
             statementUpdateGroup.executeUpdate();
 
-            Long aId = null;
-            ResultSet rs = statementUpdateGroup.getGeneratedKeys();
-            while (rs.next()) {
-                aId = rs.getLong(1);
-            }
             String queryDeleteActivities = HikingActivity.deleteQuery();
             PreparedStatement statementDeleteActivities = connection.prepareStatement(queryDeleteActivities);
-            statementDeleteActivities.setLong(1, aId);
+            statementDeleteActivities.setLong(1, object.getId());
             statementDeleteActivities.executeUpdate();
 
             if (object.getGroupActivities() != null && !object.getGroupActivities().isEmpty()) {
                 String queryInsertActivities = HikingActivity.insertQuery();
                 PreparedStatement statementInsertActivities = connection.prepareStatement(queryInsertActivities);
                 for (HikingActivity groupActivity : object.getGroupActivities()) {
-                    statementInsertActivities.setLong(1, aId);
+                    statementInsertActivities.setLong(1, object.getId());
                     statementInsertActivities.setInt(2, groupActivity.getOrderNum());
                     statementInsertActivities.setString(3, groupActivity.getName());
                     statementInsertActivities.setString(4, groupActivity.getDescription());
@@ -240,7 +235,6 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 statementInsertActivities.close();
             }
             statementDeleteActivities.close();
-            rs.close();
             statementUpdateGroup.close();
         } catch (NullPointerException ex) {
             throw new CustomException(ErrorType.UPDATE_QUERY_ERROR, "Connection must be established first, in order to update hiking group", ex);

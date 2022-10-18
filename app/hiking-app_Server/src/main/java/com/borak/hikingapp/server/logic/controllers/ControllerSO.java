@@ -346,6 +346,7 @@ public final class ControllerSO {
                 repositoryManager.getRepositoryHikingGroup().disconnect();
             }
         } catch (CustomException e) {
+            e.printStackTrace();
             throw new CustomException(ErrorType.HIKING_GROUP_UPDATE_ERROR, "Unable to update hiking group");
         }
     }

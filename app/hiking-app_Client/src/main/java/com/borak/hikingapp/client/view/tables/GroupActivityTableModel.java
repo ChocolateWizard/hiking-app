@@ -100,7 +100,6 @@ public class GroupActivityTableModel extends AbstractTableModel {
     }
 
     public HikingActivity removeActivity(int row) {
-        System.out.println(row);
         if (groupActivities != null && row >= 0 && row < groupActivities.size()) {
             HikingActivity removedActivity = groupActivities.remove(row);
             for (int i = row; i < groupActivities.size(); i++) {
@@ -127,7 +126,6 @@ public class GroupActivityTableModel extends AbstractTableModel {
                 fireTableDataChanged();
             }
         }
-
     }
 
     public void resetOrderNumbers() {
@@ -142,6 +140,11 @@ public class GroupActivityTableModel extends AbstractTableModel {
 
     public List<HikingActivity> getAllActivities() {
         return groupActivities;
+    }
+
+    public void loadActivities(List<HikingActivity> activities) {
+        this.groupActivities = activities;
+        fireTableDataChanged();
     }
 
 }

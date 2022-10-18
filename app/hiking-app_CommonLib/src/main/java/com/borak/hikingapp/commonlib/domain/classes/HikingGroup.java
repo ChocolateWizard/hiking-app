@@ -46,6 +46,19 @@ public class HikingGroup implements Serializable {
         this.groupActivities = groupActivities;
     }
 
+    public HikingGroup(Long id, String crn, String name, String description, String resources, boolean hasLiscence, Place place, List<HikingActivity> groupActivities) {
+        this.id = id;
+        this.crn = crn;
+        this.name = name;
+        this.description = description;
+        this.resources = resources;
+        this.hasLiscence = hasLiscence;
+        this.place = place;
+        this.groupActivities = groupActivities;
+    }
+    
+    
+
     public Long getId() {
         return id;
     }

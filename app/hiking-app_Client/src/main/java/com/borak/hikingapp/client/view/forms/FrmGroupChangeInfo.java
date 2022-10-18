@@ -103,8 +103,8 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
     }
 
     private void setPanels() {
-        MigLayout migFilter = new MigLayout("insets 0 0 0 0", "", "");
-        MigLayout migAction = new MigLayout("insets 0 0 0 0", "", "[]8[]");
+        MigLayout migFilter = new MigLayout("insets 5 5 5 15", "", "");
+        MigLayout migAction = new MigLayout("insets 0 0 10 0", "[]8[]", "");
         MigLayout migShow = new MigLayout("insets 0 0 0 0", "", "");
 
         pnlFilter = new JPanel(migFilter);
@@ -131,6 +131,9 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         tblGroups = new JTable(tblModel);
 
         scrollPane = new JScrollPane(tblGroups);
+        Dimension d = scrollPane.getPreferredSize();
+        d.setSize(484, d.getHeight());
+        scrollPane.setPreferredSize(d);
         pnlShow.add(scrollPane, "cell 0 0");
     }
 
@@ -152,7 +155,7 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         addListeners();
 
         pnlAction.add(btnFilter, "cell 0 0");
-        pnlAction.add(btnChange, "cell 0 1");
+        pnlAction.add(btnChange, "cell 1 0");
     }
 
     private void addListeners() {
@@ -167,41 +170,31 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
     private void btnFilterPressed() {
         try {
             filterComponent.setErrorMessage("");
-            String name = "";
-            name = filterComponent.getValue();
-            name = name.trim();
+            tblModel.removeAllGroups();
+            String name = filterComponent.getValue();
             try {
-                //returns all hikers with given name, or similar name
+                //returns all groups with given name, or similar name
                 TransferObject response = ControllerSO.getInstance().findHikingGroups(name);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     List<HikingGroup> groups = (List<HikingGroup>) response.getArgument();
                     if (groups == null || groups.isEmpty()) {
-                        if (name.isEmpty()) {
-                            Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups in database!");
-                        } else {
-                            Window.unSuccessfulOperation(this, "Find hiking groups error", "No hiking groups found with " + name + " as name!");
-                        }
+                        Window.unSuccessfulOperation(this, "Error", "No hiking groups found with given name!");
                     } else {
                         tblModel.loadGroups(groups);
-                        tblModel.fireTableDataChanged();
-                        if (name.isEmpty()) {
-                            Window.successfulOperation(this, "Successfull operation", "Loaded all " + groups.size() + " groups!");
-                        } else {
-                            Window.successfulOperation(this, "Successfull operation", "Found " + groups.size() + " groups with " + name + " in name!");
-                        }
+                        Window.successfulOperation(this, "Success", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
                     }
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Find hiking groups error", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Error", ex.getMessage());
             }
 
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Find hiking groups error", ex.getMessage());
+            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
         }
 
     }

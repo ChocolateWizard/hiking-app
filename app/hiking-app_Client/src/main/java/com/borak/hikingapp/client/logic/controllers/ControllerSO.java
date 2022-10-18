@@ -65,6 +65,12 @@ public final class ControllerSO {
         (new Sender(socket)).send(request);
         return (new Receiver(socket)).receive();
     }
+    
+    public TransferObject updateHikingGroup(HikingGroup mainGroup) throws CustomException{
+        TransferObject request=new TransferObject(RequestType.UPDATE_HIKING_GROUP, mainGroup);
+        (new Sender(socket)).send(request);
+        return (new Receiver(socket)).receive();
+    }
 
     public TransferObject deleteHikingGroup(HikingGroup g) throws CustomException{
         TransferObject request=new TransferObject(RequestType.DELETE_HIKING_GROUP, g);

@@ -88,11 +88,11 @@ public class HandleClientThread extends Thread {
                 case FIND_HIKING_GROUPS:
                     findHikingGroups(request);
                     break;
-                case DELETE_HIKING_GROUP:
-                    deleteHikingGroup(request);
-                    break;
                 case UPDATE_HIKING_GROUP:
                     updateHikingGroup(request);
+                    break;
+                case DELETE_HIKING_GROUP:
+                    deleteHikingGroup(request);
                     break;
                 default:
             }
@@ -197,17 +197,6 @@ public class HandleClientThread extends Thread {
         }
     }
 
-    private void deleteHikingGroup(TransferObject request) throws CustomException {
-        try {
-            HikingGroup group = (HikingGroup) request.getArgument();
-            ControllerSO.getInstance().deleteHikingGroup(group);
-            TransferObject response = new TransferObject(ResponseType.SUCCESS, null, null);
-            (new Sender(socket)).send(response);
-        } catch (CustomException | ClassCastException e) {
-            throw new CustomException(ErrorType.HIKING_GROUP_DELETE_ERROR, e.getMessage());
-        }
-    }
-
     private void updateHikingGroup(TransferObject request) throws CustomException {
         try {
             HikingGroup group = (HikingGroup) request.getArgument();
@@ -219,7 +208,18 @@ public class HandleClientThread extends Thread {
         }
     }
 
+    private void deleteHikingGroup(TransferObject request) throws CustomException {
+        try {
+            HikingGroup group = (HikingGroup) request.getArgument();
+            ControllerSO.getInstance().deleteHikingGroup(group);
+            TransferObject response = new TransferObject(ResponseType.SUCCESS, null, null);
+            (new Sender(socket)).send(response);
+        } catch (CustomException | ClassCastException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_DELETE_ERROR, e.getMessage());
+        }
+    }
 //==========================================================================================================
+
     public Socket getSocket() {
         return socket;
     }
