@@ -6,7 +6,7 @@ package com.borak.hikingapp.server.view.components.validators;
 
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 
 /**
  *

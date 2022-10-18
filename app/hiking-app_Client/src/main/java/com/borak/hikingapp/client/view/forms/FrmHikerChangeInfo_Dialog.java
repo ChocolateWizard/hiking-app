@@ -20,7 +20,7 @@ import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompNumberInput;
 import com.borak.hikingapp.commonlib.view.components.CompStringInput;
-import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
+import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.util.GregorianCalendar;

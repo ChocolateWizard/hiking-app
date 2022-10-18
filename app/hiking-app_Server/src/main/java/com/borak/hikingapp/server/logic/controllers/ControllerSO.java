@@ -322,7 +322,6 @@ public final class ControllerSO {
                 repositoryManager.getRepositoryHikingGroup().connect();
                 repositoryManager.getRepositoryHikingGroup().delete(g);
                 repositoryManager.getRepositoryHikingGroup().commit();
-
             } catch (CustomException ex) {
                 repositoryManager.getRepositoryHikingGroup().rollback();
                 throw ex;

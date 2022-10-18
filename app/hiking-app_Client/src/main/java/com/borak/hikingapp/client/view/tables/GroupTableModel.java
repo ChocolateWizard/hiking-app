@@ -45,6 +45,22 @@ public class GroupTableModel extends AbstractTableModel {
     }
 
     @Override
+    public Class<?> getColumnClass(int columnIndex) {
+        if (colTypes != null && columnIndex < colTypes.length) {
+            return colTypes[columnIndex];
+        }
+        return Object.class;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        if (colNames != null && column < colNames.length) {
+            return colNames[column];
+        }
+        return "NaN";
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         HikingGroup group = groups.get(rowIndex);
         return switch (columnIndex) {
@@ -61,21 +77,29 @@ public class GroupTableModel extends AbstractTableModel {
     }
 
     public void loadGroups(List<HikingGroup> groups) {
-        this.groups=groups;
-    }
-
-    public HikingGroup getGroup(int row) {
-        if (groups != null && row >= 0 && row < groups.size()) {
-            return groups.remove(row);           
-        }
-        return null;
+        this.groups = groups;
+        fireTableDataChanged();
     }
 
     public HikingGroup removeGroup(int row) {
         if (groups != null && row >= 0 && row < groups.size()) {
-            return groups.get(row);           
+            HikingGroup g = groups.remove(row);
+            fireTableRowsDeleted(row, row);
+            return g;
         }
         return null;
+    }
+
+    public HikingGroup getGroup(int row) {
+        if (groups != null && row >= 0 && row < groups.size()) {
+            return groups.get(row);
+        }
+        return null;
+    }
+
+    public void removeAllGroups() {
+        groups = new LinkedList<>();
+        fireTableDataChanged();
     }
 
 }

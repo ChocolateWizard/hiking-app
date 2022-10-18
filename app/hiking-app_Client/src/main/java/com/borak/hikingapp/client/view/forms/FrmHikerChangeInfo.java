@@ -15,7 +15,7 @@ import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompStringInput;
-import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
+import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;

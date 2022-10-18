@@ -8,7 +8,6 @@ import com.borak.hikingapp.commonlib.domain.classes.User;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
-import com.borak.hikingapp.server.DUMMYCLASSES.UserViewObserver;
 
 /**
  *

@@ -6,7 +6,7 @@ package com.borak.hikingapp.commonlib.view.components;
 
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.design.CompOneTextBox;
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 
 /**
  *

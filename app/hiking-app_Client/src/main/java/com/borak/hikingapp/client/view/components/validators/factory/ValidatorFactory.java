@@ -4,7 +4,7 @@
  */
 package com.borak.hikingapp.client.view.components.validators.factory;
 
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupCrn;
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupDescription;
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupFilter;

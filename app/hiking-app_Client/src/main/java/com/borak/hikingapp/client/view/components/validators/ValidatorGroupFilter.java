@@ -4,8 +4,9 @@
  */
 package com.borak.hikingapp.client.view.components.validators;
 
+import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 
 /**
  *
@@ -15,7 +16,9 @@ public class ValidatorGroupFilter implements IValidator<String> {
 
     @Override
     public void validate(String entity) throws CustomException {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        if (entity == null) {
+            throw new CustomException(ErrorType.UNEXPECTED_ERROR, "Find hikers unexpected error!");
+        }
     }
 
 }

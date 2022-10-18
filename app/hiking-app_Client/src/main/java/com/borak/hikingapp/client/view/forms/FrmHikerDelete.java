@@ -14,7 +14,7 @@ import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompStringInput;
-import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
+import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
@@ -206,7 +206,7 @@ public class FrmHikerDelete extends javax.swing.JDialog {
         } else {
             Hiker h = tblModel.getHiker(rows[0]);
             if (h != null) {
-                if (Window.question(this, "Error", "Do you wish to delete hiker '" + h + "'?")) {
+                if (Window.question(this, "Delete hiker", "Do you wish to delete hiker '" + h + "'?")) {
                     try {
                         TransferObject response = ControllerSO.getInstance().deleteHiker(h);
                         if (response.getResponseType() == ResponseType.SUCCESS) {

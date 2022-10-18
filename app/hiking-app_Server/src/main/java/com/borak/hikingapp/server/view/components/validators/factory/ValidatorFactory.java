@@ -4,7 +4,7 @@
  */
 package com.borak.hikingapp.server.view.components.validators.factory;
 
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import com.borak.hikingapp.server.view.components.validators.ValidatorPort;
 
 /**

@@ -5,8 +5,8 @@
 package com.borak.hikingapp.commonlib.view.components.design;
 
 
-import com.borak.hikingapp.commonlib.view.components.intf.IComponent;
-import com.borak.hikingapp.commonlib.view.components.validators.intf.IValidator;
+import com.borak.hikingapp.commonlib.view.components.api.IComponent;
+import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;

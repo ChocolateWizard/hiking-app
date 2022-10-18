@@ -7,7 +7,7 @@ package com.borak.hikingapp.server.logic.controllers;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.DUMMYCLASSES.Server;
+import com.borak.hikingapp.server.threads.Server;
 import com.borak.hikingapp.server.threads.HandleClientThread;
 import com.borak.hikingapp.server.threads.ServerThread;
 import java.io.IOException;

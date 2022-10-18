@@ -7,7 +7,6 @@ package com.borak.hikingapp.server.threads;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
-import com.borak.hikingapp.server.DUMMYCLASSES.Server;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.view.tables.TableLoggedUsers;
 import java.io.IOException;

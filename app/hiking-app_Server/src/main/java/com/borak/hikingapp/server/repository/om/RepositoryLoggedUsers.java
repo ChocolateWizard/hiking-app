@@ -8,7 +8,7 @@ import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import java.util.LinkedList;
 import java.util.List;
-import com.borak.hikingapp.server.DUMMYCLASSES.UserViewObserver;
+import com.borak.hikingapp.server.view.tables.UserViewObserver;
 import com.borak.hikingapp.server.logic.controllers.ControllerForms;
 
 /**
