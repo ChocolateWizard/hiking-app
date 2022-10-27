@@ -74,4 +74,14 @@ public class RepositoryHiker implements IRepository<Hiker> {
         }
     }
 
+    @Override
+    public void insertAll(List<Hiker> object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteAll() throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 }

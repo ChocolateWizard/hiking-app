@@ -25,9 +25,13 @@ public interface IRepository<T> {
 
     public void insert(T object) throws CustomException;
 
+    public void insertAll(List<T> object) throws CustomException;
+
     public T find(T object) throws CustomException;
 
     public void delete(T object) throws CustomException;
+
+    public void deleteAll() throws CustomException;
 
     public void update(T object) throws CustomException;
 }

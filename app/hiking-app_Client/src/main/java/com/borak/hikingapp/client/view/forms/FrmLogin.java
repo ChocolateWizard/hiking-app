@@ -106,16 +106,16 @@ public class FrmLogin extends javax.swing.JFrame {
     private void setComponents() {
         usernameComp = new CompStringInput(ValidatorFactory.getInstance().getUserUsernameValidator());
         usernameComp.setCaption("Username:");
-        usernameComp.setCaptionSize(100);
-        usernameComp.setInputSize(200);
-        usernameComp.setErrorMessageSize(200);
+        usernameComp.setCaptionWidth(100);
+        usernameComp.setInputWidth(200);
+        usernameComp.setErrorMessageWidth(200);
         usernameComp.setErrorMessage("");
 
         passwordComp = new CompPswInput(ValidatorFactory.getInstance().getUserPasswordValidator());
         passwordComp.setCaption("Password: ");
-        passwordComp.setCaptionSize(100);
-        passwordComp.setInputSize(200);
-        passwordComp.setErrorMessageSize(200);
+        passwordComp.setCaptionWidth(100);
+        passwordComp.setInputWidth(200);
+        passwordComp.setErrorMessageWidth(200);
         passwordComp.setErrorMessage("");
 
         pnlComponents.add(((JPanel) usernameComp), "cell 0 0");

@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-
 import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.Util;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
@@ -42,6 +41,8 @@ public class FrmMain extends javax.swing.JFrame {
         miHikerCreate = new javax.swing.JMenuItem();
         miHikerChangeInfo = new javax.swing.JMenuItem();
         miHikerDelete = new javax.swing.JMenuItem();
+        mbProfile = new javax.swing.JMenu();
+        miProfileConfiguration = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +102,18 @@ public class FrmMain extends javax.swing.JFrame {
 
         mbMain.add(mbHiker);
 
+        mbProfile.setText("Profile");
+
+        miProfileConfiguration.setText("Configuration");
+        miProfileConfiguration.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miProfileConfigurationActionPerformed(evt);
+            }
+        });
+        mbProfile.add(miProfileConfiguration);
+
+        mbMain.add(mbProfile);
+
         setJMenuBar(mbMain);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -122,24 +135,28 @@ public class FrmMain extends javax.swing.JFrame {
     }//GEN-LAST:event_miHikerCreateActionPerformed
 
     private void miHikerChangeInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miHikerChangeInfoActionPerformed
-       ControllerForms.getInstance().openFrmHikerChangeInfo();
+        ControllerForms.getInstance().openFrmHikerChangeInfo();
     }//GEN-LAST:event_miHikerChangeInfoActionPerformed
 
     private void miHikerDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miHikerDeleteActionPerformed
-       ControllerForms.getInstance().openFrmHikerDelete();
+        ControllerForms.getInstance().openFrmHikerDelete();
     }//GEN-LAST:event_miHikerDeleteActionPerformed
 
     private void miGroupCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGroupCreateActionPerformed
-       ControllerForms.getInstance().openFrmGroupCreate();
+        ControllerForms.getInstance().openFrmGroupCreate();
     }//GEN-LAST:event_miGroupCreateActionPerformed
 
     private void miGroupChangeInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGroupChangeInfoActionPerformed
-       ControllerForms.getInstance().openFrmGroupChangeInfo();
+        ControllerForms.getInstance().openFrmGroupChangeInfo();
     }//GEN-LAST:event_miGroupChangeInfoActionPerformed
 
     private void miGroupDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGroupDeleteActionPerformed
         ControllerForms.getInstance().openFrmGroupDelete();
     }//GEN-LAST:event_miGroupDeleteActionPerformed
+
+    private void miProfileConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProfileConfigurationActionPerformed
+        ControllerForms.getInstance().openFrmProfileConfiguration();
+    }//GEN-LAST:event_miProfileConfigurationActionPerformed
 
     private void initialize() {
         setTitle("Main menu");
@@ -149,9 +166,9 @@ public class FrmMain extends javax.swing.JFrame {
         } catch (CustomException ex) {
             ex.printStackTrace();
         }
-        
+
         setFormElements();
-        
+
         setResizable(false);
         setLocationRelativeTo(null);
     }
@@ -165,11 +182,13 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JMenu mbGroup;
     private javax.swing.JMenu mbHiker;
     private javax.swing.JMenuBar mbMain;
+    private javax.swing.JMenu mbProfile;
     private javax.swing.JMenuItem miGroupChangeInfo;
     private javax.swing.JMenuItem miGroupCreate;
     private javax.swing.JMenuItem miGroupDelete;
     private javax.swing.JMenuItem miHikerChangeInfo;
     private javax.swing.JMenuItem miHikerCreate;
     private javax.swing.JMenuItem miHikerDelete;
+    private javax.swing.JMenuItem miProfileConfiguration;
     // End of variables declaration//GEN-END:variables
 }

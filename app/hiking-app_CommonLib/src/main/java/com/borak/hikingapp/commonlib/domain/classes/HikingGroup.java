@@ -5,6 +5,7 @@
 package com.borak.hikingapp.commonlib.domain.classes;
 
 import java.io.Serializable;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,18 +23,10 @@ public class HikingGroup implements Serializable {
     private boolean hasLiscence;
     private Place place;
     private List<HikingActivity> groupActivities;
-
-    public static final String DB_ID = "id";
-    public static final String DB_CRN = "crn";
-    public static final String DB_NAME = "name";
-    public static final String DB_DESCRIPTION = "description";
-    public static final String DB_RESOURCES = "resources";
-    public static final String DB_HAS_LISCENCE = "has_liscence";
-    public static final String DB_PLACE = "place_id";
-    public static final String DB_TABLE = "hiking_group";
-    public static final String DB_TABLE_INITIALS = "hiking_group";
+    private List<Profile> profiles;
 
     public HikingGroup() {
+        profiles = new LinkedList<>();
     }
 
     public HikingGroup(String crn, String name, String description, String resources, boolean hasLiscence, Place place, List<HikingActivity> groupActivities) {
@@ -44,6 +37,7 @@ public class HikingGroup implements Serializable {
         this.hasLiscence = hasLiscence;
         this.place = place;
         this.groupActivities = groupActivities;
+        profiles = new LinkedList<>();
     }
 
     public HikingGroup(Long id, String crn, String name, String description, String resources, boolean hasLiscence, Place place, List<HikingActivity> groupActivities) {
@@ -55,9 +49,28 @@ public class HikingGroup implements Serializable {
         this.hasLiscence = hasLiscence;
         this.place = place;
         this.groupActivities = groupActivities;
+        profiles = new LinkedList<>();
     }
-    
-    
+
+    public HikingGroup(Long id, String crn, String name, String description, String resources, boolean hasLiscence, Place place, List<HikingActivity> groupActivities, List<Profile> profiles) {
+        this.id = id;
+        this.crn = crn;
+        this.name = name;
+        this.description = description;
+        this.resources = resources;
+        this.hasLiscence = hasLiscence;
+        this.place = place;
+        this.groupActivities = groupActivities;
+        this.profiles = profiles;
+    }
+
+    public List<Profile> getProfiles() {
+        return profiles;
+    }
+
+    public void setProfiles(List<Profile> profiles) {
+        this.profiles = profiles;
+    }
 
     public Long getId() {
         return id;
@@ -148,64 +161,6 @@ public class HikingGroup implements Serializable {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static String getAllQuery() {
-        return "SELECT "
-                + DB_TABLE_INITIALS + "." + DB_ID + ","
-                + DB_TABLE_INITIALS + "." + DB_CRN + ","
-                + DB_TABLE_INITIALS + "." + DB_NAME + ","
-                + DB_TABLE_INITIALS + "." + DB_DESCRIPTION + ","
-                + DB_TABLE_INITIALS + "." + DB_RESOURCES + ","
-                + DB_TABLE_INITIALS + "." + DB_HAS_LISCENCE + ","
-                + DB_TABLE_INITIALS + "." + DB_PLACE + ","
-                + Place.DB_TABLE_INITIALS + "." + Place.DB_NAME
-                + " FROM " + DB_TABLE + " " + DB_TABLE_INITIALS
-                + " INNER JOIN " + Place.DB_TABLE + " " + Place.DB_TABLE_INITIALS + " ON"
-                + "(" + DB_TABLE_INITIALS + "." + DB_PLACE + "=" + Place.DB_TABLE_INITIALS + "." + Place.DB_ID + ");";
-    }
-
-    public static String insertQuery() {
-        return "INSERT INTO "
-                + DB_TABLE + "("
-                + DB_CRN + ","
-                + DB_NAME + ","
-                + DB_DESCRIPTION + ","
-                + DB_RESOURCES + ","
-                + DB_HAS_LISCENCE + ","
-                + DB_PLACE + ")"
-                + " VALUES(?,?,?,?,?,?);";
-    }
-
-    public static String findQuery() {
-        return "SELECT "
-                + DB_TABLE_INITIALS + "." + DB_ID + ","
-                + DB_TABLE_INITIALS + "." + DB_CRN + ","
-                + DB_TABLE_INITIALS + "." + DB_NAME + ","
-                + DB_TABLE_INITIALS + "." + DB_DESCRIPTION + ","
-                + DB_TABLE_INITIALS + "." + DB_RESOURCES + ","
-                + DB_TABLE_INITIALS + "." + DB_HAS_LISCENCE + ","
-                + DB_TABLE_INITIALS + "." + DB_PLACE + ","
-                + Place.DB_TABLE_INITIALS + "." + Place.DB_ID
-                + " FROM " + DB_TABLE + " " + DB_TABLE_INITIALS
-                + " INNER JOIN " + Place.DB_TABLE + " " + Place.DB_TABLE_INITIALS
-                + " ON(" + DB_TABLE_INITIALS + "." + DB_PLACE + "=" + Place.DB_TABLE_INITIALS + "." + Place.DB_ID
-                + ") WHERE " + DB_TABLE_INITIALS + "." + DB_CRN + "=?;";
-    }
-
-    public static String deleteQuery() {
-        return "DELETE FROM " + DB_TABLE + " WHERE " + DB_CRN + "=?;";
-    }
-
-    public static String updateQuery() {
-        return "UPDATE " + DB_TABLE + " SET "
-                + DB_CRN + "=?,"
-                + DB_NAME + "=?,"
-                + DB_DESCRIPTION + "=?,"
-                + DB_RESOURCES + "=?,"
-                + DB_HAS_LISCENCE + "=?,"
-                + DB_PLACE + "=? "
-                + "WHERE " + DB_CRN + "=?;";
     }
 
 }

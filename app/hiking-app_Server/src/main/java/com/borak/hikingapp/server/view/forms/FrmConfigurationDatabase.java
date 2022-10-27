@@ -115,9 +115,9 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
     private void setDatabasePicker() {
         compDatabasePicker = new CompDatabasePicker();
         compDatabasePicker.setCaption("Current database:");
-        compDatabasePicker.setCaptionSize(120);
-        compDatabasePicker.setErrorMessageSize(200);
-        compDatabasePicker.setInputSize(200);
+        compDatabasePicker.setCaptionWidth(120);
+        compDatabasePicker.setErrorMessageWidth(200);
+        compDatabasePicker.setInputWidth(200);
         compDatabasePicker.setErrorMessage("");
 
         ((CompDatabasePicker) compDatabasePicker).addActionListener(new ActionListener() {
@@ -135,23 +135,23 @@ public class FrmConfigurationDatabase extends javax.swing.JDialog {
         compDatabasePassword = new CompStringInput();
 
         compDatabaseUrl.setCaption("Url:");
-        compDatabaseUrl.setCaptionSize(70);
-        compDatabaseUrl.setInputSize(330);
-        compDatabaseUrl.setErrorMessageSize(330);
+        compDatabaseUrl.setCaptionWidth(70);
+        compDatabaseUrl.setInputWidth(330);
+        compDatabaseUrl.setErrorMessageWidth(330);
         compDatabaseUrl.setErrorMessage("");
         compDatabaseUrl.setEnabledInput(false);
 
         compDatabaseUsername.setCaption("Username:");
-        compDatabaseUsername.setCaptionSize(70);
-        compDatabaseUsername.setInputSize(330);
-        compDatabaseUsername.setErrorMessageSize(330);
+        compDatabaseUsername.setCaptionWidth(70);
+        compDatabaseUsername.setInputWidth(330);
+        compDatabaseUsername.setErrorMessageWidth(330);
         compDatabaseUsername.setErrorMessage("");
         compDatabaseUsername.setEnabledInput(false);
 
         compDatabasePassword.setCaption("Password:");
-        compDatabasePassword.setCaptionSize(70);
-        compDatabasePassword.setInputSize(330);
-        compDatabasePassword.setErrorMessageSize(330);
+        compDatabasePassword.setCaptionWidth(70);
+        compDatabasePassword.setInputWidth(330);
+        compDatabasePassword.setErrorMessageWidth(330);
         compDatabasePassword.setErrorMessage("");
         compDatabasePassword.setEnabledInput(false);
 

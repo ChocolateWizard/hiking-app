@@ -8,9 +8,9 @@ package com.borak.hikingapp.server.domain.constants;
  *
  * @author Despot
  */
-public final class Constants {
+public final class PropertyConstants {
 
-    private Constants() {
+    private PropertyConstants() {
     }
 
     public static final String IMAGES_LOCATIONS_FILE_NAME = "images.locations.properties";

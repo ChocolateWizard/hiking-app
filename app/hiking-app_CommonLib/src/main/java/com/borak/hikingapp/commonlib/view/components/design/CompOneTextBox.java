@@ -4,11 +4,13 @@
  */
 package com.borak.hikingapp.commonlib.view.components.design;
 
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
@@ -17,6 +19,8 @@ import net.miginfocom.swing.MigLayout;
 /**
  *
  * @author Despot
+ * @param <ComponentType>
+ * @param <ValidatorType>
  */
 public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax.swing.JPanel implements IComponent<ComponentType> {
 
@@ -70,26 +74,14 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
 
     private void setCaption() {
         lblCaption = new JLabel("Caption");
-//        Dimension d = caption.getPreferredSize();
-//        int width = (int) d.getWidth();
-//        int height = (int) d.getHeight();
-//        caption.setPreferredSize(new Dimension(100, height));
     }
 
     private void setInputField() {
         txtField = new JTextField();
-//        Dimension d = txtField.getPreferredSize();
-//        int width = (int) d.getWidth();
-//        int height = (int) d.getHeight();
-//        txtField.setPreferredSize(new Dimension(200, height));
     }
 
     private void setErrorMessage() {
-        lblErrorMessage = new JLabel("ErrorMessage");
-//        Dimension d = errorMessage.getPreferredSize();
-//        int width = (int) d.getWidth();
-//        int height = (int) d.getHeight();
-//        errorMessage.setPreferredSize(new Dimension(200, height));
+        lblErrorMessage = new JLabel("Error message");
         lblErrorMessage.setForeground(Color.red);
     }
 
@@ -101,15 +93,17 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
     }
 
     @Override
-    public void setCaption(String[] caption) {
-        caption = formatArrayString(caption);
-        if (caption != null && caption.length > 0) {
-            lblCaption.setText(caption[0]);
+    public void setAllCaptions(String[] caption) {
+        if (caption != null) {
+            caption = formatArrayString(caption);
+            if (caption.length > 0) {
+                lblCaption.setText(caption[0]);
+            }
         }
     }
 
     @Override
-    public void setCaptionSize(int width) {
+    public void setCaptionWidth(int width) {
         Dimension d = lblCaption.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblCaption.setPreferredSize(d);
@@ -119,15 +113,15 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
     public void setCaptionSize(int width, int height) {
         lblCaption.setPreferredSize(new Dimension(width, height));
     }
-//-----------------------------ERROR MESSAGE-------------------------------------
 
+//-----------------------------ERROR MESSAGE-------------------------------------
     @Override
     public void setErrorMessage(String errorMessage) {
         lblErrorMessage.setText(errorMessage);
     }
 
     @Override
-    public void setErrorMessageSize(int width) {
+    public void setErrorMessageWidth(int width) {
         Dimension d = lblErrorMessage.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblErrorMessage.setPreferredSize(d);
@@ -140,7 +134,7 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
 //----------------------------INPUT----------------------------------------------
 
     @Override
-    public void setInputSize(int width) {
+    public void setInputWidth(int width) {
         Dimension d = txtField.getPreferredSize();
         d.setSize(width, d.getHeight());
         txtField.setPreferredSize(d);
@@ -152,7 +146,7 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
     }
 
     @Override
-    public void setInputSize(Integer[] width) {
+    public void setAllInputsWidth(Integer[] width) {
         width = formatArray(width);
         if (width != null && width.length > 0) {
             Dimension d = txtField.getPreferredSize();
@@ -162,24 +156,26 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
     }
 
     @Override
-    public void setInputSize(Integer[] width, Integer[] height) {
-        width = formatArray(width);
-        height = formatArray(height);
-
-        if ((width != null && width.length > 0) && (height != null && height.length > 0)) {
-            //both width and height got atleast 1 element
-            txtField.setPreferredSize(new Dimension(width[0], height[0]));
-        } else if (width != null && width.length > 0) {
-            //only width has atleast 1 element
-            Dimension d = txtField.getPreferredSize();
-            d.setSize(width[0], d.getHeight());
-            txtField.setPreferredSize(d);
-        } else if (height != null && height.length > 0) {
-            //only height has atleast 1 element
-            Dimension d = txtField.getPreferredSize();
-            d.setSize(d.getWidth(), height[0]);
-            txtField.setPreferredSize(d);
+    public void setAllInputsSize(Integer[] width, Integer[] height) {
+        Dimension d = txtField.getPreferredSize();
+        if (width != null) {
+            width = formatArray(width);
+            if (width.length > 0) {
+                d.width = width[0];
+            }
         }
+        if (height != null) {
+            height = formatArray(height);
+            if (height.length > 0) {
+                d.height = height[0];
+            }
+        }
+        txtField.setPreferredSize(d);
+    }
+
+    @Override
+    public void loadValues(ComponentType[] values) throws CustomException {
+        throw new UnsupportedOperationException("Method 'loadValues(ComponentType[] values)' not supported!");
     }
 
     @Override
@@ -198,26 +194,20 @@ public abstract class CompOneTextBox<ComponentType, ValidatorType> extends javax
     }
 
     private Integer[] formatArray(Integer[] n) {
-        if (n == null || n.length == 0) {
-            return n;
-        }
-        List<Integer> list = new ArrayList<>(n.length);
-        for (Integer n1 : n) {
-            if (n1 != null) {
-                list.add(n1);
+        List<Integer> list = new LinkedList<>();
+        for (int i = 0; i < n.length; i++) {
+            if (n[i] != null) {
+                list.add(n[i]);
             }
         }
         return list.toArray(Integer[]::new);
     }
 
     private String[] formatArrayString(String[] n) {
-        if (n == null || n.length == 0) {
-            return n;
-        }
-        List<String> list = new ArrayList<>(n.length);
-        for (String n1 : n) {
-            if (n1 != null) {
-                list.add(n1);
+        List<String> list = new LinkedList<>();
+        for (int i = 0; i < n.length; i++) {
+            if (n[i] != null) {
+                list.add(n[i]);
             }
         }
         return list.toArray(String[]::new);

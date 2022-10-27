@@ -10,6 +10,8 @@ import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.repository.db.connections.DatabaseConnectionManager;
+import com.borak.hikingapp.server.repository.db.mysql.queries.QueryHikingActivity;
+import com.borak.hikingapp.server.repository.db.mysql.queries.QueryHikingGroup;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +29,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public List<HikingGroup> getAll() throws CustomException {
-        String queryGroup = HikingGroup.getAllQuery();
+        String queryGroup = QueryHikingGroup.getAll();
         try {
             Statement statementGroups;
             ResultSet rsGroups;
@@ -53,7 +55,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 g = new HikingGroup(gId, gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
 
                 //find all activities of found hiking group
-                String queryActivities = HikingActivity.getAllQuery();
+                String queryActivities = QueryHikingActivity.getAllByHikingGroup();
                 statementActivities = connection.prepareStatement(queryActivities);
                 statementActivities.setLong(1, gId);
                 rsActivities = statementActivities.executeQuery();
@@ -88,7 +90,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void insert(HikingGroup object) throws CustomException {
-        String queryGroup = HikingGroup.insertQuery();
+        String queryGroup = QueryHikingGroup.insert();
         try {
             PreparedStatement statement = connection.prepareStatement(queryGroup, Statement.RETURN_GENERATED_KEYS);
             statement.setString(1, object.getCrn());
@@ -105,7 +107,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 aId = rs.getLong(1);
             }
             if (object.getGroupActivities() != null && !object.getGroupActivities().isEmpty()) {
-                String queryActivities = HikingActivity.insertQuery();
+                String queryActivities = QueryHikingActivity.insert();
                 statement = connection.prepareStatement(queryActivities);
                 for (HikingActivity groupActivity : object.getGroupActivities()) {
                     statement.setLong(1, aId);
@@ -130,7 +132,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public HikingGroup find(HikingGroup object) throws CustomException {
-        String queryGroup = HikingGroup.findQuery();
+        String queryGroup = QueryHikingGroup.findByCRN();
         try {
             PreparedStatement statementGroup;
             ResultSet rsGroup;
@@ -154,7 +156,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 g = new HikingGroup(gCrn, gName, gDescription, gResources, gHasLiscence, new Place(pId, pName), null);
 
                 //find all activities of found hiking group
-                String queryActivities = HikingActivity.getAllQuery();
+                String queryActivities = QueryHikingActivity.getAllByHikingGroup();
                 statementActivities = connection.prepareStatement(queryActivities);
                 statementActivities.setLong(1, gId);
                 rsActivities = statementActivities.executeQuery();
@@ -187,7 +189,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void delete(HikingGroup object) throws CustomException {
-        String query = HikingGroup.deleteQuery();
+        String query = QueryHikingGroup.deleteByCRN();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getCrn());
@@ -202,7 +204,7 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
 
     @Override
     public void update(HikingGroup object) throws CustomException {
-        String queryUpdateGroup = HikingGroup.updateQuery();
+        String queryUpdateGroup = QueryHikingGroup.updateByCRN();
         try {
             PreparedStatement statementUpdateGroup = connection.prepareStatement(queryUpdateGroup);
             statementUpdateGroup.setString(1, object.getCrn());
@@ -214,13 +216,13 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
             statementUpdateGroup.setString(7, object.getCrn());
             statementUpdateGroup.executeUpdate();
 
-            String queryDeleteActivities = HikingActivity.deleteQuery();
+            String queryDeleteActivities = QueryHikingActivity.deleteByHikingGroup();
             PreparedStatement statementDeleteActivities = connection.prepareStatement(queryDeleteActivities);
             statementDeleteActivities.setLong(1, object.getId());
             statementDeleteActivities.executeUpdate();
 
             if (object.getGroupActivities() != null && !object.getGroupActivities().isEmpty()) {
-                String queryInsertActivities = HikingActivity.insertQuery();
+                String queryInsertActivities = QueryHikingActivity.insert();
                 PreparedStatement statementInsertActivities = connection.prepareStatement(queryInsertActivities);
                 for (HikingActivity groupActivity : object.getGroupActivities()) {
                     statementInsertActivities.setLong(1, object.getId());
@@ -242,5 +244,15 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
             throw new CustomException(ErrorType.UPDATE_QUERY_ERROR, "Unable to update hiking group!", ex);
         }
 
+    }
+
+    @Override
+    public void insertAll(List<HikingGroup> object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteAll() throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

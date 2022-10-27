@@ -14,6 +14,7 @@ import com.borak.hikingapp.client.view.forms.FrmHikerCreate;
 import com.borak.hikingapp.client.view.forms.FrmHikerDelete;
 import com.borak.hikingapp.client.view.forms.FrmLogin;
 import com.borak.hikingapp.client.view.forms.FrmMain;
+import com.borak.hikingapp.client.view.forms.FrmProfileConfiguration;
 import com.borak.hikingapp.client.view.forms.FrmRegister;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
@@ -35,6 +36,7 @@ public class ControllerForms {
     private FrmHikerChangeInfo frmHikerChangeInfo;
     private FrmHikerChangeInfo_Dialog frmHikerChangeInfo_Dialog;
     private FrmGroupChangeInfo_Dialog frmGroupChangeInfo_Dialog;
+    private FrmProfileConfiguration frmProfileConfiguration;
 
     private static ControllerForms instance;
 
@@ -177,6 +179,18 @@ public class ControllerForms {
         if (frmGroupChangeInfo_Dialog != null) {
             frmGroupChangeInfo_Dialog.dispose();
             frmGroupChangeInfo_Dialog = null;
+        }
+    }
+
+    public void openFrmProfileConfiguration() {
+        frmProfileConfiguration = new FrmProfileConfiguration(frmMain, true);
+        frmProfileConfiguration.setVisible(true);
+    }
+
+    public void closeFrmProfileConfiguration() {
+        if (frmProfileConfiguration != null) {
+            frmProfileConfiguration.dispose();
+            frmProfileConfiguration = null;
         }
     }
 

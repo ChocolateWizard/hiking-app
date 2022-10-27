@@ -98,9 +98,9 @@ public class FrmConfigurationPort extends javax.swing.JDialog {
     private void setComponents() {
         componentPort = new CompNumberInput(ValidatorFactory.getInstance().getPortValidator());
         componentPort.setCaption("Port:");
-        componentPort.setCaptionSize(50);
-        componentPort.setInputSize(200);
-        componentPort.setErrorMessageSize(200);
+        componentPort.setCaptionWidth(50);
+        componentPort.setInputWidth(200);
+        componentPort.setErrorMessageWidth(200);
         componentPort.setErrorMessage("");
 
         try {

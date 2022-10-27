@@ -118,40 +118,40 @@ public class FrmHikerCreate extends javax.swing.JDialog {
 
         ucinComp = new CompStringInput(ValidatorFactory.getInstance().getHikerUcinValidator());
         ucinComp.setCaption("UCIN: ");
-        ucinComp.setCaptionSize(120);
-        ucinComp.setInputSize(200);
-        ucinComp.setErrorMessageSize(200);
+        ucinComp.setCaptionWidth(120);
+        ucinComp.setInputWidth(200);
+        ucinComp.setErrorMessageWidth(200);
         ucinComp.setErrorMessage("");
 
         firstNameComp = new CompStringInput(ValidatorFactory.getInstance().getHikerFirstNameValidator());
         firstNameComp.setCaption("First name: ");
-        firstNameComp.setCaptionSize(120);
-        firstNameComp.setInputSize(200);
-        firstNameComp.setErrorMessageSize(200);
+        firstNameComp.setCaptionWidth(120);
+        firstNameComp.setInputWidth(200);
+        firstNameComp.setErrorMessageWidth(200);
         firstNameComp.setErrorMessage("");
 
         lastNameComp = new CompStringInput(ValidatorFactory.getInstance().getHikerLastNameValidator());
         lastNameComp.setCaption("Last name: ");
-        lastNameComp.setCaptionSize(120);
-        lastNameComp.setInputSize(200);
-        lastNameComp.setErrorMessageSize(200);
+        lastNameComp.setCaptionWidth(120);
+        lastNameComp.setInputWidth(200);
+        lastNameComp.setErrorMessageWidth(200);
         lastNameComp.setErrorMessage("");
 
         genderComp = new CompGenderBinaryChoice();
         genderComp.setCaption("Gender: ");
-        genderComp.setCaptionSize(170);
+        genderComp.setCaptionWidth(170);
         genderComp.setErrorMessage("");
 
         dateOfBirthComp = new CompDateAdvanced();
         dateOfBirthComp.setCaption("Date of birth: ");
-        dateOfBirthComp.setCaptionSize(140);
+        dateOfBirthComp.setCaptionWidth(140);
         dateOfBirthComp.setErrorMessage("");
 
         yearsOfExperienceComp = new CompNumberInput(ValidatorFactory.getInstance().getHikerYearsOfExperienceValidator());
         yearsOfExperienceComp.setCaption("Years of experience: ");
         //yearsOfExperienceComp.setCaptionSize(130);
-        yearsOfExperienceComp.setInputSize(70);
-        yearsOfExperienceComp.setErrorMessageSize(200);
+        yearsOfExperienceComp.setInputWidth(70);
+        yearsOfExperienceComp.setErrorMessageWidth(200);
         yearsOfExperienceComp.setErrorMessage("");
 
         List<Place> places;
@@ -161,12 +161,12 @@ public class FrmHikerCreate extends javax.swing.JDialog {
                 places = (List<Place>) response.getArgument();
                 if (places == null || places.isEmpty()) {
                     placeComp = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-                    placeComp.setErrorMessageSize(200);
+                    placeComp.setErrorMessageWidth(200);
                     placeComp.setErrorMessage("There are no places!");
                 } else {
                     Place[] pom = places.toArray(new Place[0]);
                     placeComp = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
-                    placeComp.setErrorMessageSize(200);
+                    placeComp.setErrorMessageWidth(200);
                     placeComp.setErrorMessage("");
                 }
             } else {
@@ -175,13 +175,13 @@ public class FrmHikerCreate extends javax.swing.JDialog {
         } catch (CustomException ex) {
             ex.printStackTrace();
             placeComp = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-            placeComp.setErrorMessageSize(200);
+            placeComp.setErrorMessageWidth(200);
             placeComp.setErrorMessage("Unable to retreive places!");
         }
 
         placeComp.setCaption("Place: ");
-        placeComp.setCaptionSize(120);
-        placeComp.setInputSize(200);
+        placeComp.setCaptionWidth(120);
+        placeComp.setInputWidth(200);
 
         pnlComponents.add(((JPanel) ucinComp), "cell 0 0");
         pnlComponents.add(((JPanel) firstNameComp), "cell 0 1");

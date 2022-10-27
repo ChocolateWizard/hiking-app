@@ -119,9 +119,9 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
     private void setComponents() {
         filterComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupFilterValidator());
         filterComponent.setCaption("Find by name:");
-        filterComponent.setCaptionSize(100);
-        filterComponent.setInputSize(200);
-        filterComponent.setErrorMessageSize(200);
+        filterComponent.setCaptionWidth(100);
+        filterComponent.setInputWidth(200);
+        filterComponent.setErrorMessageWidth(200);
         filterComponent.setErrorMessage("");
         pnlFilter.add((JPanel) filterComponent, "cell 0 0");
     }

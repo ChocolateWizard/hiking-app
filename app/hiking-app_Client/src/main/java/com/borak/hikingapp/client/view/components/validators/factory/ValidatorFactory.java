@@ -10,6 +10,7 @@ import com.borak.hikingapp.client.view.components.validators.ValidatorGroupDescr
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupFilter;
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorGroupResources;
+import com.borak.hikingapp.client.view.components.validators.ValidatorHiker;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerFilter;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerFirstName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikerLastName;
@@ -19,7 +20,9 @@ import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActi
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityDescription;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorHikingActivityOrderNumber;
+import com.borak.hikingapp.client.view.components.validators.ValidatorHikingGroup;
 import com.borak.hikingapp.client.view.components.validators.ValidatorPlace;
+import com.borak.hikingapp.client.view.components.validators.ValidatorProfileNote;
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserEmail;
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserFirstName;
 import com.borak.hikingapp.client.view.components.validators.ValidatorUserLastName;
@@ -181,6 +184,16 @@ public class ValidatorFactory {
 
     public IValidator<HikingActivity> getHikingActivityValidator() {
         return new ValidatorHikingActivity();
+    }
+
+    public IValidator<Object> getHikingGroupValidator() {
+        return new ValidatorHikingGroup();
+    }
+    public IValidator<Object> getHikerValidator() {
+        return new ValidatorHiker();
+    }
+    public IValidator<String> getProfileNotesValidator() {
+        return new ValidatorProfileNote();
     }
 
 }

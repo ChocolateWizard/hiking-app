@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.commonlib.view.components.design;
 
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import java.awt.Color;
@@ -71,10 +72,6 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     
     private void setCaption() {
         lblCaption = new JLabel("Caption");
-//        Dimension d = lblCaption.getPreferredSize();
-//        int width = (int) d.getWidth();
-//        int height = (int) d.getHeight();
-//        lblCaption.setPreferredSize(new Dimension(100, height));
     }
     
     private void setInputField(ComponentType[] arrayOfElements) {
@@ -93,22 +90,28 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     
     private void setErrorMessage() {
         lblErrorMessage = new JLabel("ErrorMessage");
-//        Dimension d = lblErrorMessage.getPreferredSize();
-//        int width = (int) d.getWidth();
-//        int height = (int) d.getHeight();
-//        lblErrorMessage.setPreferredSize(new Dimension(200, height));
         lblErrorMessage.setForeground(Color.red);
     }
 
     //===============================METHODS=========================================
 //-------------------------------CAPTION-----------------------------------------
     @Override
+    public void loadValues(ComponentType[] values) throws CustomException {
+        cbField.removeAllItems();
+        if (values != null) {
+            for(int i=0;i<values.length;i++){
+                cbField.addItem(values[i]);
+            }
+        }
+    }
+    
+    @Override
     public void setCaption(String caption) {
         lblCaption.setText(caption);
     }
     
     @Override
-    public void setCaption(String[] caption) {
+    public void setAllCaptions(String[] caption) {
         caption = formatArrayString(caption);
         if (caption != null && caption.length > 0) {
             lblCaption.setText(caption[0]);
@@ -116,7 +119,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     }
     
     @Override
-    public void setCaptionSize(int width) {
+    public void setCaptionWidth(int width) {
         Dimension d = lblCaption.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblCaption.setPreferredSize(d);
@@ -134,7 +137,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     }
     
     @Override
-    public void setErrorMessageSize(int width) {
+    public void setErrorMessageWidth(int width) {
         Dimension d = lblErrorMessage.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblErrorMessage.setPreferredSize(d);
@@ -147,7 +150,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
 //----------------------------INPUT----------------------------------------------
 
     @Override
-    public void setInputSize(int width) {
+    public void setInputWidth(int width) {
         Dimension d = cbField.getPreferredSize();
         d.setSize(width, d.getHeight());
         cbField.setPreferredSize(d);
@@ -159,7 +162,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     }
     
     @Override
-    public void setInputSize(Integer[] width) {
+    public void setAllInputsWidth(Integer[] width) {
         width = formatArray(width);
         if (width != null && width.length > 0) {
             Dimension d = cbField.getPreferredSize();
@@ -169,7 +172,7 @@ public abstract class CompOneComboBox<ComponentType, ValidatorType> extends java
     }
     
     @Override
-    public void setInputSize(Integer[] width, Integer[] height) {
+    public void setAllInputsSize(Integer[] width, Integer[] height) {
         width = formatArray(width);
         height = formatArray(height);
         

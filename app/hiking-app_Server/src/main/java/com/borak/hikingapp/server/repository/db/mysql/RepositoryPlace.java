@@ -8,6 +8,7 @@ import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.repository.db.connections.DatabaseConnectionManager;
+import com.borak.hikingapp.server.repository.db.mysql.queries.QueryPlace;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -22,7 +23,7 @@ public class RepositoryPlace extends DatabaseConnectionManager<Place> {
 
     @Override
     public List<Place> getAll() throws CustomException {
-        String query = Place.getAllQuery();
+        String query = QueryPlace.getAll();
         List<Place> places = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
@@ -61,6 +62,16 @@ public class RepositoryPlace extends DatabaseConnectionManager<Place> {
 
     @Override
     public void update(Place object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void insertAll(List<Place> object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteAll() throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

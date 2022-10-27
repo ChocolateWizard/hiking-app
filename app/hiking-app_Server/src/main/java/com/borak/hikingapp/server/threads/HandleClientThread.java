@@ -10,6 +10,7 @@ import com.borak.hikingapp.commonlib.communication.TransferObject;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.classes.Profile;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
@@ -64,6 +65,21 @@ public class HandleClientThread extends Thread {
                 case GET_ALL_PLACES:
                     getAllPlaces();
                     break;
+                case GET_ALL_HIKING_GROUPS:
+                    getAllHikingGroups();
+                    break;
+                case GET_ALL_HIKERS:
+                    getAllHikers();
+                    break;
+                case GET_ALL_HIKING_GROUPS_WITH_HIKERS:
+                    getAllHikingGroupsWithHikers();
+                    break;
+                case GET_ALL_HIKERS_WITH_HIKING_GROUPS:
+                    getAllHikersWithHikingGroups();
+                    break;
+                case GET_ALL_PROFILES:
+                    getAllProfiles();
+                    break;
                 case REGISTER:
                     register(request);
                     break;
@@ -94,6 +110,9 @@ public class HandleClientThread extends Thread {
                 case DELETE_HIKING_GROUP:
                     deleteHikingGroup(request);
                     break;
+                case SAVE_PROFILES:
+                    saveProfiles(request);
+                    break;
                 default:
             }
         } catch (CustomException ex) {
@@ -105,6 +124,36 @@ public class HandleClientThread extends Thread {
     private void getAllPlaces() throws CustomException {
         List<Place> places = ControllerSO.getInstance().getAllPlaces();
         TransferObject response = new TransferObject(ResponseType.SUCCESS, places, null);
+        (new Sender(socket)).send(response);
+    }
+
+    private void getAllHikingGroups() throws CustomException {
+        List<HikingGroup> groups = ControllerSO.getInstance().getAllHikingGroups();
+        TransferObject response = new TransferObject(ResponseType.SUCCESS, groups, null);
+        (new Sender(socket)).send(response);
+    }
+
+    private void getAllHikers() throws CustomException {
+        List<Hiker> hikers = ControllerSO.getInstance().getAllHikers();
+        TransferObject response = new TransferObject(ResponseType.SUCCESS, hikers, null);
+        (new Sender(socket)).send(response);
+    }
+
+    private void getAllHikingGroupsWithHikers() throws CustomException {
+        List<HikingGroup> groups = ControllerSO.getInstance().getAllHikingGroupsWithHikers();
+        TransferObject response = new TransferObject(ResponseType.SUCCESS, groups, null);
+        (new Sender(socket)).send(response);
+    }
+
+    private void getAllHikersWithHikingGroups() throws CustomException {
+        List<Hiker> hikers = ControllerSO.getInstance().getAllHikersWithHikingGroups();
+        TransferObject response = new TransferObject(ResponseType.SUCCESS, hikers, null);
+        (new Sender(socket)).send(response);
+    }
+
+    private void getAllProfiles() throws CustomException {
+        List<Profile> profiles = ControllerSO.getInstance().getAllProfiles();
+        TransferObject response = new TransferObject(ResponseType.SUCCESS, profiles, null);
         (new Sender(socket)).send(response);
     }
 
@@ -216,6 +265,17 @@ public class HandleClientThread extends Thread {
             (new Sender(socket)).send(response);
         } catch (CustomException | ClassCastException e) {
             throw new CustomException(ErrorType.HIKING_GROUP_DELETE_ERROR, e.getMessage());
+        }
+    }
+
+    private void saveProfiles(TransferObject request) throws CustomException {
+        try {
+            List<Profile> profiles = (List<Profile>) request.getArgument();
+            ControllerSO.getInstance().saveProfiles(profiles);
+            TransferObject response = new TransferObject(ResponseType.SUCCESS, null);
+            (new Sender(socket)).send(response);
+        } catch (CustomException | ClassCastException e) {
+            throw new CustomException(ErrorType.PROFILES_SAVE_ERROR, e.getMessage());
         }
     }
 //==========================================================================================================

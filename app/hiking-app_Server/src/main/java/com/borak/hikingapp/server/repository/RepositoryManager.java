@@ -7,6 +7,7 @@ package com.borak.hikingapp.server.repository;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.classes.Profile;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
@@ -14,7 +15,6 @@ import com.borak.hikingapp.server.domain.enums.DatabaseType;
 import com.borak.hikingapp.server.logic.controllers.Util;
 import com.borak.hikingapp.server.repository.IRepository;
 import com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers;
-
 
 /**
  *
@@ -28,6 +28,7 @@ public final class RepositoryManager {
     private IRepository<User> repositoryUser;
     private IRepository<Hiker> repositoryHiker;
     private IRepository<HikingGroup> repositoryHikingGroup;
+    private IRepository<Profile> repositoryProfiles;
     private RepositoryLoggedUsers repositoryLoggedUsers;
 
     public RepositoryManager() throws CustomException {
@@ -52,6 +53,7 @@ public final class RepositoryManager {
                     break;
                 default:
             }
+            repositoryProfiles = new com.borak.hikingapp.server.repository.db.mysql.RepositoryProfile();
             repositoryLoggedUsers = new com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers();
         } catch (CustomException e) {
             throw new CustomException(ErrorType.CRITICAL_ERROR, "Unable to initialize repositories!", e);
@@ -74,10 +76,16 @@ public final class RepositoryManager {
     public IRepository<User> getRepositoryUser() {
         return repositoryUser;
     }
+    
+    public IRepository<Profile> getRepositoryProfiles() {
+        return repositoryProfiles;
+    }
 
     public RepositoryLoggedUsers getRepositoryLoggedUsers() {
         return repositoryLoggedUsers;
     }
+
     
     
+
 }

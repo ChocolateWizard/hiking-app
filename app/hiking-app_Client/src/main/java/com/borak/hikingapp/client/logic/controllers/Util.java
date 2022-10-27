@@ -9,9 +9,7 @@ import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Properties;
 import com.borak.hikingapp.client.domain.constants.PropertyConstants;
 
@@ -94,13 +92,9 @@ public final class Util {
     public String getFrmGroupChangeInfo_DialogFavicon() {
         return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFODIALOG_FAVICON);
     }
-
-    public String getFrmConfigurationPortFavicon() {
-        return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONPORTFAVICON);
-    }
-
-    public String getFrmConfigurationDatabaseFavicon() {
-        return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMCONFIGURATIONDATABASEFAVICON);
+    
+    public String getFrmProfileCreateFavicon() {
+        return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMPROFILECREATEFAVICON);
     }
 
 //=====================JOPTIONS PANES FAVICONS=====================================  
@@ -115,5 +109,7 @@ public final class Util {
     public String getErrorFavicon() {
         return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_ERROR_FAVICON);
     }
+
+    
 
 }

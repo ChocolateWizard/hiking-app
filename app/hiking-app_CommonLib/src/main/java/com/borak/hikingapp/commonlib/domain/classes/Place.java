@@ -16,11 +16,6 @@ public class Place implements Serializable {
     private Long id;
     private String name;
 
-    public static final String DB_ID = "id";
-    public static final String DB_NAME = "name";
-    public static final String DB_TABLE = "place";
-    public static final String DB_TABLE_INITIALS = "place";
-
     public Place() {
     }
 
@@ -70,10 +65,6 @@ public class Place implements Serializable {
     @Override
     public String toString() {
         return name;
-    }
-
-    public static String getAllQuery() {
-        return "SELECT " + DB_ID + "," + DB_NAME + " FROM " + DB_TABLE;
     }
 
 }

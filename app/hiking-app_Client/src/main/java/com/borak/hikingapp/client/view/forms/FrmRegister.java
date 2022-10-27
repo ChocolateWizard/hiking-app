@@ -113,37 +113,37 @@ public class FrmRegister extends javax.swing.JDialog {
 
         firstNameComp = new CompStringInput(ValidatorFactory.getInstance().getUserFirstNameValidator());
         firstNameComp.setCaption("First name: ");
-        firstNameComp.setCaptionSize(100);
-        firstNameComp.setInputSize(200);
-        firstNameComp.setErrorMessageSize(200);
+        firstNameComp.setCaptionWidth(100);
+        firstNameComp.setInputWidth(200);
+        firstNameComp.setErrorMessageWidth(200);
         firstNameComp.setErrorMessage("");
 
         lastNameComp = new CompStringInput(ValidatorFactory.getInstance().getUserLastNameValidator());
         lastNameComp.setCaption("Last name: ");
-        lastNameComp.setCaptionSize(100);
-        lastNameComp.setInputSize(200);
-        lastNameComp.setErrorMessageSize(200);
+        lastNameComp.setCaptionWidth(100);
+        lastNameComp.setInputWidth(200);
+        lastNameComp.setErrorMessageWidth(200);
         lastNameComp.setErrorMessage("");
 
         usernameComp = new CompStringInput(ValidatorFactory.getInstance().getUserUsernameValidator());
         usernameComp.setCaption("Username: ");
-        usernameComp.setCaptionSize(100);
-        usernameComp.setInputSize(200);
-        usernameComp.setErrorMessageSize(200);
+        usernameComp.setCaptionWidth(100);
+        usernameComp.setInputWidth(200);
+        usernameComp.setErrorMessageWidth(200);
         usernameComp.setErrorMessage("");
 
         passwordComp = new CompPswInput(ValidatorFactory.getInstance().getUserPasswordValidator());
         passwordComp.setCaption("Password: ");
-        passwordComp.setCaptionSize(100);
-        passwordComp.setInputSize(200);
-        passwordComp.setErrorMessageSize(200);
+        passwordComp.setCaptionWidth(100);
+        passwordComp.setInputWidth(200);
+        passwordComp.setErrorMessageWidth(200);
         passwordComp.setErrorMessage("");
 
         emailComp = new CompStringInput(ValidatorFactory.getInstance().getUserEmailValidator());
         emailComp.setCaption("Email: ");
-        emailComp.setCaptionSize(100);
-        emailComp.setInputSize(200);
-        emailComp.setErrorMessageSize(200);
+        emailComp.setCaptionWidth(100);
+        emailComp.setInputWidth(200);
+        emailComp.setErrorMessageWidth(200);
         emailComp.setErrorMessage("");
 
         List<Place> places;
@@ -153,12 +153,12 @@ public class FrmRegister extends javax.swing.JDialog {
                 places = (List<Place>) response.getArgument();
                 if (places == null || places.isEmpty()) {
                     placeComp = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-                    placeComp.setErrorMessageSize(200);
+                    placeComp.setErrorMessageWidth(200);
                     placeComp.setErrorMessage("There are no places!");
                 } else {
                     Place[] pom = places.toArray(new Place[0]);
                     placeComp = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
-                    placeComp.setErrorMessageSize(200);
+                    placeComp.setErrorMessageWidth(200);
                     placeComp.setErrorMessage("");
                 }
             } else {
@@ -168,13 +168,13 @@ public class FrmRegister extends javax.swing.JDialog {
         } catch (CustomException ex) {
             ex.printStackTrace();
             placeComp = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-            placeComp.setErrorMessageSize(200);
+            placeComp.setErrorMessageWidth(200);
             placeComp.setErrorMessage("Unable to retreive places!");
         }
 
         placeComp.setCaption("Place: ");
-        placeComp.setCaptionSize(100);
-        placeComp.setInputSize(200);
+        placeComp.setCaptionWidth(100);
+        placeComp.setInputWidth(200);
 
         pnlComponents.add(((JPanel) firstNameComp), "cell 0 0");
         pnlComponents.add(((JPanel) lastNameComp), "cell 0 1");

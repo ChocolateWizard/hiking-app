@@ -8,10 +8,12 @@ import com.borak.hikingapp.server.repository.RepositoryManager;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.classes.Profile;
 import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -83,6 +85,115 @@ public final class ControllerSO {
             }
         } catch (CustomException e) {
             throw new CustomException(ErrorType.HIKER_GET_ALL_ERROR, "Unable to retreive hikers");
+        }
+    }
+
+    public List<HikingGroup> getAllHikingGroups() throws CustomException {
+        try {
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                List<HikingGroup> groups = repositoryManager.getRepositoryHikingGroup().getAll();
+                repositoryManager.getRepositoryHikingGroup().commit();
+                return groups;
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_GET_ALL_ERROR, "Unable to retreive hiking groups");
+        }
+    }
+
+    public List<HikingGroup> getAllHikingGroupsWithHikers() throws CustomException {
+        try {
+            List<HikingGroup> groups = new LinkedList<>();
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                groups = repositoryManager.getRepositoryHikingGroup().getAll();
+                repositoryManager.getRepositoryHikingGroup().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
+            }
+            try {
+                repositoryManager.getRepositoryProfiles().connect();
+                List<Profile> profiles = repositoryManager.getRepositoryProfiles().getAll();
+                repositoryManager.getRepositoryProfiles().commit();
+                for (HikingGroup group : groups) {
+                    for (Profile profile : profiles) {
+                        if (group.equals(profile.getHikingGroup())) {
+                            group.getProfiles().add(profile);
+                        }
+                    }
+                }
+                return groups;
+            } catch (CustomException | NullPointerException ex) {
+                repositoryManager.getRepositoryProfiles().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryProfiles().disconnect();
+            }
+
+        } catch (CustomException | NullPointerException e) {
+            throw new CustomException(ErrorType.HIKING_GROUP_GET_ALL_ERROR, "Unable to retreive hiking groups");
+        }
+    }
+
+    public List<Hiker> getAllHikersWithHikingGroups() throws CustomException {
+        try {
+            List<Hiker> hikers = new LinkedList<>();
+            try {
+                repositoryManager.getRepositoryHiker().connect();
+                hikers = repositoryManager.getRepositoryHiker().getAll();
+                repositoryManager.getRepositoryHiker().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHiker().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHiker().disconnect();
+            }
+            try {
+                repositoryManager.getRepositoryProfiles().connect();
+                List<Profile> profiles = repositoryManager.getRepositoryProfiles().getAll();
+                repositoryManager.getRepositoryProfiles().commit();
+                for (Hiker hiker : hikers) {
+                    for (Profile profile : profiles) {
+                        if (hiker.equals(profile.getHiker())) {
+                            hiker.getProfiles().add(profile);
+                        }
+                    }
+                }
+                return hikers;
+            } catch (CustomException | NullPointerException ex) {
+                repositoryManager.getRepositoryProfiles().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryProfiles().disconnect();
+            }
+        } catch (CustomException | NullPointerException e) {
+            throw new CustomException(ErrorType.HIKER_GET_ALL_ERROR, "Unable to retreive hikers");
+        }
+    }
+
+    public List<Profile> getAllProfiles() throws CustomException {
+        try {
+            try {
+                repositoryManager.getRepositoryProfiles().connect();
+                List<Profile> profiles = repositoryManager.getRepositoryProfiles().getAll();
+                repositoryManager.getRepositoryProfiles().commit();
+                return profiles;
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryProfiles().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryProfiles().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.PROFILES_GET_ALL_ERROR, "Unable to retreive profiles");
         }
 
     }
@@ -353,6 +464,24 @@ public final class ControllerSO {
 
     public void logout(User loggedUser) throws CustomException {
         repositoryManager.getRepositoryLoggedUsers().remove(loggedUser);
+    }
+
+    public void saveProfiles(List<Profile> profiles) throws CustomException {
+        try {
+            try {
+                repositoryManager.getRepositoryProfiles().connect();
+                repositoryManager.getRepositoryProfiles().deleteAll();
+                repositoryManager.getRepositoryProfiles().insertAll(profiles);
+                repositoryManager.getRepositoryProfiles().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryProfiles().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryProfiles().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.PROFILES_SAVE_ERROR, "Unable to save profiles");
+        }
     }
 
 }

@@ -10,6 +10,7 @@ import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.domain.enums.Gender;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.repository.db.connections.DatabaseConnectionManager;
+import com.borak.hikingapp.server.repository.db.mysql.queries.QueryHiker;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -27,7 +28,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public List<Hiker> getAll() throws CustomException {
-        String query = Hiker.getAllQuery();
+        String query = QueryHiker.getAll();
         List<Hiker> hikers = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
@@ -46,7 +47,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
                 Long placeId = rs.getLong(8);
                 String name = rs.getString(9);
                 p = new Place(placeId, name);
-                h = new Hiker(ucin, firstName, lastName, gender, date, years, p);
+                h = new Hiker(id,ucin, firstName, lastName, gender, date, years, p);
                 hikers.add(h);
             }
             rs.close();
@@ -61,7 +62,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void insert(Hiker object) throws CustomException {
-        String query = Hiker.insertQuery();
+        String query = QueryHiker.insert();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -83,7 +84,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public Hiker find(Hiker object) throws CustomException {
-        String query = Hiker.findQuery();
+        String query = QueryHiker.findByUCIN();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -117,7 +118,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void delete(Hiker object) throws CustomException {
-        String query = Hiker.deleteQuery();
+        String query = QueryHiker.deleteByUCIN();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -132,7 +133,7 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
 
     @Override
     public void update(Hiker object) throws CustomException {
-        String query = Hiker.updateQuery();
+        String query = QueryHiker.updateByUCIN();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUcin());
@@ -151,5 +152,15 @@ public class RepositoryHiker extends DatabaseConnectionManager<Hiker> {
         } catch (SQLException ex) {
             throw new CustomException(ErrorType.UPDATE_QUERY_ERROR, "Unable to update hiker: " + object, ex);
         }
+    }
+
+    @Override
+    public void insertAll(List<Hiker> object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteAll() throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

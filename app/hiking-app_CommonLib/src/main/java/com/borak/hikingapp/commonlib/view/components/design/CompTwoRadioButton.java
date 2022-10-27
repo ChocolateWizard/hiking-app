@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.commonlib.view.components.design;
 
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import java.awt.Color;
@@ -111,12 +112,17 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
 //-------------------------------CAPTION-----------------------------------------
 
     @Override
+    public void loadValues(ComponentType[] values) throws CustomException {
+        throw new UnsupportedOperationException("Method 'loadValues(ComponentType[] values)' not supported!");
+    }
+
+    @Override
     public void setCaption(String caption) {
         lblCaption.setText(caption);
     }
 
     @Override
-    public void setCaption(String[] caption) {
+    public void setAllCaptions(String[] caption) {
         caption = formatArrayString(caption);
         if (caption != null && caption.length > 0) {
             for (int i = 0; (i < caption.length && i < 3); i++) {
@@ -135,7 +141,7 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
     }
 
     @Override
-    public void setCaptionSize(int width) {
+    public void setCaptionWidth(int width) {
         Dimension d = lblCaption.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblCaption.setPreferredSize(d);
@@ -153,7 +159,7 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
     }
 
     @Override
-    public void setErrorMessageSize(int width) {
+    public void setErrorMessageWidth(int width) {
         Dimension d = lblErrorMessage.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblErrorMessage.setPreferredSize(d);
@@ -166,7 +172,7 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
 //----------------------------INPUT----------------------------------------------
 
     @Override
-    public void setInputSize(int width) {
+    public void setInputWidth(int width) {
         Dimension d1 = rb1.getPreferredSize();
         Dimension d2 = rb2.getPreferredSize();
         d1.setSize(width, d1.getHeight());
@@ -182,7 +188,7 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
     }
 
     @Override
-    public void setInputSize(Integer[] width) {
+    public void setAllInputsWidth(Integer[] width) {
         width = formatArray(width);
         if (width != null && width.length > 0) {
             Dimension d;
@@ -206,7 +212,7 @@ public abstract class CompTwoRadioButton<ComponentType, ValidatorType> extends j
     }
 
     @Override
-    public void setInputSize(Integer[] width, Integer[] height) {
+    public void setAllInputsSize(Integer[] width, Integer[] height) {
         width = formatArray(width);
         height = formatArray(height);
         if ((width != null && width.length > 0) && (height != null && height.length > 0)) {

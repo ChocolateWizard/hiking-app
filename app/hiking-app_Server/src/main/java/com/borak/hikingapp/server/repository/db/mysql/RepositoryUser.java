@@ -9,6 +9,7 @@ import com.borak.hikingapp.commonlib.domain.classes.User;
 import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.server.repository.db.connections.DatabaseConnectionManager;
+import com.borak.hikingapp.server.repository.db.mysql.queries.QueryUser;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,7 +25,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public List<User> getAll() throws CustomException {
-        String query = User.getAllQuery();
+        String query = QueryUser.getAll();
         List<User> users = new LinkedList<>();
         try {
             Statement statement = connection.createStatement();
@@ -57,7 +58,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public void insert(User object) throws CustomException {
-        String query = User.insertQuery();
+        String query = QueryUser.insert();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getFirstName());
@@ -78,7 +79,7 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public User find(User object) throws CustomException {
-        String query = User.findQuery();
+        String query = QueryUser.findByUsername();
         try {
             PreparedStatement statement = connection.prepareStatement(query);
             statement.setString(1, object.getUsername());
@@ -116,6 +117,16 @@ public class RepositoryUser extends DatabaseConnectionManager<User> {
 
     @Override
     public void update(User object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void insertAll(List<User> object) throws CustomException {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @Override
+    public void deleteAll() throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 

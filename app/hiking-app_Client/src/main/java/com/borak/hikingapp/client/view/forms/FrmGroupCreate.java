@@ -255,51 +255,51 @@ public class FrmGroupCreate extends javax.swing.JDialog {
     private void setGroupComponents() {
         crnComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupCrnValidator());
         crnComponent.setCaption("CRN:");
-        crnComponent.setCaptionSize(100);
-        crnComponent.setInputSize(205);
-        crnComponent.setErrorMessageSize(205);
+        crnComponent.setCaptionWidth(100);
+        crnComponent.setInputWidth(205);
+        crnComponent.setErrorMessageWidth(205);
         crnComponent.setErrorMessage("");
 
         nameComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupNameValidator());
         nameComponent.setCaption("Name:");
-        nameComponent.setCaptionSize(80);
-        nameComponent.setInputSize(205);
-        nameComponent.setErrorMessageSize(205);
+        nameComponent.setCaptionWidth(80);
+        nameComponent.setInputWidth(205);
+        nameComponent.setErrorMessageWidth(205);
         nameComponent.setErrorMessage("");
 
         hasLiscenceComponent = new CompYesNoRB();
         hasLiscenceComponent.setCaption("Is it liscenced?");
-        hasLiscenceComponent.setCaptionSize(140);
+        hasLiscenceComponent.setCaptionWidth(140);
         hasLiscenceComponent.setErrorMessage("");
 
         descriptionComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getGroupDescriptionValidator());
         descriptionComponent.setCaption("Description:");
-        descriptionComponent.setCaptionSize(100);
+        descriptionComponent.setCaptionWidth(100);
         descriptionComponent.setInputSize(205, 100);
-        descriptionComponent.setErrorMessageSize(205);
+        descriptionComponent.setErrorMessageWidth(205);
         descriptionComponent.setErrorMessage("");
 
         resourcesComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getGroupResourcesValidator());
         resourcesComponent.setCaption("Resources:");
-        resourcesComponent.setCaptionSize(80);
+        resourcesComponent.setCaptionWidth(80);
         resourcesComponent.setInputSize(205, 100);
-        resourcesComponent.setErrorMessageSize(205);
+        resourcesComponent.setErrorMessageWidth(205);
         resourcesComponent.setErrorMessage("");
 
         if (places == null || places.isEmpty()) {
             placeComponent = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-            placeComponent.setErrorMessageSize(205);
+            placeComponent.setErrorMessageWidth(205);
             placeComponent.setErrorMessage("There are no places!");
         } else {
             Place[] pom = places.toArray(Place[]::new);
             placeComponent = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
-            placeComponent.setErrorMessageSize(205);
+            placeComponent.setErrorMessageWidth(205);
             placeComponent.setErrorMessage("");
         }
 
         placeComponent.setCaption("Place:");
-        placeComponent.setInputSize(205);
-        placeComponent.setCaptionSize(80);
+        placeComponent.setInputWidth(205);
+        placeComponent.setCaptionWidth(80);
 
         pnlGroupComponents.add((JPanel) crnComponent, "cell 0 0,align left top");
         pnlGroupComponents.add((JPanel) descriptionComponent, "cell 0 1,align left top");
@@ -312,49 +312,49 @@ public class FrmGroupCreate extends javax.swing.JDialog {
     private void setActivityComponents() {
         activityOrderNumberComponent = new CompNumberInput(ValidatorFactory.getInstance().getHikingActivityOrderNumberValidator());
         activityOrderNumberComponent.setCaption("Order number:");
-        activityOrderNumberComponent.setCaptionSize(100);
-        activityOrderNumberComponent.setInputSize(200);
-        activityOrderNumberComponent.setErrorMessageSize(200);
+        activityOrderNumberComponent.setCaptionWidth(100);
+        activityOrderNumberComponent.setInputWidth(200);
+        activityOrderNumberComponent.setErrorMessageWidth(200);
         activityOrderNumberComponent.setErrorMessage("");
         activityOrderNumberComponent.setEnabledInput(false);
 
         activityNameComponent = new CompStringInput(ValidatorFactory.getInstance().getHikingActivityNameValidator());
         activityNameComponent.setCaption("Name:");
-        activityNameComponent.setCaptionSize(100);
-        activityNameComponent.setInputSize(200);
-        activityNameComponent.setErrorMessageSize(200);
+        activityNameComponent.setCaptionWidth(100);
+        activityNameComponent.setInputWidth(200);
+        activityNameComponent.setErrorMessageWidth(200);
         activityNameComponent.setErrorMessage("");
         activityNameComponent.setEnabledInput(false);
 
         activityDescriptionComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getHikingActivityDescriptionValidator());
         activityDescriptionComponent.setCaption("Description:");
-        activityDescriptionComponent.setCaptionSize(80);
+        activityDescriptionComponent.setCaptionWidth(80);
         activityDescriptionComponent.setInputSize(200, 170);
-        activityDescriptionComponent.setErrorMessageSize(200);
+        activityDescriptionComponent.setErrorMessageWidth(200);
         activityDescriptionComponent.setErrorMessage("");
         activityDescriptionComponent.setEnabledInput(false);
 
         activityDateComponent = new CompDateAdvanced();
         activityDateComponent.setCaption("Date:");
-        activityDateComponent.setCaptionSize(110);
-        activityDateComponent.setErrorMessageSize(120);
+        activityDateComponent.setCaptionWidth(110);
+        activityDateComponent.setErrorMessageWidth(120);
         activityDateComponent.setErrorMessage("");
         activityDateComponent.setEnabledInput(false);
 
         if (places == null || places.isEmpty()) {
             activityPlaceComponent = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
-            activityPlaceComponent.setErrorMessageSize(205);
+            activityPlaceComponent.setErrorMessageWidth(205);
             activityPlaceComponent.setErrorMessage("There are no places!");
         } else {
             Place[] pom = places.toArray(Place[]::new);
             activityPlaceComponent = new CompPlaceInput(pom, ValidatorFactory.getInstance().getPlaceValidator());
-            activityPlaceComponent.setErrorMessageSize(205);
+            activityPlaceComponent.setErrorMessageWidth(205);
             activityPlaceComponent.setErrorMessage("");
         }
 
         activityPlaceComponent.setCaption("Place:");
-        activityPlaceComponent.setInputSize(200);
-        activityPlaceComponent.setCaptionSize(100);
+        activityPlaceComponent.setInputWidth(200);
+        activityPlaceComponent.setCaptionWidth(100);
 
         pnlActivityAddComponents.add((JPanel) activityOrderNumberComponent, "cell 0 0,align left top");
         pnlActivityAddComponents.add((JPanel) activityNameComponent, "cell 0 1,align left top");

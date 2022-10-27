@@ -4,6 +4,7 @@
  */
 package com.borak.hikingapp.commonlib.view.components.design;
 
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import com.borak.hikingapp.commonlib.view.components.validators.api.IValidator;
 import java.awt.Color;
@@ -127,6 +128,12 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
 //=================================================================================
+    @Override
+    public void loadValues(ComponentType[] values) throws CustomException {
+        throw new UnsupportedOperationException("Method 'loadValues(ComponentType[] values)' not supported!");
+    }
+    
+    
     private void setFirstCB() {
         cb1 = new JComboBox<>();
 //        Dimension d = cb1.getPreferredSize();
@@ -159,7 +166,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
     @Override
-    public void setCaption(String[] caption) {
+    public void setAllCaptions(String[] caption) {
         caption = formatArrayString(caption);
         if (caption != null && caption.length > 0) {
             for (int i = 0; (i < caption.length && i < 4); i++) {
@@ -180,7 +187,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
     @Override
-    public void setCaptionSize(int width) {
+    public void setCaptionWidth(int width) {
         Dimension d = lblCaption.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblCaption.setPreferredSize(d);
@@ -198,7 +205,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
     @Override
-    public void setErrorMessageSize(int width) {
+    public void setErrorMessageWidth(int width) {
         Dimension d = lblErrorMessage.getPreferredSize();
         d.setSize(width, d.getHeight());
         lblErrorMessage.setPreferredSize(d);
@@ -211,7 +218,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
 //----------------------------INPUT----------------------------------------------
 
     @Override
-    public void setInputSize(int width) {
+    public void setInputWidth(int width) {
         Dimension d1 = cb1.getPreferredSize();
         Dimension d2 = cb2.getPreferredSize();
         Dimension d3 = cb3.getPreferredSize();
@@ -234,7 +241,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
     @Override
-    public void setInputSize(Integer[] width) {
+    public void setAllInputsWidth(Integer[] width) {
         width = formatArray(width);
         if (width != null && width.length > 0) {
             for (int i = 0; i < width.length && i < 3; i++) {
@@ -262,7 +269,7 @@ public abstract class CompThreeComboBox<ComponentType, ComboBoxesType, Validator
     }
 
     @Override
-    public void setInputSize(Integer[] width, Integer[] height) {
+    public void setAllInputsSize(Integer[] width, Integer[] height) {
         width = formatArray(width);
         height = formatArray(height);
 
