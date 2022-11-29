@@ -190,7 +190,7 @@ public class FrmLogin extends javax.swing.JFrame {
                 Window.unSuccessfulOperation(this, "Unsuccessful login", e.getMessage());
             }
         } else {
-            Window.unSuccessfulOperation(this, "Unsuccessful login", errorMessage);
+            Window.unSuccessfulOperation(this, "Unsuccessful login", "Unable to login user");
         }
 
     }

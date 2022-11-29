@@ -15,6 +15,7 @@ import com.borak.hikingapp.client.view.helpers.Window;
 import com.borak.hikingapp.commonlib.communication.TransferObject;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.domain.enums.Gender;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
@@ -53,7 +54,7 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
 
     private Hiker hiker;
 
-    public FrmHikerChangeInfo_Dialog(Dialog owner, boolean modal, Hiker h) {
+    public FrmHikerChangeInfo_Dialog(Dialog owner, boolean modal, Hiker h) throws CustomException {
         super(owner, modal);
         initComponents();
         this.hiker = h;
@@ -85,7 +86,7 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initialize() {
+    private void initialize() throws CustomException {
         setTitle("Update hiker");
         MigLayout migMain = new MigLayout("", "", "[]0[]");
         setLayout(migMain);
@@ -103,7 +104,7 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
 
-    private void setFormElements() {
+    private void setFormElements() throws CustomException {
         setPanels();
         setComponents();
         setButtons();
@@ -120,7 +121,7 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
         add(pnlButtons, "cell 0 1,align right");
     }
 
-    private void setComponents() {
+    private void setComponents() throws CustomException {
 
         ucinComp = new CompStringInput(ValidatorFactory.getInstance().getHikerUcinValidator());
         ucinComp.setCaption("UCIN: ");
@@ -215,10 +216,10 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
                 throw response.getException();
             }
         } catch (CustomException ex) {
-            ex.printStackTrace();
             placeComp = new CompPlaceInput(null, ValidatorFactory.getInstance().getPlaceValidator());
             placeComp.setErrorMessageWidth(200);
             placeComp.setErrorMessage("Unable to retreive places!");
+            throw new CustomException(ErrorType.PLACE_EMPTY_LIST_ERROR, "Unable to retreive places!", ex);
         }
 
         placeComp.setCaption("Place: ");
@@ -340,18 +341,18 @@ public class FrmHikerChangeInfo_Dialog extends javax.swing.JDialog {
                         hiker.setDateOfBirth(dateOfBirth);
                         hiker.setYearsOfExperience(yearsOfExperience);
                         hiker.setPlace(place);
-                        Window.successfulOperation(this, "Success", "Successfully updated hiker!");
+                        Window.successfulOperation(this, "Successful hiker update", "Successfully updated hiker!");
                         ControllerForms.getInstance().closeFrmHikerChangeInfo_Dialog();
                     } else {
                         throw response.getException();
                     }
                 } catch (CustomException ex) {
                     ex.printStackTrace();
-                    Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+                    Window.unSuccessfulOperation(this, "Unsuccessful hiker update", ex.getMessage());
                 }
             }
         } else {
-            Window.unSuccessfulOperation(this, "Error", errorMessage);
+            Window.unSuccessfulOperation(this, "Unsuccessful hiker update", "Unable to update hiker");
         }
     }
 

@@ -275,7 +275,7 @@ public class FrmRegister extends javax.swing.JDialog {
                 Window.unSuccessfulOperation(this, "Unsuccessful registration", ex.getMessage());
             }
         } else {
-            Window.unSuccessfulOperation(this, "Unsuccessful registration", errorMessage);
+            Window.unSuccessfulOperation(this, "Unsuccessful registration", "Unable to register user");
         }
 
     }

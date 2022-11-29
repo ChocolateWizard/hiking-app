@@ -369,6 +369,7 @@ public final class ControllerSO {
                 if (g == null) {
                     repositoryManager.getRepositoryHikingGroup().insert(mainGroup);
                 } else {
+                    System.out.println("aaaaaaaa");
                     throw new CustomException(ErrorType.HIKING_GROUP_INVALID_ERROR, "Hiking group " + mainGroup.getCrn() + " already exists!");
                 }
                 repositoryManager.getRepositoryHikingGroup().commit();

@@ -130,7 +130,6 @@ public class FrmConfigurationPort extends javax.swing.JDialog {
             Window.successfulOperation(this, "Port configuration", "Port changes succesfully saved!");
             ControllerForms.getInstance().closeFrmConfigurationPort();
         } catch (CustomException ex) {
-            ex.printStackTrace();
             componentPort.setErrorMessage(ex.getMessage());
             Window.unSuccessfulOperation(this, "Port configuration", "Unable to save port changes!");
         }

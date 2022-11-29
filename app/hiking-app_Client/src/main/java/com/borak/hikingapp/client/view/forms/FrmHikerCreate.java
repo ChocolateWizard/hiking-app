@@ -285,17 +285,17 @@ public class FrmHikerCreate extends javax.swing.JDialog {
             try {
                 TransferObject response = ControllerSO.getInstance().createHiker(h);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
-                    Window.successfulOperation(this, "Created hiker", "Successful creation of new hiker!");
+                    Window.successfulOperation(this, "Successful hiker creation", "Successful creation of new hiker!");
                     ControllerForms.getInstance().closeFrmHikerCreate();
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Failed to create hiker", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful hiker creation", ex.getMessage());
             }
         } else {
-            Window.unSuccessfulOperation(this, "Failed to create hiker", errorMessage);
+            Window.unSuccessfulOperation(this, "Unsuccessful hiker creation", "Unable to create hiker");
         }
 
     }

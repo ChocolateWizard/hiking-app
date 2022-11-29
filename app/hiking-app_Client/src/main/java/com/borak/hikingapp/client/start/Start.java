@@ -23,5 +23,6 @@ public class Start {
         } catch (CustomException ex) {
             Window.unSuccessfulOperation(null, "Connection error", ex.getMessage());
         }
+
     }
 }

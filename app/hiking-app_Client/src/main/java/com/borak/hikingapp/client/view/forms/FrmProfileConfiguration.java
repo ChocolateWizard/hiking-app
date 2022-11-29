@@ -43,11 +43,11 @@ import net.miginfocom.swing.MigLayout;
  * @author User
  */
 public class FrmProfileConfiguration extends javax.swing.JDialog {
-    
+
     private JPanel pnlHikingGroups;
     private JPanel pnlHikingGroupsComponent;
     private JPanel pnlHikingGroupsButtons;
-    
+
     private JPanel pnlHikers;
     private JPanel pnlHikersView;
     private JPanel pnlHikersViewTable;
@@ -55,30 +55,30 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
     private JPanel pnlHikersAdd;
     private JPanel pnlHikersAddComponents;
     private JPanel pnlHikersAddButtons;
-    
+
     private HikingGroupTableModel tblModel;
     private JTable tblProfiles;
     private JScrollPane scrollPane;
-    
+
     private IComponent<HikingGroup> hikingGroupComponent;
     private IComponent<Hiker> hikerComponent;
     private IComponent<GregorianCalendar> dateComponent;
     private IComponent<String> noteComponent;
-    
+
     private JButton btnConfigurationSave;
     private JButton btnProfileAdd;
     private JButton btnProfileEdit;
     private JButton btnProfileRemove;
     private JButton btnProfileSave;
-    
+
     private List<HikingGroup> groups;
     private List<Hiker> hikers;
     private List<Profile> profiles;
-    
+
     private Profile editableProfile;
     private boolean isAdding = false;
     private boolean isEditing = false;
-    
+
     public FrmProfileConfiguration(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -120,14 +120,14 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         } catch (CustomException ex) {
             ex.printStackTrace();
         }
-        
+
         setFormElements();
-        
+
         pack();
         setResizable(false);
         setLocationRelativeTo(null);
     }
-    
+
     private void setFormElements() {
         getData();
         setData();
@@ -136,13 +136,13 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         setTable();
         setButtons();
     }
-    
+
     private void getData() {
         getHikingGroups();
         getHikers();
         getProfiles();
     }
-    
+
     private void getHikingGroups() {
         try {
             TransferObject response = ControllerSO.getInstance().getAllHikingGroups();
@@ -156,7 +156,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             groups = null;
         }
     }
-    
+
     private void getHikers() {
         try {
             TransferObject response = ControllerSO.getInstance().getAllHikers();
@@ -170,7 +170,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             hikers = null;
         }
     }
-    
+
     private void getProfiles() {
         try {
             TransferObject response = ControllerSO.getInstance().getAllProfiles();
@@ -184,7 +184,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             profiles = null;
         }
     }
-    
+
     private void setData() {
         if (groups != null && profiles != null) {
             for (HikingGroup group : groups) {
@@ -207,106 +207,106 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void setPanels() {
         setGroupPanels();
         setHikerPanels();
     }
-    
+
     private void setGroupPanels() {
         MigLayout migGroup = new MigLayout("insets 0 0 0 0", "", "[]0[]");
         MigLayout migGroupComponents = new MigLayout("insets 5 5 5 5", "", "");
         MigLayout migGroupButtons = new MigLayout("insets 0 5 5 0", "", "");
-        
+
         pnlHikingGroups = new JPanel(migGroup);
         pnlHikingGroupsComponent = new JPanel(migGroupComponents);
         pnlHikingGroupsButtons = new JPanel(migGroupButtons);
-        
+
         TitledBorder groupTitledBorder = BorderFactory.createTitledBorder("Hiking groups");
         groupTitledBorder.setTitleColor(Color.black);
         Border groupBorder = BorderFactory.createLineBorder(Color.black);
         groupTitledBorder.setBorder(groupBorder);
         pnlHikingGroups.setBorder(groupTitledBorder);
-        
+
         pnlHikingGroups.add(pnlHikingGroupsComponent, "cell 0 0");
         add(pnlHikingGroups, "cell 0 0");
         add(pnlHikingGroupsButtons, "cell 1 0");
     }
-    
+
     private void setHikerPanels() {
         MigLayout migHikers = new MigLayout("insets 0 0 0 0", "", "[]0[]");
         pnlHikers = new JPanel(migHikers);
-        
+
         TitledBorder hikersTitledBorder = BorderFactory.createTitledBorder("Hikers");
         hikersTitledBorder.setTitleColor(Color.black);
         Border hikersBorder = BorderFactory.createLineBorder(Color.black);
         hikersTitledBorder.setBorder(hikersBorder);
         pnlHikers.setBorder(hikersTitledBorder);
-        
+
         setHikersViewPanels();
         setHikersAddPanels();
-        
+
         pnlHikers.add(pnlHikersView, "cell 0 0");
         pnlHikers.add(pnlHikersAdd, "cell 0 1");
         add(pnlHikers, "cell 0 1 2 1");
-        
+
     }
-    
+
     private void setHikersViewPanels() {
         MigLayout migHikersView = new MigLayout("insets 0 0 0 0", "", "[]0[]");
         MigLayout migHikersViewTable = new MigLayout("insets 0 5 0 0", "", "");
         MigLayout migHikersViewButtons = new MigLayout("insets 5 5 5 0", "[]8[]8[]", "");
-        
+
         pnlHikersView = new JPanel(migHikersView);
         pnlHikersViewTable = new JPanel(migHikersViewTable);
         pnlHikersViewButtons = new JPanel(migHikersViewButtons);
-        
+
         pnlHikersView.add(pnlHikersViewTable, "cell 0 0");
         pnlHikersView.add(pnlHikersViewButtons, "cell 0 1");
     }
-    
+
     private void setHikersAddPanels() {
         MigLayout migHikersAdd = new MigLayout("insets 0 0 0 0", "", "[]0[]");
         MigLayout migHikersAddComponents = new MigLayout("insets 5 5 5 5", "[]10[]", "[]5[]");
         MigLayout migHikersAddButtons = new MigLayout("insets 0 5 5 0", "", "");
-        
+
         pnlHikersAdd = new JPanel(migHikersAdd);
         pnlHikersAddComponents = new JPanel(migHikersAddComponents);
         pnlHikersAddButtons = new JPanel(migHikersAddButtons);
-        
+
         TitledBorder hikersAddTitledBorder = BorderFactory.createTitledBorder("Hiker profile information");
         hikersAddTitledBorder.setTitleColor(Color.black);
         Border hikersAddBorder = BorderFactory.createLineBorder(Color.black);
         hikersAddTitledBorder.setBorder(hikersAddBorder);
         pnlHikersAdd.setBorder(hikersAddTitledBorder);
-        
+
         pnlHikersAdd.add(pnlHikersAddComponents, "cell 0 0");
         pnlHikersAdd.add(pnlHikersAddButtons, "cell 0 1");
     }
-    
+
     private void setComponents() {
         setGroupComponents();
         setHikersComponents();
     }
-    
+
     private void setGroupComponents() {
         if (groups == null || groups.isEmpty()) {
             hikingGroupComponent = new CompHikingGroupInput(null, ValidatorFactory.getInstance().getHikingGroupValidator());
-            hikingGroupComponent.setErrorMessageWidth(205);
+            hikingGroupComponent.setErrorMessageWidth(270);
             hikingGroupComponent.setEnabledInput(false);
             hikingGroupComponent.setErrorMessage("There are no hiking groups!");
         } else {
             HikingGroup[] pom = groups.toArray(HikingGroup[]::new);
             hikingGroupComponent = new CompHikingGroupInput(pom, ValidatorFactory.getInstance().getHikingGroupValidator());
-            hikingGroupComponent.setErrorMessageWidth(205);
+            hikingGroupComponent.setErrorMessageWidth(270);
             hikingGroupComponent.setErrorMessage("");
         }
         hikingGroupComponent.setCaption("Configure profiles for:");
-        hikingGroupComponent.setInputWidth(205);
+        hikingGroupComponent.setInputWidth(270);
         hikingGroupComponent.setCaptionWidth(140);
         pnlHikingGroupsComponent.add((JPanel) hikingGroupComponent, "cell 0 0");
     }
-    
+
     private void setHikersComponents() {
         hikerComponent = new CompHikerInput(null, ValidatorFactory.getInstance().getHikerValidator());
         hikerComponent.setErrorMessageWidth(205);
@@ -319,14 +319,14 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         } else {
             hikerComponent.setErrorMessage("");
         }
-        
+
         dateComponent = new CompDateAdvanced();
         dateComponent.setCaption("Date of enrollment:");
         dateComponent.setCaptionWidth(135);
         dateComponent.setErrorMessageWidth(120);
         dateComponent.setErrorMessage("");
         dateComponent.setEnabledInput(false);
-        
+
         noteComponent = new CompStringInputLarge(ValidatorFactory.getInstance().getProfileNotesValidator());
         noteComponent.setCaption("Notes:");
         noteComponent.setCaptionWidth(50);
@@ -334,13 +334,13 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         noteComponent.setErrorMessageWidth(200);
         noteComponent.setErrorMessage("");
         noteComponent.setEnabledInput(false);
-        
+
         pnlHikersAddComponents.add((JPanel) hikerComponent, "cell 0 0");
         pnlHikersAddComponents.add((JPanel) dateComponent, "cell 0 1");
         pnlHikersAddComponents.add((JPanel) noteComponent, "cell 1 0 1 2");
-        
+
     }
-    
+
     private void setTable() {
         try {
             HikingGroup selectedGroup = hikingGroupComponent.getValue();
@@ -353,11 +353,11 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         Dimension d = scrollPane.getPreferredSize();
         d.setSize(605, 200);
         scrollPane.setPreferredSize(d);
-        
+
         pnlHikersViewTable.add(scrollPane, "cell 0 0");
-        
+
     }
-    
+
     private void setButtons() {
         setGroupButtons();
         setHikerViewButtons();
@@ -365,13 +365,13 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         setAvailability();
         addListeners();
     }
-    
+
     private void setGroupButtons() {
         btnConfigurationSave = new JButton("<html><b><center>Save all<br>changes</center></b></html>");
         btnConfigurationSave.setFocusable(false);
-        pnlHikingGroupsButtons.add(btnConfigurationSave, "cell 0 0,gapleft 70");
+        pnlHikingGroupsButtons.add(btnConfigurationSave, "cell 0 0,gapleft 50");
     }
-    
+
     private void setHikerViewButtons() {
         btnProfileAdd = new JButton("Add");
         btnProfileEdit = new JButton("Edit");
@@ -379,29 +379,29 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         btnProfileAdd.setFocusable(false);
         btnProfileEdit.setFocusable(false);
         btnProfileRemove.setFocusable(false);
-        
+
         pnlHikersViewButtons.add(btnProfileAdd, "cell 0 0");
         pnlHikersViewButtons.add(btnProfileEdit, "cell 1 0");
         pnlHikersViewButtons.add(btnProfileRemove, "cell 2 0");
     }
-    
+
     private void setHikerAddButtons() {
         btnProfileSave = new JButton("Save profile information");
         btnProfileSave.setFocusable(false);
         pnlHikersAddButtons.add(btnProfileSave, "cell 0 1");
     }
-    
+
     private void setAvailability() {
         if (groups == null || groups.isEmpty() || hikers == null || hikers.isEmpty()) {
             btnConfigurationSave.setEnabled(false);
             btnProfileAdd.setEnabled(false);
             btnProfileEdit.setEnabled(false);
-            btnProfileRemove.setEnabled(false);          
+            btnProfileRemove.setEnabled(false);
         }
         btnProfileSave.setEnabled(false);
-        
+
     }
-    
+
     private void addListeners() {
         btnConfigurationSave.addActionListener(((ActionEvent) -> {
             btnGroupSavePressed();
@@ -441,13 +441,13 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
                 Hiker[] h = hikersNotInGroup.toArray(Hiker[]::new);
                 hikerComponent.loadValues(h);
                 hikerComponent.setErrorMessage("");
-                
+
                 dateComponent.setValue(new GregorianCalendar());
                 dateComponent.setErrorMessage("");
-                
+
                 noteComponent.setValue("");
                 noteComponent.setErrorMessage("");
-                
+
                 hikerComponent.setEnabledInput(true);
                 dateComponent.setEnabledInput(true);
                 noteComponent.setEnabledInput(true);
@@ -458,7 +458,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             Window.unSuccessfulOperation(this, "Add profile", "Unable to add profile!");
         }
     }
-    
+
     private void btnProfileEditPressed() {
         int[] rows = tblProfiles.getSelectedRows();
         if (rows.length == 0) {
@@ -508,7 +508,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void btnProfileRemovePressed() {
         int[] rows = tblProfiles.getSelectedRows();
         if (rows.length == 0) {
@@ -557,7 +557,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             }
         }
     }
-    
+
     private void btnProfileSavePressed() {
         boolean gate = true;
         Hiker h = null;
@@ -622,7 +622,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             Window.unSuccessfulOperation(this, "Save profile error", "Unable to save profile!");
         }
     }
-    
+
     public void cbGroupPressed() {
         try {
             HikingGroup g = hikingGroupComponent.getValue();
@@ -656,20 +656,22 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
             Window.unSuccessfulOperation(this, "Hiking group error", "Unable to change hiking group!");
         }
     }
-    
+
     private void btnGroupSavePressed() {
         try {
-            List<Profile> profilesToStore = getProfilesToStore();
-            TransferObject response = ControllerSO.getInstance().saveProfiles(profilesToStore);
-            if (response.getResponseType() == ResponseType.SUCCESS) {
-                Window.successfulOperation(this, "Save profiles", "Profiles succesfully saved!");
-                ControllerForms.getInstance().closeFrmProfileConfiguration();
-            } else {
-                Window.unSuccessfulOperation(this, "Save profiles error", response.getException().getMessage());
+            if (Window.question(this, "Save configuration", "Do you wish to save current configuration?")) {
+                List<Profile> profilesToStore = getProfilesToStore();
+                TransferObject response = ControllerSO.getInstance().saveProfiles(profilesToStore);
+                if (response.getResponseType() == ResponseType.SUCCESS) {
+                    Window.successfulOperation(this, "Successful configuration changes", "Profiles succesfully saved!");
+                    ControllerForms.getInstance().closeFrmProfileConfiguration();
+                } else {
+                    Window.unSuccessfulOperation(this, "Unsuccessful configuration changes", response.getException().getMessage());
+                }
             }
         } catch (CustomException e) {
             e.printStackTrace();
-            Window.unSuccessfulOperation(this, "Save profiles error", "Unable to save profiles!");
+            Window.unSuccessfulOperation(this, "Unsuccessful configuration changes", "Unable to save changes!");
         }
     }
 
@@ -690,7 +692,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
         }
         return hikersNotInGroup;
     }
-    
+
     private List<Profile> getProfilesToStore() {
         List<Profile> p = new LinkedList<>();
         for (HikingGroup group : groups) {

@@ -18,6 +18,7 @@ import com.borak.hikingapp.client.view.forms.FrmProfileConfiguration;
 import com.borak.hikingapp.client.view.forms.FrmRegister;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
+import com.borak.hikingapp.commonlib.exceptions.CustomException;
 
 /**
  *
@@ -122,7 +123,7 @@ public class ControllerForms {
         }
     }
 
-    public void openFrmHikerChangeInfo_Dialog(Hiker h) {
+    public void openFrmHikerChangeInfo_Dialog(Hiker h) throws CustomException {
         frmHikerChangeInfo_Dialog = new FrmHikerChangeInfo_Dialog(frmHikerChangeInfo, true, h);
         frmHikerChangeInfo_Dialog.setVisible(true);
     }
@@ -170,7 +171,7 @@ public class ControllerForms {
         }
     }
 
-    public void openFrmHikingGroupChangeInfo_Dialog(HikingGroup g) {
+    public void openFrmHikingGroupChangeInfo_Dialog(HikingGroup g) throws CustomException {
         frmGroupChangeInfo_Dialog = new FrmGroupChangeInfo_Dialog(frmGroupChangeInfo, true, g);
         frmGroupChangeInfo_Dialog.setVisible(true);
     }

@@ -4,7 +4,6 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.Util;
 import com.borak.hikingapp.client.view.components.validators.factory.ValidatorFactory;
@@ -31,20 +30,20 @@ import net.miginfocom.swing.MigLayout;
  * @author Despot
  */
 public class FrmGroupChangeInfo extends javax.swing.JDialog {
-
+    
     private IComponent<String> filterComponent;
-
+    
     private GroupTableModel tblModel;
     private JTable tblGroups;
     private JScrollPane scrollPane;
-
+    
     private JButton btnFilter;
     private JButton btnChange;
-
+    
     private JPanel pnlFilter;
     private JPanel pnlAction;
     private JPanel pnlShow;
-
+    
     public FrmGroupChangeInfo(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
@@ -86,36 +85,36 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         } catch (CustomException ex) {
             ex.printStackTrace();
         }
-
+        
         setElements();
-
+        
         pack();
         setLocationRelativeTo(null);
         setResizable(false);
     }
-
+    
     private void setElements() {
         setPanels();
         setComponents();
         setButtons();
         setTable();
-
+        
     }
-
+    
     private void setPanels() {
         MigLayout migFilter = new MigLayout("insets 5 5 5 15", "", "");
         MigLayout migAction = new MigLayout("insets 0 0 10 0", "[]8[]", "");
         MigLayout migShow = new MigLayout("insets 0 0 0 0", "", "");
-
+        
         pnlFilter = new JPanel(migFilter);
         pnlAction = new JPanel(migAction);
         pnlShow = new JPanel(migShow);
-
+        
         add(pnlFilter, "cell 0 0");
         add(pnlAction, "cell 1 0");
         add(pnlShow, "cell 0 1 2 1");// col row width height
     }
-
+    
     private void setComponents() {
         filterComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupFilterValidator());
         filterComponent.setCaption("Find by name:");
@@ -125,39 +124,39 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         filterComponent.setErrorMessage("");
         pnlFilter.add((JPanel) filterComponent, "cell 0 0");
     }
-
+    
     private void setTable() {
         tblModel = new GroupTableModel();
         tblGroups = new JTable(tblModel);
-
+        
         scrollPane = new JScrollPane(tblGroups);
         Dimension d = scrollPane.getPreferredSize();
         d.setSize(484, d.getHeight());
         scrollPane.setPreferredSize(d);
         pnlShow.add(scrollPane, "cell 0 0");
     }
-
+    
     private void setButtons() {
         btnFilter = new JButton("Find");
         btnChange = new JButton("Change");
-
+        
         Dimension d1 = btnFilter.getPreferredSize();
         Dimension d2 = btnChange.getPreferredSize();
-
+        
         Dimension d = new Dimension(findMax(d1.getWidth(), d2.getWidth()), findMax(d1.getHeight(), d2.getHeight()));
-
+        
         btnFilter.setPreferredSize(d);
         btnChange.setPreferredSize(d);
-
+        
         btnFilter.setFocusable(false);
         btnChange.setFocusable(false);
-
+        
         addListeners();
-
+        
         pnlAction.add(btnFilter, "cell 0 0");
         pnlAction.add(btnChange, "cell 1 0");
     }
-
+    
     private void addListeners() {
         btnFilter.addActionListener((ActionEvent e) -> {
             btnFilterPressed();
@@ -166,7 +165,7 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
             btnChangePressed();
         });
     }
-
+    
     private void btnFilterPressed() {
         try {
             filterComponent.setErrorMessage("");
@@ -178,27 +177,27 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     List<HikingGroup> groups = (List<HikingGroup>) response.getArgument();
                     if (groups == null || groups.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Error", "No hiking groups found with given name!");
+                        Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", "No hiking groups found with given name!");
                     } else {
                         tblModel.loadGroups(groups);
-                        Window.successfulOperation(this, "Success", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
+                        Window.successfulOperation(this, "Successful hiking group search", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
                     }
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
             }
-
+            
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+            Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
         }
-
+        
     }
-
+    
     private void btnChangePressed() {
         int[] rows = tblGroups.getSelectedRows();
         if (rows.length == 0) {
@@ -208,14 +207,20 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
         } else {
             HikingGroup g = tblModel.getGroup(rows[0]);
             if (g != null) {
-                ControllerForms.getInstance().openFrmHikingGroupChangeInfo_Dialog(g);
-                tblModel.fireTableRowsUpdated(rows[0], rows[0]);
+                try {
+                    ControllerSO.getInstance().showHikingGroup(g);
+                    tblModel.fireTableRowsUpdated(rows[0], rows[0]);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Window.unSuccessfulOperation(this, "Change hiking group error", "Unable to show hiking group");
+                }
+                
             } else {
                 Window.unSuccessfulOperation(this, "Change hiking group error", "No selected hiking groups!");
             }
         }
     }
-
+    
     private int findMax(double a, double b) {
         return a > b ? (int) a : (int) b;
     }

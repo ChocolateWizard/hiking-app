@@ -523,21 +523,21 @@ public class FrmGroupCreate extends javax.swing.JDialog {
             try {
                 TransferObject response = ControllerSO.getInstance().createHikingGroup(mainGroup);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
-                    Window.successfulOperation(this, "Created hiking group", "Successful creation of new hiking group!");
+                    Window.successfulOperation(this, "Successful group creation", "Successful creation of new hiking group!");
                     ControllerForms.getInstance().closeFrmGroupCreate();
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Failed to create hiker group", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful group creation", ex.getMessage());
             }
         } else {
             if (gateGroup == false) {
-                Window.unSuccessfulOperation(this, "Failed to create hiking group", errorMessageGroup.trim());
+                Window.unSuccessfulOperation(this, "Unsuccessful group creation", errorMessageGroup.trim());
             }
             if (gateActivity == false) {
-                Window.unSuccessfulOperation(this, "Failed to create hiking group", errorMessageActivity.trim());
+                Window.unSuccessfulOperation(this, "Unsuccessful group creation", errorMessageActivity.trim());
             }
 
         }

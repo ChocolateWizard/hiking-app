@@ -19,6 +19,8 @@ import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -177,22 +179,22 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     List<Hiker> hikers = (List<Hiker>) response.getArgument();
                     if (hikers == null || hikers.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Error", "No hikers found with given name!");
+                        Window.unSuccessfulOperation(this, "Unsuccessful hiker search", "No hikers found with given name!");
                     } else {
                         tblModel.loadHikers(hikers);
-                        Window.successfulOperation(this, "Success", "Found " + (hikers.size() == 1 ? "1 hiker" : hikers.size() + " hikers") + " with given name!");
+                        Window.successfulOperation(this, "Successful hiker search", "Found " + (hikers.size() == 1 ? "1 hiker" : hikers.size() + " hikers") + " with given name!");
                     }
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful hiker search", ex.getMessage());
             }
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+            Window.unSuccessfulOperation(this, "Unsuccessful hiker search", "Unable to find hikers");
         }
 
     }
@@ -202,14 +204,20 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
         if (rows.length == 0) {
             Window.unSuccessfulOperation(this, "Change hiker error", "No selected hiker!");
         } else if (rows.length > 1) {
-            Window.unSuccessfulOperation(this, "Change hiker error", "Pick 1 hiker you wish to change!");
+            Window.unSuccessfulOperation(this, "Change hiker error", "Pick 1 hiker you wish to change");
         } else {
             Hiker h = tblModel.getHiker(rows[0]);
             if (h != null) {
-                ControllerForms.getInstance().openFrmHikerChangeInfo_Dialog(h);
-                tblModel.fireTableRowsUpdated(rows[0], rows[0]);
+                try {
+                    ControllerSO.getInstance().showHiker(h);
+                    tblModel.fireTableRowsUpdated(rows[0], rows[0]);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                    Window.unSuccessfulOperation(this, "Change hiker error", "Unable to show hiker");
+                }
+
             } else {
-                Window.unSuccessfulOperation(this, "Change hiker error", "No selected hiker!");
+                Window.unSuccessfulOperation(this, "Change hiker error", "No selected hiker");
             }
         }
     }

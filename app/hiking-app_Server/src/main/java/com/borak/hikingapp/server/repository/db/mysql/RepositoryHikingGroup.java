@@ -162,13 +162,13 @@ public class RepositoryHikingGroup extends DatabaseConnectionManager<HikingGroup
                 rsActivities = statementActivities.executeQuery();
                 List<HikingActivity> groupActivities = new LinkedList<>();
                 while (rsActivities.next()) {
-                    Integer aOrN = rsGroup.getInt(2);
-                    String aName = rsGroup.getString(3);
-                    String aDescription = rsGroup.getString(4);
+                    Integer aOrN = rsActivities.getInt(2);
+                    String aName = rsActivities.getString(3);
+                    String aDescription = rsActivities.getString(4);
                     GregorianCalendar aDate = new GregorianCalendar();
-                    aDate.setTimeInMillis(rsGroup.getDate(5).getTime());
-                    Long apId = rsGroup.getLong(6);
-                    String apName = rsGroup.getString(7);
+                    aDate.setTimeInMillis(rsActivities.getDate(5).getTime());
+                    Long apId = rsActivities.getLong(6);
+                    String apName = rsActivities.getString(7);
                     groupActivities.add(new HikingActivity(aOrN, aName, aDescription, aDate, new Place(apId, apName), g));
                 }
                 rsActivities.close();

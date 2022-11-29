@@ -18,6 +18,7 @@ import com.borak.hikingapp.commonlib.communication.TransferObject;
 import com.borak.hikingapp.commonlib.domain.classes.HikingActivity;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
+import com.borak.hikingapp.commonlib.domain.enums.ErrorType;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompNumberInput;
@@ -95,7 +96,7 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
     private HikingActivity editableActivity;
     private List<Place> places;
 
-    public FrmGroupChangeInfo_Dialog(Dialog parent, boolean modal, HikingGroup g) {
+    public FrmGroupChangeInfo_Dialog(Dialog parent, boolean modal, HikingGroup g) throws CustomException {
         super(parent, modal);
         initComponents();
         mainGroup = g;
@@ -127,7 +128,7 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void initialize() {
+    private void initialize() throws CustomException {
         setTitle("Create hiking group");
         MigLayout migMain = new MigLayout("", "", "[]0[]");
         setLayout(migMain);
@@ -146,7 +147,7 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
         setLocationRelativeTo(null);
     }
 
-    private void getPlaces() {
+    private void getPlaces() throws CustomException {
         try {
             TransferObject response = ControllerSO.getInstance().getAllPlaces();
             if (response.getResponseType() == ResponseType.SUCCESS) {
@@ -155,8 +156,8 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
                 throw response.getException();
             }
         } catch (CustomException ex) {
-            ex.printStackTrace();
             places = null;
+            throw new CustomException(ErrorType.PLACE_EMPTY_LIST_ERROR, "Unable to retreive places!", ex);
         }
     }
 
@@ -553,24 +554,27 @@ public class FrmGroupChangeInfo_Dialog extends javax.swing.JDialog {
         }
 
         if (gateGroup == true && gateActivity == true) {
-            mainGroup.setCrn(crn);
-            mainGroup.setName(name);
-            mainGroup.setDescription(description);
-            mainGroup.setResources(resources);
-            mainGroup.setHasLiscence(hasLiscence);
-            mainGroup.setPlace(place);
-            mainGroup.setGroupActivities(tblModel.getAllActivities());
-            try {
-                TransferObject response = ControllerSO.getInstance().updateHikingGroup(mainGroup);
-                if (response.getResponseType() == ResponseType.SUCCESS) {
-                    Window.successfulOperation(this, "Updated hiking group", "Successful update of hiking group!");
-                    ControllerForms.getInstance().closeFrmGroupCreate();
-                } else {
-                    throw response.getException();
+            if (Window.question(this, "Update hiking group", "Do you wish to update hiking group '" + mainGroup + "' with current info?")) {
+                mainGroup.setCrn(crn);
+                mainGroup.setName(name);
+                mainGroup.setDescription(description);
+                mainGroup.setResources(resources);
+                mainGroup.setHasLiscence(hasLiscence);
+                mainGroup.setPlace(place);
+                mainGroup.setGroupActivities(tblModel.getAllActivities());
+
+                try {
+                    TransferObject response = ControllerSO.getInstance().updateHikingGroup(mainGroup);
+                    if (response.getResponseType() == ResponseType.SUCCESS) {
+                        Window.successfulOperation(this, "Updated hiking group", "Successful update of hiking group!");
+                        ControllerForms.getInstance().closeFrmGroupCreate();
+                    } else {
+                        throw response.getException();
+                    }
+                } catch (CustomException ex) {
+                    ex.printStackTrace();
+                    Window.unSuccessfulOperation(this, "Failed to update hiking group", ex.getMessage());
                 }
-            } catch (CustomException ex) {
-                ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Failed to update hiking group", ex.getMessage());
             }
         } else {
             if (gateGroup == false) {

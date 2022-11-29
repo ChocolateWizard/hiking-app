@@ -130,4 +130,12 @@ public final class ControllerSO {
         return (new Receiver(socket)).receive();
     }
 
+    public void showHiker(Hiker h) throws CustomException {
+        ControllerForms.getInstance().openFrmHikerChangeInfo_Dialog(h);
+    }
+
+    public void showHikingGroup(HikingGroup g) throws CustomException {
+        ControllerForms.getInstance().openFrmHikingGroupChangeInfo_Dialog(g);
+    }
+
 }

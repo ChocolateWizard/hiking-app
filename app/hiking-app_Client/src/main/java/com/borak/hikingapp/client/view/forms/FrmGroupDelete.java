@@ -176,22 +176,22 @@ public class FrmGroupDelete extends javax.swing.JDialog {
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     List<HikingGroup> groups = (List<HikingGroup>) response.getArgument();
                     if (groups == null || groups.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Error", "No hiking groups found with given name!");
+                        Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", "No hiking groups found with given name!");
                     } else {
                         tblModel.loadGroups(groups);
-                        Window.successfulOperation(this, "Success", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
+                        Window.successfulOperation(this, "Successful hiking group search", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
                     }
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
             }
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+            Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
         }
 
     }
@@ -199,9 +199,9 @@ public class FrmGroupDelete extends javax.swing.JDialog {
     private void btnDeletePressed() {
         int[] rows = tblGroups.getSelectedRows();
         if (rows.length == 0) {
-            Window.unSuccessfulOperation(this, "Error", "No selected hiking group!");
+            Window.unSuccessfulOperation(this, "Unsuccessful hiking group deletion", "No selected hiking group!");
         } else if (rows.length > 1) {
-            Window.unSuccessfulOperation(this, "Error", "Pick 1 group you wish to delete!");
+            Window.unSuccessfulOperation(this, "Unsuccessful hiking group deletion", "Pick 1 group you wish to delete!");
         } else {
             HikingGroup g = tblModel.getGroup(rows[0]);
             if (g != null) {
@@ -210,16 +210,16 @@ public class FrmGroupDelete extends javax.swing.JDialog {
                         TransferObject response = ControllerSO.getInstance().deleteHikingGroup(g);
                         if (response.getResponseType() == ResponseType.SUCCESS) {
                             tblModel.removeGroup(rows[0]);
-                            Window.successfulOperation(this, "Success", "Group " + g + " successfully deleted!");
+                            Window.successfulOperation(this, "Successful hiking group deletion", "Group " + g + " successfully deleted!");
                         } else {
                             throw response.getException();
                         }
                     } catch (CustomException ex) {
-                        Window.unSuccessfulOperation(this, "Error", ex.getMessage());
+                        Window.unSuccessfulOperation(this, "Unsuccessful hiking group deletion", ex.getMessage());
                     }
                 }
             } else {
-                Window.unSuccessfulOperation(this, "Error", "No selected hiking group!");
+                Window.unSuccessfulOperation(this, "Unsuccessful hiking group deletion", "No selected hiking group!");
             }
         }
     }
