@@ -46,22 +46,40 @@ public class RepositoryHikingGroup implements IRepository<HikingGroup> {
 
     @Override
     public void insert(HikingGroup object) throws CustomException {
+        try {
+            for (HikingGroup group : hikingGroups) {
+                if (group.getCrn().equals(object.getCrn())) {
+                    throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Duplicate hiking group crn");
+                }
+            }
+        } catch (NullPointerException | CustomException e) {
+            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Unable to insert hiking group", e);
+        }
+        object.setId(getMaxId());
         hikingGroups.add(object);
     }
 
     @Override
     public HikingGroup find(HikingGroup object) throws CustomException {
-        for (HikingGroup hikingGroup : hikingGroups) {
-            if (hikingGroup.equals(object)) {
-                return hikingGroup;
+        try {
+            for (HikingGroup hikingGroup : hikingGroups) {
+                if (hikingGroup.equals(object)) {
+                    return hikingGroup;
+                }
             }
+        } catch (NullPointerException e) {
+            throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Unable to find hiking group", e);
         }
         return null;
     }
 
     @Override
     public void delete(HikingGroup object) throws CustomException {
-        hikingGroups.remove(object);
+        try {
+            hikingGroups.remove(object);
+        } catch (NullPointerException e) {
+            throw new CustomException(ErrorType.DELETE_QUERY_ERROR, "Unable to delete hiking group", e);
+        }
     }
 
     @Override
@@ -82,6 +100,16 @@ public class RepositoryHikingGroup implements IRepository<HikingGroup> {
     @Override
     public void deleteAll() throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private Long getMaxId() {
+        Long i = 0l;
+        for (HikingGroup group : hikingGroups) {
+            if (i.compareTo(group.getId()) < 0) {
+                i = group.getId();
+            }
+        }
+        return i;
     }
 
 }

@@ -17,9 +17,9 @@ import java.util.List;
  * @author User
  */
 public class RepositoryUser implements IRepository<User> {
-
+    
     private List<User> users;
-
+    
     public RepositoryUser() {
         users = new LinkedList<>();
         User u1 = new User("Despot", "Jevtovic", "admin", "admin", "despotjev@gmail.com", new Place(1l, "Beograd"));
@@ -32,33 +32,43 @@ public class RepositoryUser implements IRepository<User> {
         users.add(u2);
         users.add(u3);
     }
-
+    
     @Override
     public void connect() throws CustomException {
     }
-
+    
     @Override
     public void disconnect() throws CustomException {
     }
-
+    
     @Override
     public void commit() throws CustomException {
     }
-
+    
     @Override
     public void rollback() throws CustomException {
     }
-
+    
     @Override
     public List<User> getAll() throws CustomException {
         return users;
     }
-
+    
     @Override
     public void insert(User object) throws CustomException {
+        try {
+            for (User user : users) {
+                if (user.getUsername().equals(object.getUsername())) {
+                    throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Duplicate username");
+                }
+            }
+        } catch (NullPointerException | CustomException e) {
+            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Unable to insert user", e);
+        }
+        object.setId(getMaxId());
         users.add(object);
     }
-
+    
     @Override
     public User find(User object) throws CustomException {
         try {
@@ -72,25 +82,35 @@ public class RepositoryUser implements IRepository<User> {
         }
         return null;
     }
-
+    
     @Override
     public void delete(User object) throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void update(User object) throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void insertAll(List<User> object) throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
     @Override
     public void deleteAll() throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-
+    
+    private Long getMaxId() {
+        Long i = 0l;
+        for (User user : users) {
+            if (i.compareTo(user.getId()) < 0) {
+                i = user.getId();
+            }
+        }
+        return i;
+    }
+    
 }

@@ -20,9 +20,19 @@ public class RepositoryPlace implements IRepository<Place> {
 
     public RepositoryPlace() {
         places = new LinkedList<>();
-        places.add(new Place(1l, "Beograd"));
-        places.add(new Place(2l, "Lazarevac"));
-        places.add(new Place(3l, "Novi Sad"));
+        places.add(new Place(1l, "Blencathra"));
+        places.add(new Place(2l, "Hadrian’s Wall"));
+        places.add(new Place(3l, "Helvellyn"));
+        places.add(new Place(4l, "The Lizard Coastal Walk"));
+        places.add(new Place(6l, "Malham Cove"));
+        places.add(new Place(7l, "North Downs Way"));
+        places.add(new Place(8l, "Pennine Way"));
+        places.add(new Place(9l, "Cuthbert’s Way"));
+        places.add(new Place(10l, "South Downs Way"));
+        places.add(new Place(11l, "Stanage Edge"));
+        places.add(new Place(12l, "Stonehenge"));
+        places.add(new Place(13l, "The Thames Path"));
+        places.add(new Place(14l, "Serbia"));
     }
 
     @Override

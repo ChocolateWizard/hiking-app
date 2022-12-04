@@ -44,16 +44,17 @@ public final class RepositoryManager {
                     repositoryUser = new com.borak.hikingapp.server.repository.om.RepositoryUser();
                     repositoryHiker = new com.borak.hikingapp.server.repository.om.RepositoryHiker();
                     repositoryHikingGroup = new com.borak.hikingapp.server.repository.om.RepositoryHikingGroup();
+                    repositoryProfiles = new com.borak.hikingapp.server.repository.om.RepositoryProfile();
                     break;
                 case MYSQL:
                     repositoryPlace = new com.borak.hikingapp.server.repository.db.mysql.RepositoryPlace();
                     repositoryUser = new com.borak.hikingapp.server.repository.db.mysql.RepositoryUser();
                     repositoryHiker = new com.borak.hikingapp.server.repository.db.mysql.RepositoryHiker();
                     repositoryHikingGroup = new com.borak.hikingapp.server.repository.db.mysql.RepositoryHikingGroup();
+                    repositoryProfiles = new com.borak.hikingapp.server.repository.db.mysql.RepositoryProfile();
                     break;
                 default:
             }
-            repositoryProfiles = new com.borak.hikingapp.server.repository.db.mysql.RepositoryProfile();
             repositoryLoggedUsers = new com.borak.hikingapp.server.repository.om.RepositoryLoggedUsers();
         } catch (CustomException e) {
             throw new CustomException(ErrorType.CRITICAL_ERROR, "Unable to initialize repositories!", e);
@@ -76,7 +77,7 @@ public final class RepositoryManager {
     public IRepository<User> getRepositoryUser() {
         return repositoryUser;
     }
-    
+
     public IRepository<Profile> getRepositoryProfiles() {
         return repositoryProfiles;
     }
@@ -84,8 +85,5 @@ public final class RepositoryManager {
     public RepositoryLoggedUsers getRepositoryLoggedUsers() {
         return repositoryLoggedUsers;
     }
-
-    
-    
 
 }

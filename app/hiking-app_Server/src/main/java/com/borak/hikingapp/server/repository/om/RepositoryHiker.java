@@ -46,22 +46,40 @@ public class RepositoryHiker implements IRepository<Hiker> {
 
     @Override
     public void insert(Hiker object) throws CustomException {
+        try {
+            for (Hiker hiker : hikers) {
+                if (hiker.getUcin().equals(object.getUcin())) {
+                    throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Duplicate hiker ucin");
+                }
+            }
+        } catch (NullPointerException | CustomException e) {
+            throw new CustomException(ErrorType.INSERT_QUERY_ERROR, "Unable to insert hiker", e);
+        }
+        object.setId(getMaxId());
         hikers.add(object);
     }
 
     @Override
     public Hiker find(Hiker object) throws CustomException {
-        for (Hiker hiker : hikers) {
-            if (hiker.equals(object)) {
-                return hiker;
+        try {
+            for (Hiker hiker : hikers) {
+                if (hiker.equals(object)) {
+                    return hiker;
+                }
             }
+        } catch (NullPointerException e) {
+            throw new CustomException(ErrorType.SELECT_QUERY_ERROR, "Unable to find hiker", e);
         }
         return null;
     }
 
     @Override
     public void delete(Hiker object) throws CustomException {
-        hikers.remove(object);
+        try {
+            hikers.remove(object);
+        } catch (NullPointerException e) {
+            throw new CustomException(ErrorType.DELETE_QUERY_ERROR, "Unable to delete hiker", e);
+        }
     }
 
     @Override
@@ -82,6 +100,16 @@ public class RepositoryHiker implements IRepository<Hiker> {
     @Override
     public void deleteAll() throws CustomException {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    private Long getMaxId() {
+        Long i = 0l;
+        for (Hiker hiker : hikers) {
+            if (i.compareTo(hiker.getId()) < 0) {
+                i = hiker.getId();
+            }
+        }
+        return i;
     }
 
 }
