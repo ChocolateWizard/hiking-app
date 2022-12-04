@@ -4,14 +4,13 @@
  */
 package com.borak.hikingapp.client.view.forms;
 
-import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.Util;
 import com.borak.hikingapp.client.view.components.validators.factory.ValidatorFactory;
 import com.borak.hikingapp.client.view.helpers.Window;
-import com.borak.hikingapp.client.view.tables.HikersTableModel;
+import com.borak.hikingapp.client.view.tables.GroupTableModel;
 import com.borak.hikingapp.commonlib.communication.TransferObject;
-import com.borak.hikingapp.commonlib.domain.classes.Hiker;
+import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.domain.enums.ResponseType;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
 import com.borak.hikingapp.commonlib.view.components.CompStringInput;
@@ -19,8 +18,6 @@ import com.borak.hikingapp.commonlib.view.components.api.IComponent;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -30,24 +27,24 @@ import net.miginfocom.swing.MigLayout;
 
 /**
  *
- * @author Despot
+ * @author Mr. Poyo
  */
-public class FrmHikerChangeInfo extends javax.swing.JDialog {
+public class FrmPlanShow extends javax.swing.JDialog {
 
     private IComponent<String> filterComponent;
 
-    private HikersTableModel tblModel;
-    private JTable tblHikers;
+    private GroupTableModel tblModel;
+    private JTable tblGroups;
     private JScrollPane scrollPane;
 
     private JButton btnFilter;
-    private JButton btnChange;
+    private JButton btnShow;
 
     private JPanel pnlFilter;
     private JPanel pnlAction;
     private JPanel pnlShow;
 
-    public FrmHikerChangeInfo(java.awt.Frame parent, boolean modal) {
+    public FrmPlanShow(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         initialize();
@@ -79,11 +76,11 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void initialize() {
-        setTitle("Change hiker");
+        setTitle("Search group plans");
         MigLayout mig = new MigLayout("", "[]0[]", "[]0[]");
         setLayout(mig);
         try {
-            ImageIcon favicon = new ImageIcon(Util.getInstance().getFrmHikerChangeInfoFavicon());
+            ImageIcon favicon = new ImageIcon(Util.getInstance().getFrmPlanShowFavicon());
             setIconImage(favicon.getImage());
         } catch (CustomException ex) {
             ex.printStackTrace();
@@ -119,7 +116,7 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
     }
 
     private void setComponents() {
-        filterComponent = new CompStringInput(ValidatorFactory.getInstance().getHikerFilterValidator());
+        filterComponent = new CompStringInput(ValidatorFactory.getInstance().getGroupFilterValidator());
         filterComponent.setCaption("Find by name:");
         filterComponent.setCaptionWidth(100);
         filterComponent.setInputWidth(200);
@@ -129,95 +126,95 @@ public class FrmHikerChangeInfo extends javax.swing.JDialog {
     }
 
     private void setTable() {
-        tblModel = new HikersTableModel();
-        tblHikers = new JTable(tblModel);
+        tblModel = new GroupTableModel();
+        tblGroups = new JTable(tblModel);
 
-        scrollPane = new JScrollPane(tblHikers);
+        scrollPane = new JScrollPane(tblGroups);
         Dimension d = scrollPane.getPreferredSize();
-        d.setSize(485, d.getHeight());
+        d.setSize(484, d.getHeight());
         scrollPane.setPreferredSize(d);
         pnlShow.add(scrollPane, "cell 0 0");
     }
 
     private void setButtons() {
         btnFilter = new JButton("Find");
-        btnChange = new JButton("Change");
+        btnShow = new JButton("Show");
 
         Dimension d1 = btnFilter.getPreferredSize();
-        Dimension d2 = btnChange.getPreferredSize();
+        Dimension d2 = btnShow.getPreferredSize();
 
         Dimension d = new Dimension(findMax(d1.getWidth(), d2.getWidth()), findMax(d1.getHeight(), d2.getHeight()));
 
         btnFilter.setPreferredSize(d);
-        btnChange.setPreferredSize(d);
+        btnShow.setPreferredSize(d);
 
         btnFilter.setFocusable(false);
-        btnChange.setFocusable(false);
+        btnShow.setFocusable(false);
 
         addListeners();
 
         pnlAction.add(btnFilter, "cell 0 0");
-        pnlAction.add(btnChange, "cell 1 0");
+        pnlAction.add(btnShow, "cell 1 0");
     }
 
     private void addListeners() {
         btnFilter.addActionListener((ActionEvent e) -> {
             btnFilterPressed();
         });
-        btnChange.addActionListener((ActionEvent e) -> {
-            btnChangePressed();
+        btnShow.addActionListener((ActionEvent e) -> {
+            btnShowPressed();
         });
     }
 
     private void btnFilterPressed() {
         try {
             filterComponent.setErrorMessage("");
-            tblModel.removeAllHikers();
+            tblModel.removeAllGroups();
             String name = filterComponent.getValue();
             try {
-                TransferObject response = ControllerSO.getInstance().findHikers(name);
+                //returns all groups with given name, or similar name
+                TransferObject response = ControllerSO.getInstance().findHikingGroups(name);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
-                    List<Hiker> hikers = (List<Hiker>) response.getArgument();
-                    if (hikers == null || hikers.isEmpty()) {
-                        Window.unSuccessfulOperation(this, "Unsuccessful hiker search", "No hikers found with given name!");
+                    List<HikingGroup> groups = (List<HikingGroup>) response.getArgument();
+                    if (groups == null || groups.isEmpty()) {
+                        Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", "No hiking groups found with given name!");
                     } else {
-                        tblModel.loadHikers(hikers);
-                        Window.successfulOperation(this, "Successful hiker search", "Found " + (hikers.size() == 1 ? "1 hiker" : hikers.size() + " hikers") + " with given name!");
+                        tblModel.loadGroups(groups);
+                        Window.successfulOperation(this, "Successful hiking group search", "Found " + (groups.size() == 1 ? "1 group" : groups.size() + " groups") + " with given name!");
                     }
                 } else {
                     throw response.getException();
                 }
             } catch (CustomException ex) {
                 ex.printStackTrace();
-                Window.unSuccessfulOperation(this, "Unsuccessful hiker search", ex.getMessage());
+                Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
             }
+
         } catch (CustomException ex) {
             ex.printStackTrace();
             filterComponent.setErrorMessage(ex.getMessage());
-            Window.unSuccessfulOperation(this, "Unsuccessful hiker search", "Unable to find hikers");
+            Window.unSuccessfulOperation(this, "Unsuccessful hiking group search", ex.getMessage());
         }
 
     }
 
-    private void btnChangePressed() {
-        int[] rows = tblHikers.getSelectedRows();
+    private void btnShowPressed() {
+        int[] rows = tblGroups.getSelectedRows();
         if (rows.length == 0) {
-            Window.unSuccessfulOperation(this, "Change hiker error", "No selected hiker!");
+            Window.unSuccessfulOperation(this, "Show hiking group plan error", "No selected hiking groups!");
         } else if (rows.length > 1) {
-            Window.unSuccessfulOperation(this, "Change hiker error", "Pick 1 hiker you wish to change");
+            Window.unSuccessfulOperation(this, "Show hiking group plan error", "Pick 1 hiking group you wish to show plan of!");
         } else {
-            Hiker h = tblModel.getHiker(rows[0]);
-            if (h != null) {
+            HikingGroup g = tblModel.getGroup(rows[0]);
+            if (g != null) {
                 try {
-                    ControllerSO.getInstance().showHiker(h);
-                    tblModel.fireTableRowsUpdated(rows[0], rows[0]);
+                    ControllerSO.getInstance().showGroupPlan(g);
                 } catch (CustomException ex) {
                     ex.printStackTrace();
-                    Window.unSuccessfulOperation(this, "Change hiker error", "Unable to show hiker");
+                    Window.unSuccessfulOperation(this, "Show hiking group plan error", "Unable to show hiking group plan");
                 }
-
             } else {
-                Window.unSuccessfulOperation(this, "Change hiker error", "No selected hiker");
+                Window.unSuccessfulOperation(this, "Show hiking group plan error", "No selected hiking groups!");
             }
         }
     }

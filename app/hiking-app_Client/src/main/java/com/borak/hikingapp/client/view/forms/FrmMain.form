@@ -33,6 +33,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miGroupDeleteActionPerformed"/>
               </Events>
             </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="miGroupMembership">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Membership"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miGroupMembershipActionPerformed"/>
+              </Events>
+            </MenuItem>
           </SubComponents>
         </Menu>
         <Menu class="javax.swing.JMenu" name="mbHiker">
@@ -66,17 +74,17 @@
             </MenuItem>
           </SubComponents>
         </Menu>
-        <Menu class="javax.swing.JMenu" name="mbProfile">
+        <Menu class="javax.swing.JMenu" name="mbView">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Profile"/>
+            <Property name="text" type="java.lang.String" value="View"/>
           </Properties>
           <SubComponents>
-            <MenuItem class="javax.swing.JMenuItem" name="miProfileConfiguration">
+            <MenuItem class="javax.swing.JMenuItem" name="miViewPlan">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Configuration"/>
+                <Property name="text" type="java.lang.String" value="Plan"/>
               </Properties>
               <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miProfileConfigurationActionPerformed"/>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="miViewPlanActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

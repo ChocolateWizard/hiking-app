@@ -37,12 +37,13 @@ public class FrmMain extends javax.swing.JFrame {
         miGroupCreate = new javax.swing.JMenuItem();
         miGroupChangeInfo = new javax.swing.JMenuItem();
         miGroupDelete = new javax.swing.JMenuItem();
+        miGroupMembership = new javax.swing.JMenuItem();
         mbHiker = new javax.swing.JMenu();
         miHikerCreate = new javax.swing.JMenuItem();
         miHikerChangeInfo = new javax.swing.JMenuItem();
         miHikerDelete = new javax.swing.JMenuItem();
-        mbProfile = new javax.swing.JMenu();
-        miProfileConfiguration = new javax.swing.JMenuItem();
+        mbView = new javax.swing.JMenu();
+        miViewPlan = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -71,6 +72,14 @@ public class FrmMain extends javax.swing.JFrame {
             }
         });
         mbGroup.add(miGroupDelete);
+
+        miGroupMembership.setText("Membership");
+        miGroupMembership.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                miGroupMembershipActionPerformed(evt);
+            }
+        });
+        mbGroup.add(miGroupMembership);
 
         mbMain.add(mbGroup);
 
@@ -102,17 +111,17 @@ public class FrmMain extends javax.swing.JFrame {
 
         mbMain.add(mbHiker);
 
-        mbProfile.setText("Profile");
+        mbView.setText("View");
 
-        miProfileConfiguration.setText("Configuration");
-        miProfileConfiguration.addActionListener(new java.awt.event.ActionListener() {
+        miViewPlan.setText("Plan");
+        miViewPlan.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                miProfileConfigurationActionPerformed(evt);
+                miViewPlanActionPerformed(evt);
             }
         });
-        mbProfile.add(miProfileConfiguration);
+        mbView.add(miViewPlan);
 
-        mbMain.add(mbProfile);
+        mbMain.add(mbView);
 
         setJMenuBar(mbMain);
 
@@ -154,9 +163,13 @@ public class FrmMain extends javax.swing.JFrame {
         ControllerForms.getInstance().openFrmGroupDelete();
     }//GEN-LAST:event_miGroupDeleteActionPerformed
 
-    private void miProfileConfigurationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miProfileConfigurationActionPerformed
-        ControllerForms.getInstance().openFrmProfileConfiguration();
-    }//GEN-LAST:event_miProfileConfigurationActionPerformed
+    private void miGroupMembershipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miGroupMembershipActionPerformed
+        ControllerForms.getInstance().openFrmGroupMemberships();
+    }//GEN-LAST:event_miGroupMembershipActionPerformed
+
+    private void miViewPlanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_miViewPlanActionPerformed
+        ControllerForms.getInstance().openFrmPlanShow();
+    }//GEN-LAST:event_miViewPlanActionPerformed
 
     private void initialize() {
         setTitle("Main menu");
@@ -182,13 +195,14 @@ public class FrmMain extends javax.swing.JFrame {
     private javax.swing.JMenu mbGroup;
     private javax.swing.JMenu mbHiker;
     private javax.swing.JMenuBar mbMain;
-    private javax.swing.JMenu mbProfile;
+    private javax.swing.JMenu mbView;
     private javax.swing.JMenuItem miGroupChangeInfo;
     private javax.swing.JMenuItem miGroupCreate;
     private javax.swing.JMenuItem miGroupDelete;
+    private javax.swing.JMenuItem miGroupMembership;
     private javax.swing.JMenuItem miHikerChangeInfo;
     private javax.swing.JMenuItem miHikerCreate;
     private javax.swing.JMenuItem miHikerDelete;
-    private javax.swing.JMenuItem miProfileConfiguration;
+    private javax.swing.JMenuItem miViewPlan;
     // End of variables declaration//GEN-END:variables
 }

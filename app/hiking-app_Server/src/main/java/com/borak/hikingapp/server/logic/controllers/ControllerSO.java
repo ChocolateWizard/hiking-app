@@ -7,6 +7,7 @@ package com.borak.hikingapp.server.logic.controllers;
 import com.borak.hikingapp.server.repository.RepositoryManager;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
+import com.borak.hikingapp.commonlib.domain.classes.HikingGroupPlan;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.Profile;
 import com.borak.hikingapp.commonlib.domain.classes.User;
@@ -482,6 +483,41 @@ public final class ControllerSO {
             }
         } catch (CustomException e) {
             throw new CustomException(ErrorType.PROFILES_SAVE_ERROR, "Unable to save profiles");
+        }
+    }
+
+    public HikingGroupPlan getHikingGroupPlan(HikingGroup group) throws CustomException {
+        try {
+            List<Hiker> members = new LinkedList<>();
+            try {
+                repositoryManager.getRepositoryProfiles().connect();
+                List<Profile> profiles = repositoryManager.getRepositoryProfiles().getAll();
+                for (Profile profile : profiles) {
+                    if (profile.getHikingGroup() != null && profile.getHikingGroup().equals(group) && profile.getHiker() != null) {
+                        members.add(profile.getHiker());
+                    }
+                }
+                repositoryManager.getRepositoryProfiles().commit();
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryProfiles().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryProfiles().disconnect();
+            }
+            try {
+                repositoryManager.getRepositoryHikingGroup().connect();
+                HikingGroup g = repositoryManager.getRepositoryHikingGroup().find(group);
+                HikingGroupPlan plan = new HikingGroupPlan(members, g.getGroupActivities());
+                repositoryManager.getRepositoryHikingGroup().commit();
+                return plan;
+            } catch (CustomException ex) {
+                repositoryManager.getRepositoryHikingGroup().rollback();
+                throw ex;
+            } finally {
+                repositoryManager.getRepositoryHikingGroup().disconnect();
+            }
+        } catch (CustomException e) {
+            throw new CustomException(ErrorType.GET_HIKING_GROUP_PLAN_ERROR, "Unable to retreive group plan");
         }
     }
 

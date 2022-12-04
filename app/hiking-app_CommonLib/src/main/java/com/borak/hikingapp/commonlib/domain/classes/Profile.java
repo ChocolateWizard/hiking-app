@@ -22,6 +22,12 @@ public class Profile implements Serializable{
     public Profile() {
     }
 
+    public Profile(HikingGroup hikingGroup) {
+        this.hikingGroup = hikingGroup;
+    }
+
+    
+    
     public Profile(HikingGroup hikingGroup, Hiker hiker, GregorianCalendar dateOfAdmission, String note) {
         this.hikingGroup = hikingGroup;
         this.hiker = hiker;

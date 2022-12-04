@@ -14,7 +14,9 @@ import com.borak.hikingapp.client.view.forms.FrmHikerCreate;
 import com.borak.hikingapp.client.view.forms.FrmHikerDelete;
 import com.borak.hikingapp.client.view.forms.FrmLogin;
 import com.borak.hikingapp.client.view.forms.FrmMain;
-import com.borak.hikingapp.client.view.forms.FrmProfileConfiguration;
+import com.borak.hikingapp.client.view.forms.FrmGroupMembership;
+import com.borak.hikingapp.client.view.forms.FrmPlanShow;
+import com.borak.hikingapp.client.view.forms.FrmPlanShow_Dialog;
 import com.borak.hikingapp.client.view.forms.FrmRegister;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
@@ -37,7 +39,9 @@ public class ControllerForms {
     private FrmHikerChangeInfo frmHikerChangeInfo;
     private FrmHikerChangeInfo_Dialog frmHikerChangeInfo_Dialog;
     private FrmGroupChangeInfo_Dialog frmGroupChangeInfo_Dialog;
-    private FrmProfileConfiguration frmProfileConfiguration;
+    private FrmGroupMembership frmProfileConfiguration;
+    private FrmPlanShow frmPlanShow;
+    private FrmPlanShow_Dialog frmPlanShow_Dialog;
 
     private static ControllerForms instance;
 
@@ -183,15 +187,39 @@ public class ControllerForms {
         }
     }
 
-    public void openFrmProfileConfiguration() {
-        frmProfileConfiguration = new FrmProfileConfiguration(frmMain, true);
+    public void openFrmGroupMemberships() {
+        frmProfileConfiguration = new FrmGroupMembership(frmMain, true);
         frmProfileConfiguration.setVisible(true);
     }
 
-    public void closeFrmProfileConfiguration() {
+    public void closeFrmGroupMemberships() {
         if (frmProfileConfiguration != null) {
             frmProfileConfiguration.dispose();
             frmProfileConfiguration = null;
+        }
+    }
+
+    public void openFrmPlanShow() {
+        frmPlanShow = new FrmPlanShow(frmMain, true);
+        frmPlanShow.setVisible(true);
+    }
+
+    public void closeFrmPlanShow() {
+        if (frmPlanShow != null) {
+            frmPlanShow.dispose();
+            frmPlanShow = null;
+        }
+    }
+
+    void openFrmPlanShow_Dialog(HikingGroup g) throws CustomException {
+        frmPlanShow_Dialog = new FrmPlanShow_Dialog(frmPlanShow, true, g);
+        frmPlanShow_Dialog.setVisible(true);
+    }
+
+    public void closeFrmPlanShow_Dialog() {
+        if (frmPlanShow_Dialog != null) {
+            frmPlanShow_Dialog.dispose();
+            frmPlanShow_Dialog = null;
         }
     }
 

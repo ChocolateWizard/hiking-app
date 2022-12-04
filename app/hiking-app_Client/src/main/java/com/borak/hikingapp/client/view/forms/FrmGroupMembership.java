@@ -42,7 +42,7 @@ import net.miginfocom.swing.MigLayout;
  *
  * @author User
  */
-public class FrmProfileConfiguration extends javax.swing.JDialog {
+public class FrmGroupMembership extends javax.swing.JDialog {
 
     private JPanel pnlHikingGroups;
     private JPanel pnlHikingGroupsComponent;
@@ -79,7 +79,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
     private boolean isAdding = false;
     private boolean isEditing = false;
 
-    public FrmProfileConfiguration(java.awt.Frame parent, boolean modal) {
+    public FrmGroupMembership(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
         initialize();
@@ -111,7 +111,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void initialize() {
-        setTitle("Configure profiles");
+        setTitle("Configure memberships");
         MigLayout migMain = new MigLayout("", "[]0[]", "[]0[]");
         setLayout(migMain);
         try {
@@ -664,7 +664,7 @@ public class FrmProfileConfiguration extends javax.swing.JDialog {
                 TransferObject response = ControllerSO.getInstance().saveProfiles(profilesToStore);
                 if (response.getResponseType() == ResponseType.SUCCESS) {
                     Window.successfulOperation(this, "Successful configuration changes", "Profiles succesfully saved!");
-                    ControllerForms.getInstance().closeFrmProfileConfiguration();
+                    ControllerForms.getInstance().closeFrmGroupMemberships();
                 } else {
                     Window.unSuccessfulOperation(this, "Unsuccessful configuration changes", response.getException().getMessage());
                 }

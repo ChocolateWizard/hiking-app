@@ -25,9 +25,11 @@ public final class PropertyConstants {
     public static final String IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFO_FAVICON = "FrmGroupChangeInfo_favicon";
     public static final String IMAGES_LOCATIONS_FILE_FRMGROUPCHANGEINFODIALOG_FAVICON = "FrmGroupChangeInfo_Dialog_favicon";
     public static final String IMAGES_LOCATIONS_FILE_FRMPROFILECREATEFAVICON = "FrmProfileCreate_favicon";
+    public static final String IMAGES_LOCATIONS_FILE_FRMPLANSHOWFAVICON="FrmPlanShow_favicon";
     public static final String IMAGES_LOCATIONS_FILE_SUCCESS_FAVICON = "Success_favicon";
     public static final String IMAGES_LOCATIONS_FILE_QUESTION_FAVICON = "Question_favicon";
     public static final String IMAGES_LOCATIONS_FILE_ERROR_FAVICON = "Error_favicon";
+    
 
     private PropertyConstants() {
     }

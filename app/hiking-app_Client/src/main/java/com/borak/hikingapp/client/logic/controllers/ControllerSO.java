@@ -124,7 +124,7 @@ public final class ControllerSO {
         return (new Receiver(socket)).receive();
     }
 
-    public TransferObject saveProfiles(List<Profile> p) throws CustomException{
+    public TransferObject saveProfiles(List<Profile> p) throws CustomException {
         TransferObject request = new TransferObject(RequestType.SAVE_PROFILES, p);
         (new Sender(socket)).send(request);
         return (new Receiver(socket)).receive();
@@ -136,6 +136,16 @@ public final class ControllerSO {
 
     public void showHikingGroup(HikingGroup g) throws CustomException {
         ControllerForms.getInstance().openFrmHikingGroupChangeInfo_Dialog(g);
+    }
+
+    public void showGroupPlan(HikingGroup g) throws CustomException {
+        ControllerForms.getInstance().openFrmPlanShow_Dialog(g);
+    }
+
+    public TransferObject getMembersAndActivities(HikingGroup hikingGroup) throws CustomException {
+        TransferObject request = new TransferObject(RequestType.GET_HIKING_GROUP_PLAN, hikingGroup);
+        (new Sender(socket)).send(request);
+        return (new Receiver(socket)).receive();
     }
 
 }

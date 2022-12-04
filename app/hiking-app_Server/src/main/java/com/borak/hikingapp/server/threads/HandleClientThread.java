@@ -9,6 +9,7 @@ import com.borak.hikingapp.commonlib.communication.Sender;
 import com.borak.hikingapp.commonlib.communication.TransferObject;
 import com.borak.hikingapp.commonlib.domain.classes.Hiker;
 import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
+import com.borak.hikingapp.commonlib.domain.classes.HikingGroupPlan;
 import com.borak.hikingapp.commonlib.domain.classes.Place;
 import com.borak.hikingapp.commonlib.domain.classes.Profile;
 import com.borak.hikingapp.commonlib.domain.classes.User;
@@ -112,6 +113,9 @@ public class HandleClientThread extends Thread {
                     break;
                 case SAVE_PROFILES:
                     saveProfiles(request);
+                    break;
+                case GET_HIKING_GROUP_PLAN:
+                    getHikingGroupPlan(request);
                     break;
                 default:
             }
@@ -278,6 +282,18 @@ public class HandleClientThread extends Thread {
             throw new CustomException(ErrorType.PROFILES_SAVE_ERROR, e.getMessage());
         }
     }
+    
+    private void getHikingGroupPlan(TransferObject request) throws CustomException {
+        try {
+            HikingGroup group = (HikingGroup) request.getArgument();
+            HikingGroupPlan plan=ControllerSO.getInstance().getHikingGroupPlan(group);
+            TransferObject response = new TransferObject(ResponseType.SUCCESS, plan,null);
+            (new Sender(socket)).send(response);
+        } catch (CustomException | ClassCastException e) {
+            throw new CustomException(ErrorType.GET_HIKING_GROUP_PLAN_ERROR, e.getMessage());
+        }
+    }
+    
 //==========================================================================================================
 
     public Socket getSocket() {
@@ -309,5 +325,7 @@ public class HandleClientThread extends Thread {
         final HandleClientThread other = (HandleClientThread) obj;
         return this.clientNum == other.clientNum;
     }
+
+    
 
 }

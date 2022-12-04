@@ -96,6 +96,10 @@ public final class Util {
     public String getFrmProfileCreateFavicon() {
         return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMPROFILECREATEFAVICON);
     }
+     public String getFrmPlanShowFavicon() {
+         return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_FRMPLANSHOWFAVICON);
+    }
+    
 
 //=====================JOPTIONS PANES FAVICONS=====================================  
     public String getSuccessFavicon() {
@@ -109,6 +113,8 @@ public final class Util {
     public String getErrorFavicon() {
         return imagesLocations.getProperty(PropertyConstants.IMAGES_LOCATIONS_FILE_ERROR_FAVICON);
     }
+
+   
 
     
 

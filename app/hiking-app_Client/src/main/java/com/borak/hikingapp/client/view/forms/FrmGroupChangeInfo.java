@@ -210,7 +210,7 @@ public class FrmGroupChangeInfo extends javax.swing.JDialog {
                 try {
                     ControllerSO.getInstance().showHikingGroup(g);
                     tblModel.fireTableRowsUpdated(rows[0], rows[0]);
-                } catch (Exception ex) {
+                } catch (CustomException ex) {
                     ex.printStackTrace();
                     Window.unSuccessfulOperation(this, "Change hiking group error", "Unable to show hiking group");
                 }

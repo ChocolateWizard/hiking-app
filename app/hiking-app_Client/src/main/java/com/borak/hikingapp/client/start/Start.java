@@ -7,8 +7,12 @@ package com.borak.hikingapp.client.start;
 import com.borak.hikingapp.client.logic.controllers.ControllerForms;
 import com.borak.hikingapp.client.logic.controllers.ControllerSO;
 import com.borak.hikingapp.client.logic.controllers.ControllerClient;
+import com.borak.hikingapp.client.view.forms.FrmPlanShow_Dialog;
 import com.borak.hikingapp.client.view.helpers.Window;
+import com.borak.hikingapp.commonlib.domain.classes.HikingGroup;
 import com.borak.hikingapp.commonlib.exceptions.CustomException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
